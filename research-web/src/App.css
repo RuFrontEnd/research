@@ -1,4 +1,4 @@
-.fileContainer {
+#fileContainer {
   position: absolute;
   top: 0;
   left: 0;
@@ -7,7 +7,7 @@
   height: 100%;
 }
 
-.fileWarp {
+#fileWarp {
   position: absolute;
   background-color: white;
   top: 50%;
@@ -15,4 +15,31 @@
   transform: translate(-250px, -250px);
   width: 500px;
   height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+#fileWarp > h1 {
+  color: #555555;
+}
+
+#avatar {
+  width: 60%;
+  height: 60%;
+  background-color: #55555555;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#avatar > p {
+  font-size: 45px;
+  opacity: 0.25;
+}
+
+#file-uploader {
 }

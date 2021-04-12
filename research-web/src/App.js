@@ -4,32 +4,39 @@ import "./App.css";
 
 function App() {
   const $fileUploader = useRef();
-  const [addFileTime, setAddFileTime] = useState(0);
+  const [addFileTime, setAddFileTime] = useState(false);
 
   useEffect(() => {
-    console.log("$fileUploader", $fileUploader);
-    console.log("$fileUploader.current.dataset", $fileUploader.current.dataset);
-  }, [addFileTime]);
-
-  useEffect(() => {
-    console.log("$fileUploader.current.files", $fileUploader.current.files);
+    const photo = $fileUploader.current.files;
+    const reader = new FileReader();
+    console.log("photo", photo);
+    console.log("reader", reader);
+    // console.log(reader.readAsDataURL(photo));
+    // reader.readAsDataURL(photo);
   }, [addFileTime]);
 
   return (
     <div>
       {/* multiple => 屬性可以一次上傳多個檔案 */}
       {/* accept => 屬性可以限制上傳檔案的類型 */}
-      <div className="fileContainer">
-        <div className="fileWarp">
+      {/* step1 */}
+      <div id="fileContainer">
+        <div id="fileWarp">
+          <h1>React Upload File</h1>
+
+          <span id="avatar">
+            {/* <img src="" id="avatar" alt="Avatar Preview"></img> */}
+            <p>AVATAR</p>
+          </span>
           <input
             type="file"
             id="file-uploader"
             data-target="file-uploader"
             accept="image/*"
-            multiple="multiple"
+            // multiple="multiple"
             ref={$fileUploader}
             onChange={() => {
-              setAddFileTime(addFileTime + 1);
+              setAddFileTime(!addFileTime);
             }}
           />
         </div>

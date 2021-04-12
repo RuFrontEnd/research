@@ -1,19 +1,27 @@
 // tutorial https://pjchender.blogspot.com/2019/01/js-javascript-input-file-upload-file.html
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 
 function App() {
-  const $fileUploader = useRef();
-  const [addFileTime, setAddFileTime] = useState(false);
+  const $fileUploaderRef = useRef();
+  const [isShowPhoto, setIsShowPhoto] = useState(false);
+  const [imgUrl, setImgUrl] = useState("");
 
-  useEffect(() => {
-    const photo = $fileUploader.current.files;
+  const handleFile = async (e) => {
+    console.log(e);
+    const photo = e.target.files[0];
     const reader = new FileReader();
-    console.log("photo", photo);
-    console.log("reader", reader);
-    // console.log(reader.readAsDataURL(photo));
-    // reader.readAsDataURL(photo);
-  }, [addFileTime]);
+
+    if (photo) {
+      console.log("photo", photo);
+      reader.readAsDataURL(photo);
+      reader.onloadend = () => {
+        console.log("reader.result", reader.result);
+        setImgUrl(reader.result);
+        setIsShowPhoto(true);
+      };
+    }
+  };
 
   return (
     <div>
@@ -25,8 +33,10 @@ function App() {
           <h1>React Upload File</h1>
 
           <span id="avatar">
-            {/* <img src="" id="avatar" alt="Avatar Preview"></img> */}
-            <p>AVATAR</p>
+            {isShowPhoto && (
+              <img src={imgUrl} id="photo" alt="Avatar Preview"></img>
+            )}
+            {!isShowPhoto && <p>AVATAR</p>}
           </span>
           <input
             type="file"
@@ -34,9 +44,10 @@ function App() {
             data-target="file-uploader"
             accept="image/*"
             // multiple="multiple"
-            ref={$fileUploader}
-            onChange={() => {
-              setAddFileTime(!addFileTime);
+            ref={$fileUploaderRef}
+            onChange={(event) => {
+              // setAddFileTime(!addFileTime);
+              handleFile(event);
             }}
           />
         </div>

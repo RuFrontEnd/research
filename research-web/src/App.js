@@ -9,8 +9,10 @@ import man from "./assests/man.jpg";
 
 function App() {
   const $photo = useRef();
-  const [isShowPhoto, setIsShowPhoto] = useState(false);
+  const [imgCropperContainerStyle, setImgCropperContainerStyle] = useState({});
+  const [backgroundColor, setBackGroundColor] = useState("");
   const [imgUrl, setImgUrl] = useState("");
+  const [cropImgUrl, setCropImgUrl] = useState("");
 
   const handleFile = async (e) => {
     console.log(e);
@@ -21,43 +23,62 @@ function App() {
       reader.readAsDataURL(photo);
       reader.onloadend = () => {
         setImgUrl(reader.result);
-        setIsShowPhoto(true);
       };
     }
   };
 
   useEffect(() => {
+    // crop image logic
     console.log("$photo.current", $photo.current);
-    const cropper = new Cropper($photo.current, {
-      zoomable: false,
-      scalable: false,
-      aspectRatio: 16 / 9,
-      //   crop: () => {
-      //     const canvas = cropper.getCroppedCanvas();
-      //     setImgUrl(canvas.toDataURL("image/png"));
-      //   },
-    });
-  }, []);
+    if (imgUrl) {
+      setBackGroundColor("#00000099");
+      const cropper = new Cropper($photo.current, {
+        zoomable: false,
+        scalable: false,
+        aspectRatio: 1,
+        crop: () => {
+          const canvas = cropper.getCroppedCanvas();
+          setCropImgUrl(canvas.toDataURL("image/jpg"));
+        },
+      });
+    }
+  }, [imgUrl]);
+
+  // useEffect(() => {
+  //   console.log(cropImgUrl);
+  // }, [cropImgUrl]);
 
   return (
     <div>
       {/* multiple => 屬性可以一次上傳多個檔案 */}
       {/* accept => 屬性可以限制上傳檔案的類型 */}
       {/* step1 */}
-      <div id="fileContainer">
-        <div id="fileWarp">
-          <h1>React Upload File</h1>
-          <span id="avatar">
-            {/* {isShowPhoto && ( */}
+      <div id="fileContainer" style={{ backgroundColor: backgroundColor }}>
+        {imgUrl && (
+          <div id="image-cropper-container">
             <img
-              // src={imgUrl}
+              src={imgUrl}
               src={man}
               id="photo"
               alt="Avatar Preview"
               ref={$photo}
             ></img>
-            {/* )} */}
-            {/* {!isShowPhoto && <p>AVATAR</p>} */}
+            <button id="confirm-btn">確認</button>
+          </div>
+        )}
+        <div id="fileWarp">
+          <h1>React Upload File</h1>
+          <span id="avatar">
+            {cropImgUrl && (
+              <img
+                src={imgUrl}
+                src={man}
+                id="photo"
+                alt="Avatar Preview"
+                ref={$photo}
+              ></img>
+            )}
+            {!imgUrl && <p>AVATAR</p>}
           </span>
           <input
             type="file"

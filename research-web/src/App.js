@@ -7,6 +7,7 @@ import Cropper from "cropperjs"; // npm install cropperjs
 import "cropperjs/dist/cropper.min.css";
 
 function App() {
+  test contribution
   const $photo = useRef();
   const [fileContainerStyle, setFileContainerStyle] = useState({});
   const [imgUrl, setImgUrl] = useState("");

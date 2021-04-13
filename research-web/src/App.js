@@ -1,11 +1,13 @@
 // tutorial https://pjchender.blogspot.com/2019/01/js-javascript-input-file-upload-file.html
 // Cropper.js https://github.com/fengyuanchen/cropperjs
 // Cropper.js tutorial https://www.youtube.com/watch?v=hM9uKmy-BQQ&ab_channel=ThePolyglotDeveloper
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
+import Cropper from "cropperjs"; // npm install cropperjs
+import man from "public/man.jpg";
 
 function App() {
-  const $fileUploaderRef = useRef();
+  const $photo = useRef();
   const [isShowPhoto, setIsShowPhoto] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
 
@@ -15,15 +17,26 @@ function App() {
     const reader = new FileReader();
 
     if (photo) {
-      console.log("photo", photo);
       reader.readAsDataURL(photo);
       reader.onloadend = () => {
-        console.log("reader.result", reader.result);
         setImgUrl(reader.result);
         setIsShowPhoto(true);
       };
     }
   };
+
+  useEffect(() => {
+    console.log("$photo.current", $photo.current);
+    const cropper = new Cropper($photo.current, {
+      zoomable: false,
+      scalable: false,
+      aspectRatio: 1,
+      crop: () => {
+        const canvas = cropper.getCroppedCanvas();
+        setImgUrl(canvas.toDataURL("image/png"));
+      },
+    });
+  }, []);
 
   return (
     <div>
@@ -33,12 +46,17 @@ function App() {
       <div id="fileContainer">
         <div id="fileWarp">
           <h1>React Upload File</h1>
-
           <span id="avatar">
-            {isShowPhoto && (
-              <img src={imgUrl} id="photo" alt="Avatar Preview"></img>
-            )}
-            {!isShowPhoto && <p>AVATAR</p>}
+            {/* {isShowPhoto && ( */}
+            <img
+              // src={imgUrl}
+              src={man}
+              id="photo"
+              alt="Avatar Preview"
+              ref={$photo}
+            ></img>
+            {/* )} */}
+            {/* {!isShowPhoto && <p>AVATAR</p>} */}
           </span>
           <input
             type="file"
@@ -46,7 +64,6 @@ function App() {
             data-target="file-uploader"
             accept="image/*"
             // multiple="multiple"
-            ref={$fileUploaderRef}
             onChange={(event) => {
               handleFile(event);
             }}

@@ -4,7 +4,8 @@
 import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import Cropper from "cropperjs"; // npm install cropperjs
-import man from "public/man.jpg";
+import "cropperjs/dist/cropper.min.css";
+import man from "./assests/man.jpg";
 
 function App() {
   const $photo = useRef();
@@ -30,11 +31,11 @@ function App() {
     const cropper = new Cropper($photo.current, {
       zoomable: false,
       scalable: false,
-      aspectRatio: 1,
-      crop: () => {
-        const canvas = cropper.getCroppedCanvas();
-        setImgUrl(canvas.toDataURL("image/png"));
-      },
+      aspectRatio: 16 / 9,
+      //   crop: () => {
+      //     const canvas = cropper.getCroppedCanvas();
+      //     setImgUrl(canvas.toDataURL("image/png"));
+      //   },
     });
   }, []);
 

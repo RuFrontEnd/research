@@ -8,7 +8,7 @@ import "cropperjs/dist/cropper.min.css";
 
 function UploadFile() {
   const $photo = useRef();
-  const [fileContainerStyle, setFileContainerStyle] = useState({});
+  const [isShowModal, setIsShowModal] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   const [cropImgUrl, setCropImgUrl] = useState("");
   const [finalImgUrl, setFinalImgUrl] = useState("");
@@ -17,7 +17,7 @@ function UploadFile() {
     console.log(e);
     const photo = e.target.files[0];
     const reader = new FileReader();
-
+    setIsShowModal(true);
     if (photo) {
       reader.readAsDataURL(photo);
       reader.onloadend = () => {
@@ -29,16 +29,12 @@ function UploadFile() {
   const handleCrop = () => {
     setFinalImgUrl(cropImgUrl);
     setImgUrl("");
-    setFileContainerStyle({});
+    setIsShowModal(false);
   };
 
   useEffect(() => {
     // crop image logic
     if (imgUrl) {
-      setFileContainerStyle({
-        backgroundColor: "#00000099",
-        pointerEvents: "none",
-      });
       const cropper = new Cropper($photo.current, {
         zoomable: false,
         scalable: false,
@@ -55,7 +51,6 @@ function UploadFile() {
     <div>
       {/* multiple => 屬性可以一次上傳多個檔案 */}
       {/* accept => 屬性可以限制上傳檔案的類型 */}
-      {/* step1 */}
       {imgUrl && (
         <div id="image-cropper-container">
           <img src={imgUrl} id="photo" alt="Avatar Preview" ref={$photo}></img>
@@ -69,7 +64,8 @@ function UploadFile() {
           </button>
         </div>
       )}
-      <div id="fileContainer" style={fileContainerStyle}>
+      {isShowModal && <div id="modal-background"></div>}
+      <div id="fileContainer">
         <div id="fileWarp">
           <h1>React Upload File</h1>
           <span id="avatar">

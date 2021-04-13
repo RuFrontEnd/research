@@ -2,7 +2,7 @@
 // Cropper.js https://github.com/fengyuanchen/cropperjs
 // Cropper.js tutorial https://www.youtube.com/watch?v=hM9uKmy-BQQ&ab_channel=ThePolyglotDeveloper
 import { useEffect, useState, useRef } from "react";
-import "./App.css";
+import "./UploadFile.css";
 import Cropper from "cropperjs"; // npm install cropperjs
 import "cropperjs/dist/cropper.min.css";
 

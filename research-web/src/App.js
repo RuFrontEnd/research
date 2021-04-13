@@ -5,16 +5,15 @@ import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import Cropper from "cropperjs"; // npm install cropperjs
 import "cropperjs/dist/cropper.min.css";
-import man from "./assests/man.jpg";
 
 function App() {
   const $photo = useRef();
-  const [imgCropperContainerStyle, setImgCropperContainerStyle] = useState({});
-  const [backgroundColor, setBackGroundColor] = useState("");
+  const [fileContainerStyle, setFileContainerStyle] = useState({});
   const [imgUrl, setImgUrl] = useState("");
   const [cropImgUrl, setCropImgUrl] = useState("");
+  const [finalImgUrl, setFinalImgUrl] = useState("");
 
-  const handleFile = async (e) => {
+  const handleFile = (e) => {
     console.log(e);
     const photo = e.target.files[0];
     const reader = new FileReader();
@@ -27,11 +26,19 @@ function App() {
     }
   };
 
+  const handleCrop = () => {
+    setFinalImgUrl(cropImgUrl);
+    setImgUrl("");
+    setFileContainerStyle({});
+  };
+
   useEffect(() => {
     // crop image logic
-    console.log("$photo.current", $photo.current);
     if (imgUrl) {
-      setBackGroundColor("#00000099");
+      setFileContainerStyle({
+        backgroundColor: "#00000099",
+        pointerEvents: "none",
+      });
       const cropper = new Cropper($photo.current, {
         zoomable: false,
         scalable: false,
@@ -44,41 +51,37 @@ function App() {
     }
   }, [imgUrl]);
 
-  // useEffect(() => {
-  //   console.log(cropImgUrl);
-  // }, [cropImgUrl]);
-
   return (
     <div>
       {/* multiple => 屬性可以一次上傳多個檔案 */}
       {/* accept => 屬性可以限制上傳檔案的類型 */}
       {/* step1 */}
-      <div id="fileContainer" style={{ backgroundColor: backgroundColor }}>
-        {imgUrl && (
-          <div id="image-cropper-container">
-            <img
-              src={imgUrl}
-              src={man}
-              id="photo"
-              alt="Avatar Preview"
-              ref={$photo}
-            ></img>
-            <button id="confirm-btn">確認</button>
-          </div>
-        )}
+      {imgUrl && (
+        <div id="image-cropper-container">
+          <img src={imgUrl} id="photo" alt="Avatar Preview" ref={$photo}></img>
+          <button
+            id="confirm-btn"
+            onClick={() => {
+              handleCrop();
+            }}
+          >
+            確認
+          </button>
+        </div>
+      )}
+      <div id="fileContainer" style={fileContainerStyle}>
         <div id="fileWarp">
           <h1>React Upload File</h1>
           <span id="avatar">
-            {cropImgUrl && (
+            {finalImgUrl && (
               <img
-                src={imgUrl}
-                src={man}
+                src={finalImgUrl}
                 id="photo"
                 alt="Avatar Preview"
                 ref={$photo}
               ></img>
             )}
-            {!imgUrl && <p>AVATAR</p>}
+            {!finalImgUrl && <p>AVATAR</p>}
           </span>
           <input
             type="file"

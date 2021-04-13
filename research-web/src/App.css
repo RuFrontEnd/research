@@ -31,6 +31,12 @@
   transform: translate(-50%, -50%);
 }
 
+#confirm-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
 #fileWarp > h1 {
   color: #555555;
 }

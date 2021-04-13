@@ -46,7 +46,6 @@ function App() {
             // multiple="multiple"
             ref={$fileUploaderRef}
             onChange={(event) => {
-              // setAddFileTime(!addFileTime);
               handleFile(event);
             }}
           />

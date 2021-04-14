@@ -1,9 +1,9 @@
-import UploadFile from "./uploadFile/UploadFile";
+import Reveal from "./reveal/Reveal";
 
 function App() {
   return (
     <>
-      <UploadFile />
+      <Reveal />
     </>
   );
 }

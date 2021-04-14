@@ -6,7 +6,7 @@ import "./Reveal.css";
 import logo from "../assets/logo.png";
 import Zoom from "react-reveal/Zoom";
 import Fade from "react-reveal/Fade";
-import Slide from "react-reveal/Slide"
+import Slide from "react-reveal/Slide";
 
 function Reveal() {
   return (
@@ -18,10 +18,16 @@ function Reveal() {
             <img src={logo} className="App-logo" alt="logo" />
           </Zoom>
           <h1 className="App-title">02</h1>
+          <Slide bottom>
+            <div>
+              <img src={logo} className="App-logo" alt="logo" />
+            </div>
+          </Slide>
+          <h1 className="App-title">03</h1>
           <Fade left>
             <img src={logo} className="App-logo" alt="logo" />
           </Fade>
-          <h1 className="App-title">03</h1>
+          <h1 className="App-title">04</h1>
           <Fade top big cascade>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <img src={logo} className="App-logo" alt="logo" />
@@ -29,12 +35,6 @@ function Reveal() {
               <img src={logo} className="App-logo" alt="logo" />
             </div>
           </Fade>
-          <h1 className="App-title">04</h1>
-          <Slide bottom>
-            <div>
-              <img src={logo} className="App-logo" alt="logo" />
-            </div>
-          </Slide>
         </header>
       </div>
     </>

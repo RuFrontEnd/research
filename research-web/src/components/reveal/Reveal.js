@@ -2,8 +2,8 @@
 // yarn add react-reveal
 // https://www.react-reveal.com/
 
-import "./Reveal.css";
-import logo from "../assets/logo.png";
+import "components/reveal/Reveal.css";
+import logo from "assets/logo.png";
 import Zoom from "react-reveal/Zoom";
 import Fade from "react-reveal/Fade";
 import Slide from "react-reveal/Slide";

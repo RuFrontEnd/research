@@ -7,13 +7,15 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Nav}></Route>
+        <Route exact path="/">
+          <Nav style={{ padding: "20px" }} />
+        </Route>
       </Switch>
       <Switch>
-        <Route exact path="/uploadFile" component={uploadFile}></Route>
+        <Route exact path="/uploadFile" component={uploadFile} />
       </Switch>
       <Switch>
-        <Route exact path="/Reveal" component={Reveal}></Route>
+        <Route exact path="/Reveal" component={Reveal} />
       </Switch>
     </BrowserRouter>
   );

@@ -1,41 +1,26 @@
 import React, { useEffect, useState } from "react";
-
+import LinkTo from "components/LinkTo";
 import "components/Nav.css";
 import { Row, Col, Slider } from "antd";
 
-const gutters = {};
-const vgutters = {};
-const colCounts = {};
-
-[8, 16, 24, 32, 40, 48].forEach((value, i) => {
-  gutters[i] = value;
-});
-[8, 16, 24, 32, 40, 48].forEach((value, i) => {
-  vgutters[i] = value;
-});
-[2, 3, 4, 6, 8, 12].forEach((value, i) => {
-  colCounts[i] = value;
-});
-
-function Nav() {
-  const [gutterKey, setGutterKey] = useState(1);
-  const [vgutterKey, setVgutterKey] = useState(1);
-  const [colCountKey, setColCountKey] = useState(2);
-
+function Nav(props) {
+  const { style } = props;
+  const uploadFile = <LinkTo address={"uploadFile"} name={"uploadFile"} />;
+  const components = [uploadFile];
   const cols = [];
-  const colCount = colCounts[colCountKey];
-  let colCode = "";
-  for (let i = 0; i < colCount; i++) {
+
+  components.forEach((component, componentIndex) => {
     cols.push(
-      <Col key={i.toString()} span={24 / colCount}>
-        <div>Column</div>
+      <Col key={componentIndex.toString()} span={4}>
+        <div></div>
+        {component}
       </Col>
     );
-    colCode += `<Col span={${24 / colCount}} />\n`;
-  }
+  });
+
   return (
-    <div>
-      <Row gutter={[gutters[gutterKey], vgutters[vgutterKey]]}>
+    <div style={style}>
+      <Row gutter={[16, 16]}>
         {cols}
         {cols}
       </Row>

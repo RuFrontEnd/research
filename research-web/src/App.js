@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/">
-            <Nav style={{ padding: "20px" }} />
+            <Nav style={{ padding: "30px" }} />
           </Route>
         </Switch>
         <Switch>

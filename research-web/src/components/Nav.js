@@ -6,8 +6,7 @@ import { Row, Col } from "antd";
 function Nav(props) {
   const { style } = props;
   const components = [
-    <LinkTo address={"uploadFile"} name={"uploadFile"} />,
-    <LinkTo address={"uploadFile"} name={"uploadFile"} />,
+    <LinkTo address={"uploadFile"} name={"uploadFile"} color={"	#1E90FF"} />,
   ];
   const cols = [];
 

@@ -20,10 +20,7 @@ function Nav(props) {
 
   return (
     <div style={style}>
-      <Row gutter={[16, 16]}>
-        {cols}
-        {cols}
-      </Row>
+      <Row gutter={[16, 16]}>{cols}</Row>
     </div>
   );
 }

@@ -2,8 +2,10 @@ import { BrowserRouter, Switch, Route } from "react-router-dom"; // npm install 
 import Reveal from "./components/reveal/Reveal";
 import uploadFile from "./components/uploadFile/UploadFile";
 import Nav from "components/Nav";
+import { useEffect } from "react";
 
 function App() {
+
   return (
     <BrowserRouter>
       <Switch>

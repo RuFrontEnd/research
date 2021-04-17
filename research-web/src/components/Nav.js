@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import LinkTo from "components/LinkTo";
 import "components/Nav.css";
-import { Row, Col, Slider } from "antd";
+import { Row, Col } from "antd";
 
 function Nav(props) {
   const { style } = props;
@@ -12,8 +12,17 @@ function Nav(props) {
   components.forEach((component, componentIndex) => {
     cols.push(
       <Col key={componentIndex.toString()} span={4}>
-        <div></div>
-        {component}
+        <div style={{ backgroundColor: "white" }}>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              boxShadow: "10px 5px 5px #00000055",
+            }}
+          >
+            {component}
+          </div>
+        </div>
       </Col>
     );
   });

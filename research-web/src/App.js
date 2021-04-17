@@ -5,21 +5,23 @@ import Nav from "components/Nav";
 import { useEffect } from "react";
 
 function App() {
-
+  // document.body.style = "background: 	#FFE4C4;";
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/">
-          <Nav style={{ padding: "20px" }} />
-        </Route>
-      </Switch>
-      <Switch>
-        <Route exact path="/uploadFile" component={uploadFile} />
-      </Switch>
-      <Switch>
-        <Route exact path="/Reveal" component={Reveal} />
-      </Switch>
-    </BrowserRouter>
+    <div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <Nav style={{ padding: "20px" }} />
+          </Route>
+        </Switch>
+        <Switch>
+          <Route exact path="/uploadFile" component={uploadFile} />
+        </Switch>
+        <Switch>
+          <Route exact path="/Reveal" component={Reveal} />
+        </Switch>
+      </BrowserRouter>
+    </div>
   );
 }
 

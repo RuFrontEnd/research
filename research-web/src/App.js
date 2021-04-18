@@ -5,7 +5,7 @@ import Nav from "components/Nav";
 import { useEffect } from "react";
 
 function App() {
-  // document.body.style = "background: 	#FFE4C4;";
+ 
   return (
     <div>
       <BrowserRouter>

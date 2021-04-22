@@ -1,8 +1,7 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom"; // npm install react-router-dom
-import Reveal from "./components/reveal/Reveal";
 import uploadFile from "./components/uploadFile/UploadFile";
+import Reveal from "./components/reveal/Reveal";
 import Nav from "components/Nav";
-import { useEffect } from "react";
 
 function App() {
  

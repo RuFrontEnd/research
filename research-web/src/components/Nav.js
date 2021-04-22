@@ -7,6 +7,7 @@ function Nav(props) {
   const { style } = props;
   const components = [
     <LinkTo address={"uploadFile"} name={"uploadFile"} color={"	#1E90FF"} />,
+    <LinkTo address={"reveal"} name={"reveal"} color={"	#1E90FF"} />,
   ];
   const cols = [];
 

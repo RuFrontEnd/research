@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
+// let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 function Carousel(props) {
   const { activation, cards } = props;
   const [active, setActive] = useState(activation);
@@ -22,14 +24,14 @@ function Carousel(props) {
       } else if (i >= items.length) {
         index = i % items.length;
       }
+      level = active - tmp;
+      items.push(<CarouselItem key={index} id={items[index]} level={level} />);
     }
-    level = active - tmp;
-    items.push(<CarouselItem key={index} id={items[index]} level={level} />);
     return items;
   };
 
   useEffect(() => {
-    console.log();
+    console.log(generateItems());
   }, []);
 
   return (
@@ -38,7 +40,12 @@ function Carousel(props) {
         <FontAwesomeIcon icon={faArrowLeft} />
       </div>
       {/* <ReactCSSTransitionGroup transitionName={this.state.direction}> */}
-      {generateItems()}
+      {/* {generateItems()} */}
+      <CarouselItem key={1} id={1} level={0} />
+      <CarouselItem key={2} id={2} level={1} />
+      <CarouselItem key={3} id={3} level={2} />
+      <CarouselItem key={4} id={4} level={-1} />
+      <CarouselItem key={4} id={5} level={-2} />
       {/* </ReactCSSTransitionGroup> */}
       <div className="arrow arrow-right">
         <i className="fi-arrow-right">

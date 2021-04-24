@@ -2,7 +2,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom"; // npm install 
 import uploadFile from "./components/uploadFile/UploadFile";
 import Reveal from "./components/reveal/Reveal";
 import Nav from "components/Nav";
-import Carousel from 'components/Carousel/Carousel'
+import Carousel from 'components/carousel/Carousel'
 
 function App() {
  

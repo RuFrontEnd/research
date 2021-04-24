@@ -2,9 +2,9 @@ import { BrowserRouter, Switch, Route } from "react-router-dom"; // npm install 
 import uploadFile from "./components/uploadFile/UploadFile";
 import Reveal from "./components/reveal/Reveal";
 import Nav from "components/Nav";
+import Carousel from "components/carousel/CarouselModule";
 
 function App() {
- 
   return (
     <div>
       <BrowserRouter>
@@ -14,10 +14,13 @@ function App() {
           </Route>
         </Switch>
         <Switch>
-          <Route exact path="/uploadFile" component={uploadFile} />
+          <Route exact path="/carousel" component={Carousel} />
         </Switch>
         <Switch>
-          <Route exact path="/Reveal" component={Reveal} />
+          <Route exact path="/reveal" component={Reveal} />
+        </Switch>
+        <Switch>
+          <Route exact path="/uploadFile" component={uploadFile} />
         </Switch>
       </BrowserRouter>
     </div>

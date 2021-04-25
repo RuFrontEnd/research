@@ -8,6 +8,7 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 // let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 function Carousel(props) {
+  console.log("props", props);
   const { activation, cards } = props;
   const [active, setActive] = useState(activation);
   const [items, setItems] = useState(cards);
@@ -31,7 +32,7 @@ function Carousel(props) {
   };
 
   useEffect(() => {
-    console.log(generateItems());
+    // console.log(generateItems());
   }, []);
 
   return (

@@ -13,6 +13,9 @@ function Carousel(props) {
   const [items, setItems] = useState(cards);
   const [direction, setDirection] = useState("");
 
+  console.log("active", active);
+  console.log("items", items);
+
   const generateItems = () => {
     let components = [];
     let level;
@@ -24,28 +27,32 @@ function Carousel(props) {
       } else if (i >= items.length) {
         index = i % items.length;
       }
-      level = active - i;
+      console.log("i", i);
+      console.log("active", active);
+      level = active - i; // level 永遠是 -2 -1 0 1 2
+      console.log("level", level);
       components.push(
-        <CarouselItem key={index} id={items[index]} level={level} />
+        <CarouselItem key={items[index]} id={items[index]} level={level} />
       );
     }
+    console.log("components", components);
     return components;
   };
 
   const moveLeft = () => {
-    let newActive = active;
-    newActive--;
-    setActive(newActive < 0 ? items.length - 1 : newActive);
+    let _active = active;
+    _active--;
+    setActive(_active < 0 ? items.length - 1 : _active);
     setDirection("left");
   };
 
   const moveRight = () => {
-    let newActive = active;
-    newActive++;
-    setActive(newActive < 0 ? items.length - 1 : newActive);
+    let _active = active;
+    _active++;
+    setActive(_active < 0 ? items.length - 1 : _active);
     setDirection("right");
   };
-  
+
   return (
     <div id="carousel" className="noselect">
       <div

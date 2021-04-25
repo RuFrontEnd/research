@@ -1,8 +1,8 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom"; // npm install react-router-dom
-import uploadFile from "./components/uploadFile/UploadFile";
-import Reveal from "./components/reveal/Reveal";
+import UploadFile from "components/uploadFile/UploadFile";
+import Reveal from "components/reveal/Reveal";
+import Carousel from "components/carousel/Carousel ";
 import Nav from "components/Nav";
-import Carousel from "components/carousel/CarouselModule";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           <Route exact path="/reveal" component={Reveal} />
         </Switch>
         <Switch>
-          <Route exact path="/uploadFile" component={uploadFile} />
+          <Route exact path="/uploadFile" component={UploadFile} />
         </Switch>
       </BrowserRouter>
     </div>

@@ -3,7 +3,8 @@
   width: 20%;
   height: 100%;
   border: solid 5px orange;
-  // overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
 }
 
 #carouselB-slider {
@@ -13,22 +14,12 @@
   border: solid 3px green;
   display: flex;
   flex-shrink: 0;
-  transition: 0.5s;
+  transition: 0.3s;
 }
 
 .carouselB-slider-next {
   transform: translate(0%);
-  transition: 0.5s;
-}
-
-.carouselB-slider-next-active {
-  transform: translate(-20%);
-  transition: 0.5s;
-}
-
-.carouselB-slider-next-deActive {
-  transform: translate(0%);
-  transition: none;
+  transition: 0.3s;
 }
 
 #carouselB-slider > li {

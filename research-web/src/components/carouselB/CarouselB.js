@@ -3,9 +3,12 @@ import "components/carouselB/CarouselB.scss";
 import { CSSTransitionGroup } from "react-transition-group"; // npm install react-transition-group@1.x --save / yarn add react-transition-group@1.x
 
 function CarouselB(props) {
-  const [sliderClassName, setSlideClassName] = useState(
-    "carouselB-slider-next"
-  );
+  // const [sliderClassName, setSlideClassName] = useState(
+  //   "carouselB-slider-next"
+  // );
+  const [direction, setDirection] = useState(1);
+  const $slider = useRef();
+  const $carousel = useRef();
   const [items, setItems] = useState([
     "content 1",
     "content 2",
@@ -13,59 +16,56 @@ function CarouselB(props) {
     "content 4",
     "content 5",
   ]);
-  // const items = [
-  //   <li id="li-01">1</li>,
-  //   <li id="li-02">2</li>,
-  //   <li id="li-03">3</li>,
-  //   <li id="li-04">4</li>,
-  //   <li id="li-05">5</li>,
-  // ];
+
   const [index, setIndex] = useState(1);
+  const _items = [...items]; // 深拷貝(淺拷貝會影響到原陣列)
 
-  const handleLeft = () => {
-    setSlideClassName("");
+  const handlePrev = () => {
+    $carousel.current.style.justifyContent = "flex-end";
+    $slider.current.style.transform = "translate(20%)";
+    if (direction === -1) {
+      const popItem = _items.shift();
+      _items.push(popItem);
+    }
+    setDirection(-1);
   };
 
-  const handleRight = () => {
-    changeItem();
-    // setSlideClassName("carouselB-slider-next-active");
+  const handleNext = () => {
+    $carousel.current.style.justifyContent = "flex-start";
+    $slider.current.style.transform = "translate(-20%)";
+    if (direction === 1) {
+      const shiftItem = _items.shift();
+      _items.push(shiftItem);
+    }
+    setTimeout(() => {
+      setDirection(1);
+    }, 5);
   };
 
-  // const renderItem = (index) => {
-  //   let renderItem = [];
-  //   console.log("index", index);
-
-  //   for (let i = index - 1; i < index + 2; i++) {
-  //     renderItem.push(items[i]);
-  //   }
-  //   return renderItem;
-  // };
-
-  const changeItem = () => {
-    // const _items = [...items];
-    const _items = items;
-    console.log("_items", _items);
-    console.log("items", items);
-    const shiftItem = _items.shift();
-    // console.log("shiftItem", shiftItem);
-    _items.push(shiftItem);
-    setItems(_items);
-
-    // setSlideClassName("carouselB-slider-next-deActive");
-    // setTimeout(() => {
-    //   setSlideClassName("carouselB-slider-next");
-    // }, 3 * 1000);
+  const shiftItem = () => {
+    if (direction === 1) {
+      console.log(1);
+      setItems(_items);
+      $slider.current.style.transition = "none";
+      $slider.current.style.transform = "translate(0%)";
+      setTimeout(() => {
+        $slider.current.style.transition = "0.3s";
+      }, 4);
+    }
+    if (direction === -1) {
+      console.log(-1);
+      setItems(_items);
+      $slider.current.style.transition = "none";
+      $slider.current.style.transform = "translate(0%)";
+      setTimeout(() => {
+        $slider.current.style.transition = "0.3s";
+      }, 4);
+    }
   };
 
   useEffect(() => {
     console.log(items);
   }, [items]);
-
-  // useEffect(() => {
-  //   if (sliderClassName === "carouselB-slider-next-active") {
-  //     changeItem();
-  //   }
-  // }, [sliderClassName]);
 
   return (
     <section
@@ -79,11 +79,12 @@ function CarouselB(props) {
     >
       <div style={{ width: "1170px", height: "100px" }}>
         {/* carousel */}
-        <div id="carouselB">
+        <div id="carouselB" ref={$carousel}>
           <ul
             id="carouselB-slider"
-            className={sliderClassName}
-            // onTransitionEnd={changeItem}
+            // className={sliderClassName}
+            onTransitionEnd={shiftItem}
+            ref={$slider}
           >
             {items.map((item) => (
               <>
@@ -94,14 +95,14 @@ function CarouselB(props) {
           <div
             id="carouselB-prev"
             className="carouselB-btn"
-            onClick={handleLeft}
+            onClick={handlePrev}
           >
             prev
           </div>
           <div
             id="carouselB-next"
             className="carouselB-btn"
-            onClick={handleRight}
+            onClick={handleNext}
           >
             next
           </div>

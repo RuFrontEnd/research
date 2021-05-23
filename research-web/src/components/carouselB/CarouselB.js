@@ -18,34 +18,27 @@ function CarouselB(props) {
   ]);
 
   const [index, setIndex] = useState(1);
-  const _items = [...items]; // 深拷貝(淺拷貝會影響到原陣列)
 
   const handlePrev = () => {
+    setDirection(-1);
     $carousel.current.style.justifyContent = "flex-end";
     $slider.current.style.transform = "translate(20%)";
-    if (direction === -1) {
-      const popItem = _items.shift();
-      _items.push(popItem);
-    }
-    setDirection(-1);
   };
 
   const handleNext = () => {
+    setDirection(1);
     $carousel.current.style.justifyContent = "flex-start";
     $slider.current.style.transform = "translate(-20%)";
-    if (direction === 1) {
-      const shiftItem = _items.shift();
-      _items.push(shiftItem);
-    }
-    setTimeout(() => {
-      setDirection(1);
-    }, 5);
   };
 
   const shiftItem = () => {
+    const _items = [...items]; // 深拷貝(淺拷貝會影響到原陣列)
     if (direction === 1) {
       console.log(1);
+      const shiftItem = _items.shift();
+      _items.push(shiftItem);
       setItems(_items);
+      console.log(_items);
       $slider.current.style.transition = "none";
       $slider.current.style.transform = "translate(0%)";
       setTimeout(() => {
@@ -54,6 +47,9 @@ function CarouselB(props) {
     }
     if (direction === -1) {
       console.log(-1);
+      const popItem = _items.shift();
+      _items.push(popItem);
+      console.log(_items);
       setItems(_items);
       $slider.current.style.transition = "none";
       $slider.current.style.transform = "translate(0%)";
@@ -66,6 +62,12 @@ function CarouselB(props) {
   useEffect(() => {
     console.log(items);
   }, [items]);
+
+  // useEffect(() => {
+  //   if (sliderClassName === "carouselB-slider-next-active") {
+  //     changeItem();
+  //   }
+  // }, [sliderClassName]);
 
   return (
     <section

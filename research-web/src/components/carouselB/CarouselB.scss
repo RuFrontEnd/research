@@ -9,7 +9,7 @@
   outline: solid 5px orange;
   display: flex;
   justify-content: flex-start;
-  // overflow: hidden;
+  overflow: hidden;
 }
 
 #carouselB-slider {
@@ -19,7 +19,6 @@
   outline: solid 3px green;
   display: flex;
   flex-shrink: 0;
-  // transition: "none";
   top: 0px;
 }
 

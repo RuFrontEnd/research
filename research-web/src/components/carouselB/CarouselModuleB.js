@@ -21,6 +21,13 @@ function CarouselModuleB(props) {
   const [btnSize, setBtnSize] = useState(buttonSize);
 
   window.addEventListener("resize", () => {
+    // 優化效能
+    let count = 0;
+    count++;
+    if (count % 2 === 0) {
+      return;
+    }
+    // 判斷響應式width
     if (window.innerWidth >= breakpoints.xxl.point) {
       setCarouselBWidth(breakpoints.xxl.width);
     }

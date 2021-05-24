@@ -1,11 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import "components/carouselB/CarouselB.scss";
+import Radium from "radium"; // 可以使inline-style有media-qurey功能
 
 function CarouselB(props) {
   const [direction, setDirection] = useState(-1);
   const $slider = useRef();
   const $carousel = useRef();
   const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
+  //  const [items, setItems] = useState(["5", "6", "7", "1", "2", "3", "4"]);
+
+  const [carouselBWidth, setCarouselBWidth] = useState(500);
+  const [carouselBSliderWidth, setCarouselBSliderWidth] = useState(
+    ((carouselBWidth / items.length) * items.length) / 3
+  );
+
+  // document.documentElement.style.setProperty('--my-custom-color', '100px');
+
+  const carouselBSliderStyle = {
+    width: `${carouselBSliderWidth}%`,
+    "@media (max-width: 1800px)": {
+      // width: "20%",
+    },
+  };
 
   const handlePrev = () => {
     setDirection(1);
@@ -53,12 +69,13 @@ function CarouselB(props) {
       }}
     >
       {/* carousel */}
-      <div id="carouselB-container">
+      <div id="carouselB-container" style={{ width: `${carouselBWidth}px` }}>
         <div id="carouselB-wrap" ref={$carousel}>
           <ul
             id="carouselB-slider"
             // className={sliderClassName}
-            onTransitionEnd={shiftItem}
+            // onTransitionEnd={shiftItem}
+            style={carouselBSliderStyle}
             ref={$slider}
           >
             {items.map((item) => (
@@ -88,4 +105,4 @@ function CarouselB(props) {
   );
 }
 
-export default CarouselB;
+export default Radium(CarouselB);

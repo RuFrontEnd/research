@@ -3,10 +3,13 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { StyleRoot } from "radium"; // 可以使inline-style有media-qurey功能
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <StyleRoot>
+      <App />
+    </StyleRoot>
   </React.StrictMode>,
   document.getElementById("root")
 );

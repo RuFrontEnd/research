@@ -1,6 +1,16 @@
+:root {
+  --my-custom-color: brown;
+}
+
+$importedColor: var(--my-custom-color);
+
+body {
+  background-color: $importedColor;
+}
+
 #carouselB-container {
-  width: 1170px;
-  height: 600px;
+  // width: 500px;
+  height: 500px;
 }
 
 #carouselB-wrap {
@@ -14,18 +24,21 @@
 }
 
 #carouselB-slider {
+  position: absolute;
   margin-bottom: 0px;
   height: 100%;
-  width: 166.75%;
+  // width: 166.6%;
   outline: solid 3px green;
   display: flex;
   flex-shrink: 0;
   transition: 0.3s;
-  transform: translate(-20%);
+  top: 0px;
+  // left: -166.6px;
+  // transform: translate(-166.6px);
 }
 
 #carouselB-slider > li {
-  flex-basis: 20%;
+  flex-basis: 100%;
   font-size: 30px;
   outline: solid 1px rgb(174, 189, 255);
   display: flex;

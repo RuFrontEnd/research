@@ -7,20 +7,33 @@ function CarouselB(props) {
   const $slider = useRef();
   const $carousel = useRef();
   const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
-  //  const [items, setItems] = useState(["5", "6", "7", "1", "2", "3", "4"]);
+  // const [items, setItems] = useState(["5", "6", "7", "1", "2", "3", "4"]);
+  // const [items, setItems] = useState([
+  //   "6",
+  //   "7",
+  //   "8",
+  //   "9",
+  //   "1",
+  //   "2",
+  //   "3",
+  //   "4",
+  //   "5",
+  // ]);
 
   const [carouselBWidth, setCarouselBWidth] = useState(500);
   const [carouselBSliderWidth, setCarouselBSliderWidth] = useState(
-    ((carouselBWidth / items.length) * items.length) / 3
+    (carouselBWidth / 3) * items.length
   );
-
-  // document.documentElement.style.setProperty('--my-custom-color', '100px');
-
+  const [carouselBSliderLeft, setCarouselBSliderLeft] = useState(
+    (carouselBWidth / 3) * ((items.length - 3) / 2)
+  );
+  const carouselBContainerStyle = {
+    width: `${carouselBWidth}px`,
+  };
   const carouselBSliderStyle = {
-    width: `${carouselBSliderWidth}%`,
-    "@media (max-width: 1800px)": {
-      // width: "20%",
-    },
+    width: `${carouselBSliderWidth}px`,
+    left: `-${carouselBSliderLeft}px`,
+    "@media (max-width: 1800px)": {},
   };
 
   const handlePrev = () => {
@@ -69,7 +82,7 @@ function CarouselB(props) {
       }}
     >
       {/* carousel */}
-      <div id="carouselB-container" style={{ width: `${carouselBWidth}px` }}>
+      <div id="carouselB-container" style={carouselBContainerStyle}>
         <div id="carouselB-wrap" ref={$carousel}>
           <ul
             id="carouselB-slider"
@@ -78,9 +91,9 @@ function CarouselB(props) {
             style={carouselBSliderStyle}
             ref={$slider}
           >
-            {items.map((item) => (
+            {items.map((item, index) => (
               <>
-                <li>{item}</li>
+                <li key={index}>{item}</li>
               </>
             ))}
           </ul>

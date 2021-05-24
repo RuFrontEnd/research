@@ -1,91 +1,46 @@
 import React, { useState, useEffect, useRef } from "react";
 import "components/carouselB/CarouselB.scss";
-import { CSSTransitionGroup } from "react-transition-group"; // npm install react-transition-group@1.x --save / yarn add react-transition-group@1.x
 
 function CarouselB(props) {
-  // const [sliderClassName, setSlideClassName] = useState(
-  //   "carouselB-slider-next"
-  // );
   const [direction, setDirection] = useState(-1);
   const $slider = useRef();
   const $carousel = useRef();
-  const [items, setItems] = useState([
-    "content 1",
-    "content 2",
-    "content 3",
-    "content 4",
-    "content 5",
-  ]);
+  const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
 
   const handlePrev = () => {
-    if (direction === -1) {
-      const _items = [...items]; // 深拷貝(淺拷貝會影響到原陣列)
-      const shiftItem = _items.shift();
-      _items.push(shiftItem);
-      setItems(_items);
-    }
     setDirection(1);
-    $slider.current.style.transform = "translate(20%)";
-    $carousel.current.style.justifyContent = "flex-end";
+    $slider.current.style.transform = "translate(0%)";
   };
 
   const handleNext = () => {
-    if (direction === 1) {
-      const _items = [...items]; // 深拷貝(淺拷貝會影響到原陣列)
-      const popItem = _items.pop();
-      console.log("shiftItem", shiftItem);
-      console.log("_items", _items);
-      _items.unshift(popItem);
-      console.log("_items", _items);
-      setItems(_items);
-    }
     setDirection(-1);
-    $carousel.current.style.justifyContent = "flex-start";
-    $slider.current.style.transform = "translate(-20%)";
+    $slider.current.style.transform = "translate(-40%)";
   };
 
   const shiftItem = () => {
     const _items = [...items]; // 深拷貝(淺拷貝會影響到原陣列)
-
     if (direction === -1) {
       console.log(-1);
       const shiftItem = _items.shift();
       _items.push(shiftItem);
       setItems(_items);
-      $slider.current.style.transition = "none";
-      $slider.current.style.transform = "translate(0%)";
-      setTimeout(() => {
-        $slider.current.style.transition = "0.3s";
-      }, 4);
     }
     if (direction === 1) {
       console.log(1);
       const popItem = _items.pop();
-      // console.log(popItem);
       _items.unshift(popItem);
       setItems(_items);
-      $slider.current.style.transition = "none";
-      $slider.current.style.transform = "translate(0%)";
-      setTimeout(() => {
-        $slider.current.style.transition = "0.3s";
-      }, 4);
     }
-    // $slider.current.style.transition = "none";
-    // $slider.current.style.transform = "translate(0%)";
-    // setTimeout(() => {
-    //   $slider.current.style.transition = "0.3s";
-    // }, 4);
+    $slider.current.style.transition = "none";
+    $slider.current.style.transform = "translate(-20%)";
+    setTimeout(() => {
+      $slider.current.style.transition = "0.3s";
+    }, 4);
   };
 
   useEffect(() => {
     console.log(items);
   }, [items]);
-
-  // useEffect(() => {
-  //   if (sliderClassName === "carouselB-slider-next-active") {
-  //     changeItem();
-  //   }
-  // }, [sliderClassName]);
 
   return (
     <section
@@ -97,9 +52,9 @@ function CarouselB(props) {
         alignItems: "center",
       }}
     >
-      <div style={{ width: "1170px", height: "100px" }}>
-        {/* carousel */}
-        <div id="carouselB" ref={$carousel}>
+      {/* carousel */}
+      <div id="carouselB-container">
+        <div id="carouselB-wrap" ref={$carousel}>
           <ul
             id="carouselB-slider"
             // className={sliderClassName}
@@ -127,9 +82,8 @@ function CarouselB(props) {
             next
           </div>
         </div>
-
-        {/* carousel */}
       </div>
+      {/* carousel */}
     </section>
   );
 }

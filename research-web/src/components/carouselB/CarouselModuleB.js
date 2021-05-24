@@ -4,16 +4,15 @@ import Radium from "radium"; // 可以使inline-style有media-qurey功能
 import { ReactComponent as Arrow } from "assets/arrow.svg";
 
 function CarouselModuleB(props) {
-  const { CarouselItems, width, buttonSize } = props;
+  const { CarouselItems, width, height, buttonSize, breakpoints } = props;
   const $slider = useRef();
   const $carousel = useRef();
 
   const [direction, setDirection] = useState(-1);
   const [items, setItems] = useState(CarouselItems);
   const [carouselBWidth, setCarouselBWidth] = useState(width);
-  const [carouselItemWidth, setCarouselItemWidth] = useState(
-    carouselBWidth / 3
-  );
+  const [carouselBHeight, setCarouselBHeight] = useState(height);
+  const carouselItemWidth = carouselBWidth / 3;
   const [carouselBSliderWidth, setCarouselBSliderWidth] = useState(
     carouselItemWidth * items.length
   );
@@ -22,12 +21,31 @@ function CarouselModuleB(props) {
   );
   const [btnSize, setBtnSize] = useState(buttonSize);
 
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 1200) {
+      setCarouselBWidth(1170);
+    }
+    if (window.innerWidth < 1200) {
+      setCarouselBWidth(960);
+    }
+  });
+
+  useEffect(() => {
+    if (carouselBWidth) {
+      console.log("a");
+      setCarouselBSliderWidth(carouselItemWidth * items.length);
+      setCarouselBSliderLeft(carouselItemWidth * ((items.length - 3) / 2));
+      // $slider.current.style.transition = "0.3s";
+    }
+  }, [carouselBWidth]);
+
   // inline style
   const carouselBContainerStyle = {
     width: `${carouselBWidth}px`,
-    "@media (max-width: 1200px)": {
-      width: "960px",
-    },
+    height: `${carouselBHeight}px`,
+    // "@media (max-width: 1200px)": {
+    //   width: A,
+    // },
   };
   const carouselBSliderStyle = {
     width: `${carouselBSliderWidth}px`,
@@ -36,11 +54,13 @@ function CarouselModuleB(props) {
 
   const handlePrev = () => {
     setDirection(1);
+    $slider.current.style.transition = "0.3s";
     $slider.current.style.transform = `translate(${carouselItemWidth}px)`;
   };
 
   const handleNext = () => {
     setDirection(-1);
+    $slider.current.style.transition = "0.3s";
     $slider.current.style.transform = `translate(-${carouselItemWidth}px)`;
   };
 
@@ -60,9 +80,9 @@ function CarouselModuleB(props) {
     }
     $slider.current.style.transition = "none";
     $slider.current.style.transform = `translate(0px)`;
-    setTimeout(() => {
-      $slider.current.style.transition = "0.3s";
-    }, 4);
+    // setTimeout(() => {
+    //   $slider.current.style.transition = "0.3s";
+    // }, 4);
   };
 
   useEffect(() => {

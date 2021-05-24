@@ -25,11 +25,13 @@ function CarouselModuleB(props) {
   // inline style
   const carouselBContainerStyle = {
     width: `${carouselBWidth}px`,
+    "@media (max-width: 1200px)": {
+      width: "960px",
+    },
   };
   const carouselBSliderStyle = {
     width: `${carouselBSliderWidth}px`,
     left: `-${carouselBSliderLeft}px`,
-    "@media (max-width: 1800px)": {},
   };
 
   const handlePrev = () => {

@@ -1,13 +1,3 @@
-:root {
-  --my-custom-color: brown;
-}
-
-$importedColor: var(--my-custom-color);
-
-body {
-  background-color: $importedColor;
-}
-
 #carouselB-container {
   // width: 500px;
   height: 500px;
@@ -20,7 +10,7 @@ body {
   outline: solid 5px orange;
   display: flex;
   justify-content: flex-start;
-  // overflow: hidden;
+  overflow: hidden;
 }
 
 #carouselB-slider {

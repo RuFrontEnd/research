@@ -6,7 +6,8 @@ function CarouselB(props) {
   const [direction, setDirection] = useState(-1);
   const $slider = useRef();
   const $carousel = useRef();
-  const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
+  const [items, setItems] = useState(["3", "1", "2"]);
+  // const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
   // const [items, setItems] = useState(["5", "6", "7", "1", "2", "3", "4"]);
   // const [items, setItems] = useState([
   //   "6",
@@ -20,12 +21,15 @@ function CarouselB(props) {
   //   "5",
   // ]);
 
-  const [carouselBWidth, setCarouselBWidth] = useState(500);
+  const [carouselBWidth, setCarouselBWidth] = useState(700);
+  const [carouselItemWidth, setCarouselItemWidth] = useState(
+    carouselBWidth / 3
+  );
   const [carouselBSliderWidth, setCarouselBSliderWidth] = useState(
-    (carouselBWidth / 3) * items.length
+    carouselItemWidth * items.length
   );
   const [carouselBSliderLeft, setCarouselBSliderLeft] = useState(
-    (carouselBWidth / 3) * ((items.length - 3) / 2)
+    carouselItemWidth * ((items.length - 3) / 2)
   );
   const carouselBContainerStyle = {
     width: `${carouselBWidth}px`,
@@ -38,12 +42,12 @@ function CarouselB(props) {
 
   const handlePrev = () => {
     setDirection(1);
-    $slider.current.style.transform = "translate(0%)";
+    $slider.current.style.transform = `translate(${carouselItemWidth}px)`;
   };
 
   const handleNext = () => {
     setDirection(-1);
-    $slider.current.style.transform = "translate(-40%)";
+    $slider.current.style.transform = `translate(-${carouselItemWidth}px)`;
   };
 
   const shiftItem = () => {
@@ -61,11 +65,15 @@ function CarouselB(props) {
       setItems(_items);
     }
     $slider.current.style.transition = "none";
-    $slider.current.style.transform = "translate(-20%)";
+    $slider.current.style.transform = `translate(0px)`;
     setTimeout(() => {
       $slider.current.style.transition = "0.3s";
     }, 4);
   };
+
+  useEffect(() => {
+    console.log(carouselItemWidth);
+  }, [carouselItemWidth]);
 
   useEffect(() => {
     console.log(items);
@@ -87,7 +95,7 @@ function CarouselB(props) {
           <ul
             id="carouselB-slider"
             // className={sliderClassName}
-            // onTransitionEnd={shiftItem}
+            onTransitionEnd={shiftItem}
             style={carouselBSliderStyle}
             ref={$slider}
           >

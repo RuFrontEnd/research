@@ -24,7 +24,7 @@ function CarouselModuleB(props) {
     // 優化效能
     let count = 0;
     count++;
-    if (count % 2 === 0) {
+    if (count % 3 === 0) {
       return;
     }
     // 判斷響應式width

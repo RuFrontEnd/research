@@ -41,9 +41,9 @@ function CarouselB(props, children) {
           width={1170}
           buttonSize={100}
           breakpoints={{
-            s: { point: 576, width: 1170 },
-            m: { point: 768, width: 1170 },
-            l: { point: 1024, width: 1170 },
+            s: { point: 576, width: 400 },
+            m: { point: 768, width: 800 },
+            l: { point: 1024, width: 960 },
             xl: { point: 1200, width: 1170 },
             xxl: { point: 1440, width: 1170 },
           }}

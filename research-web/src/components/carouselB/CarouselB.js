@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import "components/carouselB/CarouselB.scss";
 import Radium from "radium"; // 可以使inline-style有media-qurey功能
+import { ReactComponent as ArrowLeft } from "assets/arrowLeft.svg";
+import { ReactComponent as ArrowRight } from "assets/arrowRight.svg";
 
 function CarouselB(props) {
   const [direction, setDirection] = useState(-1);
   const $slider = useRef();
   const $carousel = useRef();
-  const [items, setItems] = useState(["3", "1", "2"]);
-  // const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
+  // const [items, setItems] = useState(["3", "1", "2"]);
+  const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
   // const [items, setItems] = useState(["5", "6", "7", "1", "2", "3", "4"]);
   // const [items, setItems] = useState([
   //   "6",
@@ -21,7 +23,7 @@ function CarouselB(props) {
   //   "5",
   // ]);
 
-  const [carouselBWidth, setCarouselBWidth] = useState(700);
+  const [carouselBWidth, setCarouselBWidth] = useState(1170);
   const [carouselItemWidth, setCarouselItemWidth] = useState(
     carouselBWidth / 3
   );
@@ -109,15 +111,27 @@ function CarouselB(props) {
             id="carouselB-prev"
             className="carouselB-btn"
             onClick={handlePrev}
+            style={{ top: "calc(50% - 50px)" }}
           >
-            prev
+            <ArrowLeft
+              style={{
+                width: "100px",
+                height: "100px",
+              }}
+            ></ArrowLeft>
           </div>
           <div
             id="carouselB-next"
             className="carouselB-btn"
             onClick={handleNext}
+            style={{ top: "calc(50% - 50px)" }}
           >
-            next
+            <ArrowRight
+              style={{
+                width: "100px",
+                height: "100px",
+              }}
+            ></ArrowRight>
           </div>
         </div>
       </div>

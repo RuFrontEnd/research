@@ -1,29 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import "components/carouselB/CarouselB.scss";
 import Radium from "radium"; // 可以使inline-style有media-qurey功能
-import { ReactComponent as ArrowLeft } from "assets/arrowLeft.svg";
-import { ReactComponent as ArrowRight } from "assets/arrowRight.svg";
+import { ReactComponent as Arrow } from "assets/arrow.svg";
 
 function CarouselModuleB(props) {
-  const [direction, setDirection] = useState(-1);
+  const { CarouselItems, width, buttonSize } = props;
   const $slider = useRef();
   const $carousel = useRef();
-  // const [items, setItems] = useState(["3", "1", "2"]);
-  const [items, setItems] = useState(["4", "5", "1", "2", "3"]);
-  // const [items, setItems] = useState(["5", "6", "7", "1", "2", "3", "4"]);
-  // const [items, setItems] = useState([
-  //   "6",
-  //   "7",
-  //   "8",
-  //   "9",
-  //   "1",
-  //   "2",
-  //   "3",
-  //   "4",
-  //   "5",
-  // ]);
 
-  const [carouselBWidth, setCarouselBWidth] = useState(1170);
+  const [direction, setDirection] = useState(-1);
+  const [items, setItems] = useState(CarouselItems);
+  const [carouselBWidth, setCarouselBWidth] = useState(width);
   const [carouselItemWidth, setCarouselItemWidth] = useState(
     carouselBWidth / 3
   );
@@ -33,6 +20,9 @@ function CarouselModuleB(props) {
   const [carouselBSliderLeft, setCarouselBSliderLeft] = useState(
     carouselItemWidth * ((items.length - 3) / 2)
   );
+  const [btnSize, setBtnSize] = useState(buttonSize);
+
+  // inline style
   const carouselBContainerStyle = {
     width: `${carouselBWidth}px`,
   };
@@ -82,15 +72,7 @@ function CarouselModuleB(props) {
   }, [items]);
 
   return (
-    <section
-      style={{
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <>
       {/* carousel */}
       <div id="carouselB-container" style={carouselBContainerStyle}>
         <div id="carouselB-wrap" ref={$carousel}>
@@ -111,32 +93,33 @@ function CarouselModuleB(props) {
             id="carouselB-prev"
             className="carouselB-btn"
             onClick={handlePrev}
-            style={{ top: "calc(50% - 50px)" }}
+            style={{ top: `calc(50% - ${btnSize / 2}px)` }}
           >
-            <ArrowLeft
+            <Arrow
               style={{
-                width: "100px",
-                height: "100px",
+                width: btnSize,
+                height: btnSize,
               }}
-            ></ArrowLeft>
+            ></Arrow>
           </div>
           <div
             id="carouselB-next"
             className="carouselB-btn"
             onClick={handleNext}
-            style={{ top: "calc(50% - 50px)" }}
+            style={{ top: `calc(50% - ${btnSize / 2}px)` }}
           >
-            <ArrowRight
+            <Arrow
               style={{
-                width: "100px",
-                height: "100px",
+                width: btnSize,
+                height: btnSize,
+                transform: "scaleX(-1)",
               }}
-            ></ArrowRight>
+            ></Arrow>
           </div>
         </div>
       </div>
       {/* carousel */}
-    </section>
+    </>
   );
 }
 

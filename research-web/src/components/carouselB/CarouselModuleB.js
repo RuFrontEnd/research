@@ -4,7 +4,16 @@ import Radium from "radium"; // 可以使inline-style有media-qurey功能
 import { ReactComponent as Arrow } from "assets/arrow.svg";
 
 function CarouselModuleB(props) {
-  const { CarouselItems, width, height, buttonSize, breakpoints } = props;
+  const {
+    id,
+    className,
+    style,
+    CarouselItems,
+    width,
+    height,
+    buttonSize,
+    breakpoints,
+  } = props;
   const $slider = useRef();
   const $carousel = useRef();
 
@@ -114,51 +123,51 @@ function CarouselModuleB(props) {
 
   return (
     <>
-      {/* carousel */}
-      <div id="carouselB-container" style={carouselBContainerStyle}>
-        <div id="carouselB-wrap" ref={$carousel}>
-          <ul
-            id="carouselB-slider"
-            onTransitionEnd={shiftItem}
-            style={carouselBSliderStyle}
-            ref={$slider}
-          >
-            {items.map((item, index) => (
-              <>
-                <li key={index}>{item}</li>
-              </>
-            ))}
-          </ul>
-          <div
-            id="carouselB-prev"
-            className="carouselB-btn"
-            onClick={handlePrev}
-            style={{ top: `calc(50% - ${btnSize / 2}px)` }}
-          >
-            <Arrow
-              style={{
-                width: btnSize,
-                height: btnSize,
-              }}
-            ></Arrow>
-          </div>
-          <div
-            id="carouselB-next"
-            className="carouselB-btn"
-            onClick={handleNext}
-            style={{ top: `calc(50% - ${btnSize / 2}px)` }}
-          >
-            <Arrow
-              style={{
-                width: btnSize,
-                height: btnSize,
-                transform: "scaleX(-1)",
-              }}
-            ></Arrow>
+      <section id={id} className={className} style={style}>
+        <div id="carouselB-container" style={carouselBContainerStyle}>
+          <div id="carouselB-wrap" ref={$carousel}>
+            <ul
+              id="carouselB-slider"
+              onTransitionEnd={shiftItem}
+              style={carouselBSliderStyle}
+              ref={$slider}
+            >
+              {items.map((item, index) => (
+                <>
+                  <li key={index}>{item}</li>
+                </>
+              ))}
+            </ul>
+            <div
+              id="carouselB-prev"
+              className="carouselB-btn"
+              onClick={handlePrev}
+              style={{ top: `calc(50% - ${btnSize / 2}px)` }}
+            >
+              <Arrow
+                style={{
+                  width: btnSize,
+                  height: btnSize,
+                }}
+              ></Arrow>
+            </div>
+            <div
+              id="carouselB-next"
+              className="carouselB-btn"
+              onClick={handleNext}
+              style={{ top: `calc(50% - ${btnSize / 2}px)` }}
+            >
+              <Arrow
+                style={{
+                  width: btnSize,
+                  height: btnSize,
+                  transform: "scaleX(-1)",
+                }}
+              ></Arrow>
+            </div>
           </div>
         </div>
-      </div>
-      {/* carousel */}
+      </section>
     </>
   );
 }

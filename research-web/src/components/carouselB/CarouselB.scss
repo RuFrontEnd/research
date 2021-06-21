@@ -1,0 +1,45 @@
+#carouselB-container {
+  height: 500px;
+}
+
+#carouselB-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  outline: solid 5px orange;
+  display: flex;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+#carouselB-slider {
+  position: absolute;
+  margin-bottom: 0px;
+  height: 100%;
+  outline: solid 3px green;
+  display: flex;
+  flex-shrink: 0;
+  top: 0px;
+}
+
+#carouselB-slider > li {
+  flex-basis: 100%;
+  font-size: 30px;
+  outline: solid 1px rgb(174, 189, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carouselB-btn {
+  cursor: pointer;
+  position: absolute;
+}
+
+#carouselB-prev {
+  left: 0%;
+}
+
+#carouselB-next {
+  right: 0%;
+}

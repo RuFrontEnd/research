@@ -3,6 +3,7 @@ import UploadFile from "components/uploadFile/UploadFile";
 import Reveal from "components/reveal/Reveal";
 import Carousel from "components/carousel/Carousel";
 import CarouselB from "components/carouselB/CarouselB";
+import Pagination from "components/pagination/Pagination";
 import Nav from "components/Nav";
 
 function App() {
@@ -13,6 +14,9 @@ function App() {
           <Route exact path="/">
             <Nav style={{ padding: "30px" }} />
           </Route>
+        </Switch>
+        <Switch>
+          <Route exact path="/pagination" component={Pagination} />
         </Switch>
         <Switch>
           <Route exact path="/carouselB" component={CarouselB} />

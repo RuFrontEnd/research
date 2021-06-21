@@ -6,6 +6,7 @@ import { Row, Col } from "antd";
 function Nav(props) {
   const { style } = props;
   const components = [
+    <LinkTo address={"pagination"} name={"Pagination"} color={"#1E90FF"} />,
     <LinkTo address={"carouselB"} name={"CarouselB"} color={"#1E90FF"} />,
     <LinkTo address={"carousel"} name={"Carousel"} color={"#1E90FF"} />,
     <LinkTo address={"reveal"} name={"Reveal"} color={"	#1E90FF"} />,

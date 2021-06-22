@@ -22,18 +22,31 @@ function Pagination() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const pages = [];
+  const pages = []; // 總頁數
   for (let i = 1; i < Math.ceil(todos.length / itemsPerPage); i++) {
     pages.push(i);
   } // 總共幾頁
 
+  const handleCurrentPage = useCallback((e) => {
+    setCurrentPage(e.target.id);
+  }, []);
+
   const renderPageNumbers = pages.map((number) => {
     return (
-      <li key={number} id={number}>
+      <li
+        key={number}
+        id={number}
+        className={"page"}
+        onClick={handleCurrentPage}
+      >
         {number}
       </li>
     );
-  });
+  }); // 頁數元件
+
+  const indexOfLastItem = currentPage * itemsPerPage; // 每頁最後一筆資料索引
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage; // 每頁第一筆資料索引
+  const currentItems = todos.slice(indexOfFirstItem, indexOfLastItem); // 每頁第一筆到最後一筆資料
 
   const getData = useCallback(() => {
     fetch("https://jsonplaceholder.typicode.com/todos")
@@ -41,11 +54,11 @@ function Pagination() {
       .then((json) => {
         setTodos(json);
       });
-  }, []);
+  }, []); // 接資料方法
 
   useEffect(() => {
     getData();
-  }, [getData]);
+  }, [getData]); // 接資料
 
   useEffect(() => {
     console.log(todos);
@@ -54,10 +67,8 @@ function Pagination() {
   return (
     <>
       <h1>Todo List</h1>
-      {renderData(todos)}
-      <ul>
-        {renderPageNumbers}
-      </ul>
+      {renderData(currentItems)}
+      <ul id="pages">{renderPageNumbers}</ul>
     </>
   );
 }

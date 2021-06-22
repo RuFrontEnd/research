@@ -1,10 +1,20 @@
 #pages {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .page {
   padding: 10px;
   border: 1px solid grey;
+  cursor: pointer;
+}
+
+.active {
+  background-color: black;
+  color: white;
+}
+
+.page-button {
   cursor: pointer;
 }

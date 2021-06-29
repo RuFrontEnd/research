@@ -1,1 +1,2 @@
-git push <remote name> :<branch name> => 刪除遠端分支
+git push <remote name> --delete <branch name> => 刪除遠端分支
+ex: git push origin --delete branchName

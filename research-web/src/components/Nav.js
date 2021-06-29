@@ -5,12 +5,13 @@ import { Row, Col } from "antd";
 
 function Nav(props) {
   const { style } = props;
+  const color = "#5ea6ee";
   const components = [
-    <LinkTo address={"pagination"} name={"Pagination"} color={"#1E90FF"} />,
-    <LinkTo address={"carouselB"} name={"CarouselB"} color={"#1E90FF"} />,
-    <LinkTo address={"carousel"} name={"Carousel"} color={"#1E90FF"} />,
-    <LinkTo address={"reveal"} name={"Reveal"} color={"	#1E90FF"} />,
-    <LinkTo address={"uploadFile"} name={"UploadFile"} color={"	#1E90FF"} />,
+    <LinkTo address={"pagination"} name={"Pagination"} color={color} />,
+    <LinkTo address={"carouselB"} name={"CarouselB"} color={color} />,
+    <LinkTo address={"carousel"} name={"Carousel"} color={color} />,
+    <LinkTo address={"reveal"} name={"Reveal"} color={color} />,
+    <LinkTo address={"uploadFile"} name={"UploadFile"} color={color} />,
   ];
   const cols = [];
 

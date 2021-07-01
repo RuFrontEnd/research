@@ -4,6 +4,7 @@
 // npm install i18next react-i18next i18next-browser-languagedetector
 import "components/internation/Internation.css";
 import { useTranslation, Trans } from "react-i18next";
+import "components/internation/i18n";
 
 const lngs = {
   en: { nativeName: "English" },

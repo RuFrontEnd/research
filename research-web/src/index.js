@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { StyleRoot } from "radium"; // 可以使inline-style有media-qurey功能
-import "components/internation/i18n";
 
 ReactDOM.render(
   <React.StrictMode>

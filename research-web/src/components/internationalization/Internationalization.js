@@ -2,6 +2,15 @@
 // tutorial https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb
 // tutroial2 https://www.youtube.com/watch?v=txHU6lrsa3o&ab_channel=MaksimIvanov
 // npm install i18next react-i18next i18next-browser-languagedetector
+
+// step1 npm install模組
+// step2 定義 i18nConfig.js
+// step3 定義 import useTranslation 或 Trans 和 i18nConfig.js
+// step3 const { t, i18n } = useTranslation();
+// step4 <Trans i18nKey="description.part1"></Trans> 或 {t("description.part2")}
+// step5 const lngs = { en: { nativeName: "English" }, zh: { nativeName: "中文" }};
+// step6 onClick={() => i18n.changeLanguage(lng)}
+
 import "components/internationalization/Internationalization.css";
 import { useTranslation, Trans } from "react-i18next";
 import "components/internationalization/i18nConfig";

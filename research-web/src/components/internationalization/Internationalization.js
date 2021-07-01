@@ -3,7 +3,7 @@
 // tutroial2 https://www.youtube.com/watch?v=txHU6lrsa3o&ab_channel=MaksimIvanov
 // npm install i18next react-i18next i18next-browser-languagedetector
 
-// step1 npm install模組
+// step1 npm install 模組
 // step2 定義 i18nConfig.js
 // step3 定義 import useTranslation 或 Trans 和 i18nConfig.js
 // step3 const { t, i18n } = useTranslation();

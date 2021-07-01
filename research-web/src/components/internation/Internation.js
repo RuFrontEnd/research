@@ -3,19 +3,33 @@
 // tutroial2 https://www.youtube.com/watch?v=txHU6lrsa3o&ab_channel=MaksimIvanov
 // npm install i18next react-i18next i18next-browser-languagedetector
 import "components/internation/Internation.css";
-import i18n from "components/internation/i18n";
 import { useTranslation, Trans } from "react-i18next";
+
+const lngs = {
+  en: { nativeName: 'English' },
+  zh: { nativeName: '中文' }
+};
+
 function Internation() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <>
       <div className={"internation"}>
-        <a>zh</a>
-        <a>en</a>
+        {Object.keys(lngs).map((lng) => (
+          <a
+            key={lng}
+            style={{ fontWeight: i18n.language === lng ? "bold" : "normal" }}
+            type="submit"
+            onClick={() => i18n.changeLanguage(lng)}
+          >
+            {lngs[lng].nativeName}
+          </a>
+        ))}
       </div>
       <Trans i18nKey="description.part1">
-        test
       </Trans>
+      <br />
+      {t("description.part2")}
     </>
   );
 }

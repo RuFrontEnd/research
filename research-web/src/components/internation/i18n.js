@@ -2,8 +2,6 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
-console.log('i18n',i18n);
-
 i18n
   // detect user language
   // learn more: https://github.com/i18next/i18next-browser-languageDetector
@@ -21,7 +19,20 @@ i18n
     resources: {
       en: {
         translation: {
-          // here we will place our translations...
+          description: {
+            // here we will place our translations...
+            part1: "test-part1",
+            part2: "test-part2",
+          },
+        },
+      },
+      zh: {
+        translation: {
+          description: {
+            // here we will place our translations...
+            part1: "測試-一區",
+            part2: "測試-二區",
+          },
         },
       },
     },

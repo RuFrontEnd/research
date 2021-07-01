@@ -2,16 +2,16 @@
 // tutorial https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb
 // tutroial2 https://www.youtube.com/watch?v=txHU6lrsa3o&ab_channel=MaksimIvanov
 // npm install i18next react-i18next i18next-browser-languagedetector
-import "components/internation/Internation.css";
+import "components/internationalization/Internationalization.css";
 import { useTranslation, Trans } from "react-i18next";
-import "components/internation/i18n";
+import "components/internationalization/i18nConfig";
 
 const lngs = {
   en: { nativeName: "English" },
   zh: { nativeName: "中文" },
 };
 
-function Internation() {
+function Internationalization() {
   const { t, i18n } = useTranslation();
   return (
     <>
@@ -37,4 +37,4 @@ function Internation() {
   );
 }
 
-export default Internation;
+export default Internationalization;

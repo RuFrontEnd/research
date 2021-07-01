@@ -16,6 +16,7 @@ function Internation() {
   return (
     <>
       <div className={"internation"}>
+        {/* Object.keys 回傳陣列*/}
         {Object.keys(lngs).map((lng) => (
           <a
             key={lng}
@@ -27,7 +28,7 @@ function Internation() {
           </a>
         ))}
       </div>
-      <div  className={"internation"}>
+      <div className={"internation"}>
         <Trans i18nKey="description.part1"></Trans>
         <br />
         {t("description.part2")}

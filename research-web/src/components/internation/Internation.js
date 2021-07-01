@@ -6,8 +6,8 @@ import "components/internation/Internation.css";
 import { useTranslation, Trans } from "react-i18next";
 
 const lngs = {
-  en: { nativeName: 'English' },
-  zh: { nativeName: '中文' }
+  en: { nativeName: "English" },
+  zh: { nativeName: "中文" },
 };
 
 function Internation() {
@@ -26,10 +26,11 @@ function Internation() {
           </a>
         ))}
       </div>
-      <Trans i18nKey="description.part1">
-      </Trans>
-      <br />
-      {t("description.part2")}
+      <div  className={"internation"}>
+        <Trans i18nKey="description.part1"></Trans>
+        <br />
+        {t("description.part2")}
+      </div>
     </>
   );
 }

@@ -10,8 +10,7 @@ import Slide from "react-reveal/Slide";
 
 function Reveal() {
   return (
-    <>
-      <div>
+      <section>
         <header className="App-header">
           <h1 className="App-title">01</h1>
           <Zoom>
@@ -36,8 +35,7 @@ function Reveal() {
             </div>
           </Fade>
         </header>
-      </div>
-    </>
+      </section>
   );
 }
 

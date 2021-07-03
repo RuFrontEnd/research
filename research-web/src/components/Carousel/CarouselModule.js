@@ -12,10 +12,7 @@ function Carousel(props) {
   const [active, setActive] = useState(activation);
   const [items, setItems] = useState(cards);
   const [direction, setDirection] = useState("");
-
-  console.log("active", active);
-  console.log("items", items);
-
+  
   const generateItems = () => {
     let components = [];
     let level;

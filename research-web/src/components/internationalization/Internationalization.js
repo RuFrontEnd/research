@@ -23,7 +23,7 @@ const lngs = {
 function Internationalization() {
   const { t, i18n } = useTranslation();
   return (
-    <>
+    <section>
       <div className={"internation"}>
         {/* Object.keys 回傳陣列*/}
         {Object.keys(lngs).map((lng) => (
@@ -42,7 +42,7 @@ function Internationalization() {
         <br />
         {t("description.part2")}
       </div>
-    </>
+    </section>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
-import { CSSTransitionGroup } from "react-transition-group"; // npm install react-transition-group@1.x --save / yarn add react-transition-group@1.x
+// import { CSSTransitionGroup } from "react-transition-group"; // npm install react-transition-group@1.x --save / yarn add react-transition-group@1.x
 import CarouselItem from "components/carousel/CarouselItem";
 import "components/carousel/Carousel.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +12,7 @@ function Carousel(props) {
   const [active, setActive] = useState(activation);
   const [items, setItems] = useState(cards);
   const [direction, setDirection] = useState("");
-  
+
   const generateItems = () => {
     let components = [];
     let level;
@@ -60,9 +60,9 @@ function Carousel(props) {
       >
         <FontAwesomeIcon icon={faArrowLeft} />
       </div>
-      <CSSTransitionGroup transitionName={direction}>
-        {generateItems()}
-      </CSSTransitionGroup>
+      {/* <CSSTransitionGroup transitionName={direction}> */}
+      {generateItems()}
+      {/* </CSSTransitionGroup> */}
       <div
         className="arrow arrow-right"
         onClick={() => {

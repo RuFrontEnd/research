@@ -8,11 +8,11 @@ import Internationalization from "components/internationalization/Internationali
 import Nav from "components/Nav";
 // import CSSTransition from "react-transition-group/CSSTransition"
 import { CSSTransition } from "react-transition-group";
-import 'App.css'
+import "App.css";
 
 function App() {
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <BrowserRouter>
         <Route exact path="/">
           {/* <Switch> */}
@@ -39,8 +39,21 @@ function App() {
             </CSSTransition>
           )}
         </Route>
-        <Route exact path="/pagination" component={Pagination} />
-        <Route exact path="/carouselB" component={CarouselB} />
+        <Route exact path="/pagination">
+          {({ match }) => (
+            <CSSTransition
+              in={match != null}
+              timeout={300}
+              classNames="transition"
+              unmountOnExit
+            >
+              <Pagination />
+            </CSSTransition>
+          )}
+        </Route>
+        <Route exact path="/carouselB">
+          <CarouselB />
+        </Route>
         <Route exact path="/carousel" component={Carousel} />
         <Route exact path="/reveal" component={Reveal} />
         <Route exact path="/uploadFile" component={UploadFile} />

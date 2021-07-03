@@ -97,7 +97,7 @@ function Pagination() {
   }, [todos]);
 
   return (
-    <>
+    <section>
       <h1>Todo List</h1>
       {renderData(currentItems)}
       <ul id="pages">
@@ -115,7 +115,7 @@ function Pagination() {
           </button>
         </li>
       </ul>
-    </>
+    </section>
   );
 }
 

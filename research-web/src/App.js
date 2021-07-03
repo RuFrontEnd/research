@@ -15,23 +15,11 @@ function App() {
           <Route exact path="/">
             <Nav style={{ padding: "30px" }} />
           </Route>
-        </Switch>
-        <Switch>
           <Route exact path="/internation" component={Internationalization} />
-        </Switch>
-        <Switch>
           <Route exact path="/pagination" component={Pagination} />
-        </Switch>
-        <Switch>
           <Route exact path="/carouselB" component={CarouselB} />
-        </Switch>
-        <Switch>
           <Route exact path="/carousel" component={Carousel} />
-        </Switch>
-        <Switch>
           <Route exact path="/reveal" component={Reveal} />
-        </Switch>
-        <Switch>
           <Route exact path="/uploadFile" component={UploadFile} />
         </Switch>
       </BrowserRouter>

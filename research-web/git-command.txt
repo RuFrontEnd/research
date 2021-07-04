@@ -1,2 +1,5 @@
 git push <remote name> --delete <branch name> => 刪除遠端分支
 ex: git push origin --delete branchName
+
+git revert {commit id} => 拉回push後的commit內容
+ex git revert 41a3a0d

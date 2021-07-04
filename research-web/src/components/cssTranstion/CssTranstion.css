@@ -1,14 +1,22 @@
-.alert-enter {
+.cssTransition-text {
+  font-size: 30px;
+}
+
+.cssTransition-enter {
+  position: absolute;
   opacity: 0;
 }
-.alert-enter-active {
+.cssTransition-enter-active {
+  position: absolute;
   opacity: 1;
-  transition: opacity 10000ms, transform 10000ms;
+  transition: opacity 1000ms, transform 1000ms;
 }
-.alert-exit {
+.cssTransition-exit {
+  position: absolute;
   opacity: 1;
 }
-.alert-exit-active {
+.cssTransition-exit-active {
+  position: absolute;
   opacity: 0;
-  transition: opacity 10000ms, transform 10000ms;
+  transition: opacity 1000ms, transform 1000ms;
 }

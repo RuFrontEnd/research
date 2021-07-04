@@ -6,6 +6,8 @@ import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import "components/cssTranstion/CssTranstion.css";
 
+// dom生成時 給與
+
 function CssTranstion() {
   const [showHello, setShowHello] = useState(true);
 
@@ -21,19 +23,19 @@ function CssTranstion() {
       <div style={{ position: "relative" }}>
         <CSSTransition
           in={showHello}
-          timeout={10 * 1000} // 持續多久 => 通常跟css transtion屬性同時間
-          classNames="alert"
+          timeout={1 * 1000} // 持續多久 => 通常跟css transtion屬性同時間
+          classNames="cssTransition"
           unmountOnExit
         >
-          <div>hello</div>
+          <div className="cssTransition-text">hello</div>
         </CSSTransition>
         <CSSTransition
           in={!showHello}
-          timeout={10 * 1000} // 持續多久 => 通常跟css transtion屬性同時間
-          classNames="alert"
+          timeout={1 * 1000} // 持續多久 => 通常跟css transtion屬性同時間
+          classNames="cssTransition"
           unmountOnExit
         >
-          <div>world</div>
+          <div className="cssTransition-text">world</div>
         </CSSTransition>
       </div>
     </section>

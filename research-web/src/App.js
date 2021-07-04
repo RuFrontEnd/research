@@ -1,4 +1,5 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom"; // npm install react-router-dom
+import { CSSTransition } from "react-transition-group";
 import UploadFile from "components/uploadFile/UploadFile";
 import Reveal from "components/reveal/Reveal";
 import Carousel from "components/carousel/Carousel";
@@ -6,8 +7,7 @@ import CarouselB from "components/carouselB/CarouselB";
 import Pagination from "components/pagination/Pagination";
 import Internationalization from "components/internationalization/Internationalization";
 import Nav from "components/Nav";
-// import CSSTransition from "react-transition-group/CSSTransition"
-import { CSSTransition } from "react-transition-group";
+import CssTranstion  from "components/cssTranstion/CssTranstion";
 import "App.css";
 
 const routes = [
@@ -18,6 +18,7 @@ const routes = [
   { path: "/carousel", component: <Carousel /> },
   { path: "/reveal", component: <Reveal /> },
   { path: "/uploadFile", component: <UploadFile /> },
+  { path: "/cssTranstion", component: <CssTranstion /> },
 ];
 
 function App() {

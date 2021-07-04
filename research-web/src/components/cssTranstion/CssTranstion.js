@@ -1,5 +1,5 @@
 // import React from 'react'
-import "components/CssTranstion.js/CssTranstion.css";
+import "components/cssTranstion/CssTranstion.css";
 
 function CssTranstion() {
   return <section></section>;

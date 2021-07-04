@@ -48,55 +48,50 @@ function UploadFile() {
   }, [imgUrl]);
 
   return (
-    <section>
-        {/* multiple => 屬性可以一次上傳多個檔案 */}
-        {/* accept => 屬性可以限制上傳檔案的類型 */}
-        {imgUrl && (
-          <div id="image-cropper-container">
-            <img
-              src={imgUrl}
-              id="photo"
-              alt="Avatar Preview"
-              ref={$photo}
-            ></img>
-            <button
-              id="confirm-btn"
-              onClick={() => {
-                handleCrop();
-              }}
-            >
-              確認
-            </button>
-          </div>
-        )}
-        {isShowModal && <div id="modal-background"></div>}
-        <div id="fileContainer">
-          <div id="fileWarp">
-            <h1>React Upload File</h1>
-            <span id="avatar">
-              {finalImgUrl && (
-                <img
-                  src={finalImgUrl}
-                  id="photo"
-                  alt="Avatar Preview"
-                  ref={$photo}
-                ></img>
-              )}
-              {!finalImgUrl && <p>AVATAR</p>}
-            </span>
-            <input
-              type="file"
-              id="file-uploader"
-              data-target="file-uploader"
-              accept="image/*"
-              // multiple="multiple"
-              onChange={(event) => {
-                handleFile(event);
-              }}
-            />
-          </div>
+    <div>
+      {/* multiple => 屬性可以一次上傳多個檔案 */}
+      {/* accept => 屬性可以限制上傳檔案的類型 */}
+      {imgUrl && (
+        <div id="image-cropper-container">
+          <img src={imgUrl} id="photo" alt="Avatar Preview" ref={$photo}></img>
+          <button
+            id="confirm-btn"
+            onClick={() => {
+              handleCrop();
+            }}
+          >
+            確認
+          </button>
         </div>
-    </section>
+      )}
+      {isShowModal && <div id="modal-background"></div>}
+      <div id="fileContainer">
+        <div id="fileWarp">
+          <h1>React Upload File</h1>
+          <span id="avatar">
+            {finalImgUrl && (
+              <img
+                src={finalImgUrl}
+                id="photo"
+                alt="Avatar Preview"
+                ref={$photo}
+              ></img>
+            )}
+            {!finalImgUrl && <p>AVATAR</p>}
+          </span>
+          <input
+            type="file"
+            id="file-uploader"
+            data-target="file-uploader"
+            accept="image/*"
+            // multiple="multiple"
+            onChange={(event) => {
+              handleFile(event);
+            }}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
 

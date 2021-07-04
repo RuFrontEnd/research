@@ -6,7 +6,8 @@ import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import "components/cssTranstion/CssTranstion.css";
 
-// dom生成時 給與
+// DOM生成時 同時給予 cssTransition-enter 和 cssTransition-enter-active 作過渡動畫
+// DOM消失時 同時給予 cssTransition-exit 和 cssTransition-enter-exit-active 作過渡動畫
 
 function CssTranstion() {
   const [showHello, setShowHello] = useState(true);
@@ -22,16 +23,16 @@ function CssTranstion() {
       </button>
       <div style={{ position: "relative" }}>
         <CSSTransition
-          in={showHello}
-          timeout={1 * 1000} // 持續多久 => 通常跟css transtion屬性同時間
-          classNames="cssTransition"
-          unmountOnExit
+          in={showHello} // 是否生成這個DOM
+          timeout={1 * 1000} // 持續多久 => 通常跟 css transtion 屬性同時間
+          classNames="cssTransition" // 對應 cssTransition-enter / cssTransition-enter-active / cssTransition-exit / cssTransition-exit-active
+          unmountOnExit // 過渡動畫執行完時是否還存在這個DOM
         >
           <div className="cssTransition-text">hello</div>
         </CSSTransition>
         <CSSTransition
           in={!showHello}
-          timeout={1 * 1000} // 持續多久 => 通常跟css transtion屬性同時間
+          timeout={1 * 1000}
           classNames="cssTransition"
           unmountOnExit
         >

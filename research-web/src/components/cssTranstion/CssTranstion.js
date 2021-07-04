@@ -23,7 +23,7 @@ function CssTranstion() {
       </button>
       <div style={{ position: "relative" }}>
         <CSSTransition
-          in={showHello} // 是否生成這個DOM
+          in={showHello} // 是否生成這個DOM並觸發過渡動畫
           timeout={1 * 1000} // 持續多久 => 通常跟 css transtion 屬性同時間
           classNames="cssTransition" // 對應 cssTransition-enter / cssTransition-enter-active / cssTransition-exit / cssTransition-exit-active
           unmountOnExit // 過渡動畫執行完時是否還存在這個DOM

@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import "components/template/Template.css";
 
 function SetStateInUseEffect() {
-  const [state, useState] = useState('')
+  const [state, setState] = useState("");
 
-
-  return <section></section>;
+  return (
+    <section>
+      <button>setState</button>
+      <div>{state}</div>
+    </section>
+  );
 }
 
 export default SetStateInUseEffect;

@@ -2,11 +2,23 @@ import React, { useState, useEffect } from "react";
 import "components/template/Template.css";
 
 function SetStateInUseEffect() {
-  const [state, setState] = useState("");
+  const [state, setState] = useState("0");
+
+  useEffect(() => {
+    if (state !== "0") {
+      setState("2");
+    }
+  }, [state]);
 
   return (
     <section>
-      <button>setState</button>
+      <button
+        onClick={() => {
+          setState("1");
+        }}
+      >
+        setState
+      </button>
       <div>{state}</div>
     </section>
   );

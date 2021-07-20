@@ -14,7 +14,7 @@ function SetStateInUseEffect() {
     <section>
       <button
         onClick={() => {
-          setState("1");
+          setState("111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
         }}
       >
         setState

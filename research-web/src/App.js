@@ -6,12 +6,14 @@ import Carousel from "components/carousel/Carousel";
 import CarouselB from "components/carouselB/CarouselB";
 import Pagination from "components/pagination/Pagination";
 import Internationalization from "components/internationalization/Internationalization";
+import SetStateInUseEffect from 'components/setStateInUseEffect/SetStateInUseEffect'
 import Nav from "components/Nav";
-import CssTranstion  from "components/cssTranstion/CssTranstion";
+import CssTranstion from "components/cssTranstion/CssTranstion";
 import "App.css";
 
 const routes = [
   { path: "/", component: <Nav style={{ padding: "30px" }} /> },
+  { path: "/setStateInUseEffect", component: <SetStateInUseEffect /> },
   { path: "/internation", component: <Internationalization /> },
   { path: "/pagination", component: <Pagination /> },
   { path: "/carouselB", component: <CarouselB /> },

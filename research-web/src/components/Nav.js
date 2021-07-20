@@ -7,6 +7,7 @@ function Nav(props) {
   const { style } = props;
   const color = "#5ea6ee";
   const components = [
+    <LinkTo address={"setStateInUseEffect"} name={"SetStateInUseEffect"} color={color} />,
     <LinkTo address={"cssTranstion"} name={"CssTranstion"} color={color} />,
     <LinkTo address={"internation"} name={"Internation"} color={color} />,
     <LinkTo address={"pagination"} name={"Pagination"} color={color} />,

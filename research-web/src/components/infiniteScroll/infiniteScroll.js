@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components/macro";
 import axios from "axios";
 import { style } from "dom-helpers";
+import ReactLoadingRef from "react-loading";
 
 const Container = styled.section`
   display: block;
-  padding: 50px;
+  padding: 0px 50px;
 `;
 
 const Wrap = styled.div`
@@ -20,7 +21,7 @@ const Item = styled.div`
   display: flex;
   background-color: rgba(245, 245, 245);
   padding: 20px;
-  margin-bottom: 20px;
+  margin: 20px 0px;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 `;
 
@@ -32,18 +33,21 @@ const Title = styled.div`
   display: block;
 `;
 
+const ReactLoading = styled(ReactLoadingRef)`
+  margin: 20px auto;
+`;
+
 const fetchData = (page) => axios.post("/infiniteScroll", { page: page });
 
 function InfiniteScroll() {
   const [todos, setTodos] = useState([]);
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPermitInfiniteLoad, setIsPermitInfiniteLoad] = useState(false);
 
-  const $target = useRef();
+  const $reactLoading = document.getElementById("reactLoading");
+
+  // const $reactLoading = useRef(); // Todo 抓不到這個ref
   const $imageContainer = useRef();
-
-  // console.log("$target", $target);
-  // console.log("$imageContainer", $imageContainer);
 
   let options = {
     root: null,
@@ -56,21 +60,21 @@ function InfiniteScroll() {
   };
 
   useEffect(() => {
-    if (isLoading) {
+    if (isPermitInfiniteLoad) {
       const observer = new IntersectionObserver((entries, observer) => {
         console.log("entries[0].isIntersecting", entries[0].isIntersecting);
         if (entries[0].isIntersecting) {
           loadMore();
         }
       }, options);
-      observer.observe($target.current);
+      observer.observe($reactLoading);
     }
-  }, [isLoading]);
+  }, [isPermitInfiniteLoad]);
 
   useEffect(() => {
     fetchData(page).then((res) => {
       setTodos(res.data);
-      setIsLoading(true);
+      setIsPermitInfiniteLoad(true);
     });
   }, [page]);
 
@@ -79,22 +83,24 @@ function InfiniteScroll() {
   }
 
   return (
-    <div id="image-container" ref={$imageContainer}>
+    <Container ref={$imageContainer}>
       <Wrap>
         {todos.map((todo, index) => (
-          <Item key={index} id={`item-${index}`}>
+          <Item key={index}>
             <Id>{todo.id}．</Id>
             <Title>{todo.title}</Title>
           </Item>
         ))}
       </Wrap>
-      <div
-        ref={$target}
-        style={{ width: "100px", height: "500px", backgroundColor: "red" }}
-      >
-        {todos.length}
-      </div>
-    </div>
+      <ReactLoading
+        type={"spin"}
+        color={"red"}
+        height={50}
+        width={50}
+        id="reactLoading"
+        // ref={$reactLoading}
+      />
+    </Container>
   );
 }
 

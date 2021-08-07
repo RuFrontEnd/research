@@ -6,9 +6,10 @@ import Carousel from "components/carousel/Carousel";
 import CarouselB from "components/carouselB/CarouselB";
 import Pagination from "components/pagination/Pagination";
 import Internationalization from "components/internationalization/Internationalization";
-import SetStateInUseEffect from 'components/setStateInUseEffect/SetStateInUseEffect'
+import SetStateInUseEffect from "components/setStateInUseEffect/SetStateInUseEffect";
 import Nav from "components/Nav";
 import CssTranstion from "components/cssTranstion/CssTranstion";
+import InfiniteScroll from "components/infiniteScroll/infiniteScroll";
 import "App.css";
 
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
   { path: "/reveal", component: <Reveal /> },
   { path: "/uploadFile", component: <UploadFile /> },
   { path: "/cssTranstion", component: <CssTranstion /> },
+  { path: "/infiniteScroll", component: <InfiniteScroll /> },
 ];
 
 function App() {

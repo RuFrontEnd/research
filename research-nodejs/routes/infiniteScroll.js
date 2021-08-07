@@ -9,7 +9,7 @@ router.post("/", function (req, res, next) {
     const Items = response.data;
     const todos = [];
     Items.forEach((Item, index) => {
-      if (index + 1 > page * 10 - 10 && index + 1 <= page * 10) {
+      if (index + 1 <= page * 10) {
         todos.push(Item);
       }
     });

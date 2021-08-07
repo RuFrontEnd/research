@@ -17,33 +17,48 @@ const Loading = styled.section`
 `;
 
 const Item = styled.div`
+  display: flex;
   background-color: rgba(245, 245, 245);
   padding: 20px;
+  margin-bottom: 20px;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 `;
 
-const fetchData = (page) => {
-  console.log("a");
-  axios.post("/infiniteScroll", { body: { page: page } }).then((res) => {
-    console.log("res", res);
-  });
-};
+const Id = styled.div`
+  display: block;
+`;
+
+const Title = styled.div`
+  display: block;
+`;
+
+const fetchData = (page) => axios.post("/infiniteScroll", { page: page });
 
 function InfiniteScroll() {
-  const [items, setItmes] = useState([]);
+  const [todos, setTodos] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetchData(1);
+    fetchData(page).then((res) => setTodos(res.data));
   }, []);
 
-  // if (items.length === 0) {
-  //   return <Loading>Loading...</Loading>;
-  // }
+  useEffect(() => {
+    console.log("todos", todos);
+  }, [todos]);
+
+  if (todos.length === 0) {
+    return <Loading>Loading...</Loading>;
+  }
 
   return (
     <Container>
       <Wrap>
-        <Item>123</Item>
+        {todos.map((todo) => (
+          <Item>
+            <Id>{todo.id}．</Id>
+            <Title>{todo.title}</Title>
+          </Item>
+        ))}
       </Wrap>
     </Container>
   );

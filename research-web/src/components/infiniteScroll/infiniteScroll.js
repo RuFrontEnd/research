@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components/macro";
 import axios from "axios";
 import { style } from "dom-helpers";
@@ -37,30 +37,64 @@ const fetchData = (page) => axios.post("/infiniteScroll", { page: page });
 function InfiniteScroll() {
   const [todos, setTodos] = useState([]);
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const $target = useRef();
+  const $imageContainer = useRef();
+
+  // console.log("$target", $target);
+  // console.log("$imageContainer", $imageContainer);
+
+  let options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 1,
+  };
+
+  const loadMore = () => {
+    setPage((page) => page + 1);
+  };
 
   useEffect(() => {
-    fetchData(page).then((res) => setTodos(res.data));
-  }, []);
+    if (isLoading) {
+      const observer = new IntersectionObserver((entries, observer) => {
+        console.log("entries[0].isIntersecting", entries[0].isIntersecting);
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      }, options);
+      observer.observe($target.current);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
-    console.log("todos", todos);
-  }, [todos]);
+    fetchData(page).then((res) => {
+      setTodos(res.data);
+      setIsLoading(true);
+    });
+  }, [page]);
 
   if (todos.length === 0) {
     return <Loading>Loading...</Loading>;
   }
 
   return (
-    <Container>
+    <div id="image-container" ref={$imageContainer}>
       <Wrap>
-        {todos.map((todo) => (
-          <Item>
+        {todos.map((todo, index) => (
+          <Item key={index} id={`item-${index}`}>
             <Id>{todo.id}．</Id>
             <Title>{todo.title}</Title>
           </Item>
         ))}
       </Wrap>
-    </Container>
+      <div
+        ref={$target}
+        style={{ width: "100px", height: "500px", backgroundColor: "red" }}
+      >
+        {todos.length}
+      </div>
+    </div>
   );
 }
 

@@ -42,12 +42,6 @@ function Pagination() {
     [currentPage]
   );
 
-  useEffect(() => {
-    console.log("currentPage", currentPage);
-    console.log("maxPageNumberLimit", maxPageNumberLimit);
-    console.log("minPageNumberLimit", minPageNumberLimit);
-  }, [currentPage, maxPageNumberLimit, minPageNumberLimit]);
-
   const handleNextButton = useCallback(
     (e) => {
       setCurrentPage((currentPage) => currentPage + 1);
@@ -92,9 +86,6 @@ function Pagination() {
     getData();
   }, [getData]); // 接資料
 
-  useEffect(() => {
-    console.log(todos);
-  }, [todos]);
 
   return (
     <section>

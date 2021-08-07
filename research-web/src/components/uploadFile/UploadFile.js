@@ -14,7 +14,6 @@ function UploadFile() {
   const [finalImgUrl, setFinalImgUrl] = useState("");
 
   const handleFile = (e) => {
-    console.log(e);
     const photo = e.target.files[0];
     const reader = new FileReader();
     setIsShowModal(true);

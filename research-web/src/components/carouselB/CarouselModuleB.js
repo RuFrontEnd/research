@@ -98,13 +98,11 @@ function CarouselModuleB(props) {
   const shiftItem = () => {
     const _items = [...items]; // 深拷貝(淺拷貝會影響到原陣列)
     if (direction === -1) {
-      console.log(-1);
       const shiftItem = _items.shift();
       _items.push(shiftItem);
       setItems(_items);
     }
     if (direction === 1) {
-      console.log(1);
       const popItem = _items.pop();
       _items.unshift(popItem);
       setItems(_items);
@@ -113,13 +111,6 @@ function CarouselModuleB(props) {
     $slider.current.style.transform = `translate(0px)`;
   };
 
-  useEffect(() => {
-    console.log(carouselItemWidth);
-  }, [carouselItemWidth]);
-
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
 
   return (
     <>

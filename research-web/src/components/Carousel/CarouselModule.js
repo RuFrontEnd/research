@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-function Carousel(props) {
+function CarouselModule(props) {
   const { activation, cards } = props;
   const [active, setActive] = useState(activation);
   const [items, setItems] = useState(cards);
@@ -24,15 +24,11 @@ function Carousel(props) {
       } else if (i >= items.length) {
         index = i % items.length;
       }
-      console.log("i", i);
-      console.log("active", active);
       level = active - i; // level 永遠是 -2 -1 0 1 2
-      console.log("level", level);
       components.push(
         <CarouselItem key={items[index]} id={items[index]} level={level} />
       );
     }
-    console.log("components", components);
     return components;
   };
 
@@ -75,4 +71,4 @@ function Carousel(props) {
   );
 }
 
-export default Carousel;
+export default CarouselModule;

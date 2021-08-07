@@ -11,6 +11,7 @@ import Nav from "components/Nav";
 import CssTranstion from "components/cssTranstion/CssTranstion";
 import InfiniteScroll from "components/infiniteScroll/infiniteScroll";
 import "App.css";
+import axios from "axios";
 
 const routes = [
   { path: "/", component: <Nav style={{ padding: "30px" }} /> },
@@ -24,6 +25,8 @@ const routes = [
   { path: "/cssTranstion", component: <CssTranstion /> },
   { path: "/infiniteScroll", component: <InfiniteScroll /> },
 ];
+
+axios.defaults.baseURL = "http://localhost:8000";
 
 function App() {
   return (

@@ -22,16 +22,23 @@ const Item = styled.div`
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 `;
 
-const fetchData = () => {
-  axios.get('')
+const fetchData = (page) => {
+  console.log("a");
+  axios.post("/infiniteScroll", { body: { page: page } }).then((res) => {
+    console.log("res", res);
+  });
 };
 
 function InfiniteScroll() {
   const [items, setItmes] = useState([]);
 
-  if (items.length === 0) {
-    return <Loading>Loading...</Loading>;
-  }
+  useEffect(() => {
+    fetchData(1);
+  }, []);
+
+  // if (items.length === 0) {
+  //   return <Loading>Loading...</Loading>;
+  // }
 
   return (
     <Container>

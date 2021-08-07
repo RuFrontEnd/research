@@ -3,11 +3,18 @@ var router = express.Router();
 let axios = require("axios");
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
-  axios.get("https://jsonplaceholder.typicode.com/todos").then((res) => {
-    console.log("res", res.data);
+router.post("/", function (req, res, next) {
+  axios.get("https://jsonplaceholder.typicode.com/todos").then((response) => {
+    const page = req.body.page;
+    const Items = response.data;
+    const todos = [];
+    Items.forEach((Item, index) => {
+      if (index + 1 > page * 10 - 10 && index + 1 <= page * 10) {
+        todos.push(Item);
+      }
+    });
+    res.json(todos);
   });
-  res.send("respond with a resource");
 });
 
 module.exports = router;

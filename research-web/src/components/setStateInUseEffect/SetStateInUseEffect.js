@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "components/template/Template.css";
 
 function SetStateInUseEffect() {
   const [state, setState] = useState("0");

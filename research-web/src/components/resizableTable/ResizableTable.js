@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 
-function Template() {
+function ResizableTable() {
   return <section></section>;
 }
 
-export default Template;
+export default ResizableTable;

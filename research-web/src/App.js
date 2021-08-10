@@ -10,6 +10,7 @@ import SetStateInUseEffect from "components/setStateInUseEffect/SetStateInUseEff
 import Nav from "components/Nav";
 import CssTranstion from "components/cssTranstion/CssTranstion";
 import InfiniteScroll from "components/infiniteScroll/infiniteScroll";
+import ResizableTable from "components/resizableTable/ResizableTable";
 import "App.css";
 import axios from "axios";
 
@@ -24,7 +25,7 @@ const routes = [
   { path: "/uploadFile", component: <UploadFile /> },
   { path: "/cssTranstion", component: <CssTranstion /> },
   { path: "/infiniteScroll", component: <InfiniteScroll /> },
-  { path: "/resizableTable", component: <resizableTable /> },
+  { path: "/resizableTable", component: <ResizableTable /> },
 ];
 
 axios.defaults.baseURL = "http://localhost:8000";

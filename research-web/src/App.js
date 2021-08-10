@@ -24,6 +24,7 @@ const routes = [
   { path: "/uploadFile", component: <UploadFile /> },
   { path: "/cssTranstion", component: <CssTranstion /> },
   { path: "/infiniteScroll", component: <InfiniteScroll /> },
+  { path: "/resizableTable", component: <resizableTable /> },
 ];
 
 axios.defaults.baseURL = "http://localhost:8000";

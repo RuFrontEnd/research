@@ -16,6 +16,7 @@ import "App.css";
 import axios from "axios";
 
 export const routes = [
+  { path: "/prototype", component: <Prototype /> },
   { path: "/setStateInUseEffect", component: <SetStateInUseEffect /> },
   { path: "/internation", component: <Internationalization /> },
   { path: "/pagination", component: <Pagination /> },
@@ -26,7 +27,6 @@ export const routes = [
   { path: "/cssTranstion", component: <CssTranstion /> },
   { path: "/infiniteScroll", component: <InfiniteScroll /> },
   { path: "/resizableTable", component: <ResizableTable /> },
-  { path: "/prototype", component: <Prototype /> },
 ];
 
 axios.defaults.baseURL = "http://localhost:8000";

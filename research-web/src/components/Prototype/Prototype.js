@@ -92,9 +92,17 @@ function Prototype() {
     )
   );
 
-  const data = new Date();
-  console.log(data);
-  console.dir(data); // console.dir打印出該物件所有屬性
+  const date = new Date();
+  console.log("date", date);
+  console.dir(date); // console.dir打印出該物件所有屬性
+  Date.prototype.getFullDate = function () {
+    let dd = String(this.getDate());
+    let mm = String(this.getMonth() + 1);
+    let yyyy = String(this.getFullYear());
+    let today = `${yyyy}/${mm}/${dd}`;
+    return today;
+  };
+  console.log("date.getFullDate()", date.getFullDate());
 
   return (
     <section style={{ fontSize: "20px" }}>

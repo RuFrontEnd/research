@@ -1,12 +1,30 @@
 import styled from "styled-components/macro";
 function Player() {}
 const object = {};
-const numbersA = [1, 2, 3];
-const numbersB = [4, 5, 6];
+function Dog(name, color, size) {
+  this.name = name; // this指向呼叫的對象
+  this.color = color;
+  this.size = size;
+  this.bark = function () {
+    console.log("bark");
+  };
+} // 建構函式
+const newSring = new String("字串");
 
 function Prototype() {
+  let Bibi = new Dog("逼逼", "紅色", "小");
+  // new 在做的事情
+  // 1. 創建一個空物件(即{})
+  // 2. 將該物件的__proto__繼承於建構函式
+  // 3. 藉由建構函式中的this賦予屬性
+  Bibi.bark();
+  Dog.prototype.eat = function () {
+    console.log("好吃");
+  }; // 利用原型新增建構函式的方法
+  Bibi.eat();
+
   const consoleMethod = (num, title, method, content) =>
-    console.log(`${num}.${title}`, method || "", `(${content})`);
+    console.log(`${num || "*"}.${title}`, method || "", `(${content})`);
 
   console.log("－－－－－－－－－－　protoType研究開始　－－－－－－－－－－");
   const informations = [
@@ -53,6 +71,16 @@ function Prototype() {
       content:
         "(1)每個「函式」中都會有prototype屬性, 指向一個prototype物件, (2)每個函式的prototype物件, 會有一個constructor屬性, 指回到這個函式, (3)每個物件都有一個__proto__內部屬性，指向它的繼承而來的原型prototype物件, (4)由__proto__指向連接起來的結構, 稱之為原型鏈(prototype chain)",
     },
+    {
+      title: "Bibi",
+      method: Bibi,
+      content: "觀察Bibi",
+    },
+    {
+      title: "newSring",
+      method: newSring,
+      content: "觀察newSring的__proto__",
+    },
   ];
 
   const messages = informations.map((information, index) =>
@@ -64,20 +92,13 @@ function Prototype() {
     )
   );
 
-  numbersA.__proto__.getLast = function () {
-    return this[this.length - 1]; // this指向呼叫的那個人
-  }; // numbersA.__proto__指向 原生Array物件
+  const data = new Date();
+  console.log(data);
+  console.dir(data); // console.dir打印出該物件所有屬性
 
   return (
     <section style={{ fontSize: "20px" }}>
       check the console first plz.{messages.map((message) => message)}
-      <div>
-        *呼叫 numbersB.getLast(): {numbersB.getLast()}
-        <br />
-        1.numbersB繼承來自numbersA.__proto__(即原生Array物件)
-        <br />
-        2.this指向B
-      </div>
     </section>
   );
 }

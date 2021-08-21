@@ -11,11 +11,11 @@ import Nav from "components/Nav";
 import CssTranstion from "components/cssTranstion/CssTranstion";
 import InfiniteScroll from "components/infiniteScroll/infiniteScroll";
 import ResizableTable from "components/resizableTable/ResizableTable";
+import Prototype from "components/Prototype/Prototype";
 import "App.css";
 import axios from "axios";
 
-const routes = [
-  { path: "/", component: <Nav style={{ padding: "30px" }} /> },
+export const routes = [
   { path: "/setStateInUseEffect", component: <SetStateInUseEffect /> },
   { path: "/internation", component: <Internationalization /> },
   { path: "/pagination", component: <Pagination /> },
@@ -26,6 +26,7 @@ const routes = [
   { path: "/cssTranstion", component: <CssTranstion /> },
   { path: "/infiniteScroll", component: <InfiniteScroll /> },
   { path: "/resizableTable", component: <ResizableTable /> },
+  { path: "/prototype", component: <Prototype /> },
 ];
 
 axios.defaults.baseURL = "http://localhost:8000";
@@ -34,6 +35,18 @@ function App() {
   return (
     <div style={{ position: "relative" }}>
       <BrowserRouter>
+        <Route exact path="/">
+          {({ match }) => (
+            <CSSTransition
+              in={match != null}
+              timeout={300}
+              classNames="transition"
+              unmountOnExit
+            >
+              <Nav style={{ padding: "30px" }} />
+            </CSSTransition>
+          )}
+        </Route>
         {routes.map((route) => (
           <Route exact path={route.path}>
             {({ match }) => (

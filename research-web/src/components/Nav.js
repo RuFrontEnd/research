@@ -2,26 +2,23 @@ import React from "react";
 import LinkTo from "components/LinkTo";
 import "components/Nav.css";
 import { Row, Col } from "antd";
+import { routes } from "App";
 
 function Nav(props) {
   const { style } = props;
   const color = "#5ea6ee";
-  const components = [
-    <LinkTo address={"resizableTable"} name={"ResizableTable"} color={color} />,
-    <LinkTo address={"infiniteScroll"} name={"InfiniteScroll"} color={color} />,
-    <LinkTo
-      address={"setStateInUseEffect"}
-      name={"SetStateInUseEffect"}
-      color={color}
-    />,
-    <LinkTo address={"cssTranstion"} name={"CssTranstion"} color={color} />,
-    <LinkTo address={"internation"} name={"Internation"} color={color} />,
-    <LinkTo address={"pagination"} name={"Pagination"} color={color} />,
-    <LinkTo address={"carouselB"} name={"CarouselB"} color={color} />,
-    <LinkTo address={"carousel"} name={"Carousel"} color={color} />,
-    <LinkTo address={"reveal"} name={"Reveal"} color={color} />,
-    <LinkTo address={"uploadFile"} name={"UploadFile"} color={color} />,
-  ];
+
+  const components = routes.map((route) => {
+    const _address = route.path.replace("/", "");
+    const _name = `${_address.slice(0, 1).toUpperCase()}${_address.slice(
+      1,
+      _address.length
+    )}`;
+
+    return <LinkTo address={_address} name={_name} color={color} />;
+  });
+
+
   const cols = [];
 
   components.forEach((component, componentIndex) => {

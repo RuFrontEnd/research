@@ -1,5 +1,8 @@
 import styled from "styled-components/macro";
 function Player() {}
+const object = {};
+const numbersA = [1, 2, 3];
+const numbersB = [4, 5, 6];
 
 function Prototype() {
   const consoleMethod = (num, title, method, content) =>
@@ -12,10 +15,16 @@ function Prototype() {
       method: Player,
       content: "創建出來的一個函式",
     },
+    { title: "object", method: object, content: "創建出來的一個物件" },
     {
       title: "Player.prototype",
       method: Player.prototype,
       content: "Player.prototype指向一個特殊的prototype物件",
+    },
+    {
+      title: "object.prototype",
+      method: object.prototype,
+      content: "物件沒有prototype屬性",
     },
     {
       title: "Player.prototype.constructor",
@@ -55,9 +64,20 @@ function Prototype() {
     )
   );
 
+  numbersA.__proto__.getLast = function () {
+    return this[this.length - 1]; // this指向呼叫的那個人
+  }; // numbersA.__proto__指向 原生Array物件
+
   return (
     <section style={{ fontSize: "20px" }}>
-      check the console plz.{messages.map((message) => message)}
+      check the console first plz.{messages.map((message) => message)}
+      <div>
+        *呼叫 numbersB.getLast(): {numbersB.getLast()}
+        <br />
+        1.numbersB繼承來自numbersA.__proto__(即原生Array物件)
+        <br />
+        2.this指向B
+      </div>
     </section>
   );
 }

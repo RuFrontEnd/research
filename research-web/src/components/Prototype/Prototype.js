@@ -73,10 +73,12 @@ function Prototype() {
 
   // 建構函式研究
   let Bibi = new Dog("逼逼", "紅色", "小");
+  let Bibe2 = Dog("逼逼", "紅色", "小")
   // new 在做的事情
-  // 1. 創建一個空物件(即{})
-  // 2. 將該物件的__proto__繼承於建構函式
-  // 3. 藉由建構函式中的this賦予屬性
+  // 1. 創造一個空物件(即{})
+  // 2. 將 constructor 鏈結到所創造的空物件上
+  // 3. 第一個步驟創造的物件作為 this 傳遞給 constructor
+  // 4. 如果該 constructor 沒有回傳物件，則回傳所創造的物件
   console.log("Bibi", Bibi);
   Bibi.bark();
   Dog.prototype.eat = function () {

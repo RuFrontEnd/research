@@ -11,12 +11,14 @@ import Nav from "components/Nav";
 import CssTranstion from "components/cssTranstion/CssTranstion";
 import InfiniteScroll from "components/infiniteScroll/infiniteScroll";
 import ResizableTable from "components/resizableTable/ResizableTable";
-import Prototype from "components/Prototype/Prototype";
+import This from "components/this/This"
+import Prototype from "components/prototype/Prototype";
 import "App.css";
 import axios from "axios";
 
 export const routes = [
   { path: "/prototype", component: <Prototype /> },
+  { path: "/this", component: <This /> },
   { path: "/setStateInUseEffect", component: <SetStateInUseEffect /> },
   { path: "/internation", component: <Internationalization /> },
   { path: "/pagination", component: <Pagination /> },

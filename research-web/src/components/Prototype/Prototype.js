@@ -1,5 +1,5 @@
 import styled from "styled-components/macro";
-import { consoleMethod, handleConsoles } from "utils/methods";
+import { handleConsoles } from "utils/methods";
 
 function Player() {}
 const object = {};

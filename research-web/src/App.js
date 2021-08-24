@@ -17,6 +17,7 @@ import "App.css";
 import axios from "axios";
 
 export const routes = [
+  { path: "/designPattern", component: <DesignPattern /> },
   { path: "/prototype", component: <Prototype /> },
   { path: "/this", component: <This /> },
   { path: "/setStateInUseEffect", component: <SetStateInUseEffect /> },

@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import styled from "styled-components/macro";
 import { handleConsoles } from "utils/methods";
 
@@ -22,10 +23,6 @@ const objB = {
 const bindSay = objB.sayThis.bind("hello");
 bindSay.call("改變的值");
 // bindSay.apply('改變的值');
-
-document.querySelector(".btn").addEventListener("click", function () {
-  console.log(this, "指向DOM本身");
-});
 
 const informations = [
   {
@@ -62,6 +59,12 @@ const informations = [
 
 function This() {
   const messages = handleConsoles(informations);
+
+  useEffect(() => {
+    document.querySelector(".btn").addEventListener("click", function () {
+      console.log(this, "指向DOM本身");
+    });
+  }, []);
 
   return (
     <section style={{ fontSize: "20px" }}>

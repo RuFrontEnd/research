@@ -28,6 +28,12 @@ function DesignPattern() {
   });
   // console.log(myObject);
 
+  // SOLID 原則
+  // Open/Closed Principle (開閉原則)
+  const pay = ()=>{
+    
+  }
+
   // constructor pattern 建構子模式
   function Student(name, year, grade) {
     this.name = name;
@@ -41,9 +47,6 @@ function DesignPattern() {
   // console.log(student1);
 
   // Module Pattern 模組模式
-
-
-  console.log("publicAPI", publicAPI);
 
   return (
     <section style={{ fontSize: "20px" }}>check the console first plz.</section>

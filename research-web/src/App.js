@@ -13,6 +13,7 @@ import InfiniteScroll from "components/infiniteScroll/infiniteScroll";
 import ResizableTable from "components/resizableTable/ResizableTable";
 import This from "components/this/This"
 import Prototype from "components/prototype/Prototype";
+import DesignPattern from "components/designPattern/DesignPattern";
 import "App.css";
 import axios from "axios";
 

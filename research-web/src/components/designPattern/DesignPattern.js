@@ -156,8 +156,12 @@ function DesignPattern() {
     new RangeQuestion("What is the speed limit in your city?"),
   ];
 
-  printQuiz_correct(questions_correct);
+  // printQuiz_correct(questions_correct);
 
+  // ---------- Liskov Substitution Principle(里氏替換原則) ----------
+
+
+  // Desgin Pattern
   // constructor pattern 建構子模式
   function Student(name, year, grade) {
     this.name = name;

@@ -38,9 +38,9 @@ function Objector() {
       return this.log.join("");
     },
   }; // getter 方法用於物件動態取值
-  console.log(myObject2.latest, myObject2.concat);
+  // console.log(myObject2.latest, myObject2.concat);
 
-  
+
   return (
     <section style={{ fontSize: "20px" }}>check the console first plz.</section>
   );

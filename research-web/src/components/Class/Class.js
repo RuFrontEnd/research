@@ -3,13 +3,24 @@ import styled from "styled-components/macro";
 function Class() {
   // JS中類別仍是函式, 是原型繼承的語法糖, 記得class名稱要大寫
   class Polygon {
+    // constructor 只能有一個
     constructor(height, weight) {
       this.height = height;
       this.weight = weight;
     }
+
+    // Getter
+    get area() {
+      return this.calcArea();
+    }
+
+    calcArea() {
+      return this.height * this.weight;
+    }
   } // 類別宣告式(class declarations)
-  const polygon = new Polygon(10, 10);
-  // console.log(polygon); // { height:10, weight:10 }
+  const square = new Polygon(10, 10);
+  // console.log(square); // { height:10, weight:10 }
+  // console.log(square.area);
 
   const NamedClass = class namedClass {
     constructor(message) {

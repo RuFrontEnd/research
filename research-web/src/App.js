@@ -7,6 +7,7 @@ import CarouselB from "components/carouselB/CarouselB";
 import Pagination from "components/pagination/Pagination";
 import Internationalization from "components/internationalization/Internationalization";
 import SetStateInUseEffect from "components/setStateInUseEffect/SetStateInUseEffect";
+import Object from "components/object/Object";
 import Nav from "components/Nav";
 import CssTranstion from "components/cssTranstion/CssTranstion";
 import InfiniteScroll from "components/infiniteScroll/infiniteScroll";
@@ -23,6 +24,7 @@ export const routes = [
   { path: "/class", component: <Class /> },
   { path: "/prototype", component: <Prototype /> },
   { path: "/this", component: <This /> },
+  { path: "/object", component: <Object /> },
   { path: "/setStateInUseEffect", component: <SetStateInUseEffect /> },
   { path: "/internation", component: <Internationalization /> },
   { path: "/pagination", component: <Pagination /> },

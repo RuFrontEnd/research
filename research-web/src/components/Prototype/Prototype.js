@@ -11,6 +11,7 @@ function Dog(name, color, size) {
     console.log("bark");
   };
 } // 建構函式
+
 const newSring = new String("字串");
 
 const informations = [

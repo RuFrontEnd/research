@@ -16,10 +16,12 @@ import This from "components/this/This";
 import Prototype from "components/prototype/Prototype";
 import Class from "components/Class/Class";
 import DesignPattern from "components/designPattern/DesignPattern";
+import UseCallback from "components/useCallback/UseCallback";
 import "App.css";
 import axios from "axios";
 
 export const routes = [
+  { path: "/useCallback", component: <UseCallback /> },
   { path: "/designPattern", component: <DesignPattern /> },
   { path: "/class", component: <Class /> },
   { path: "/prototype", component: <Prototype /> },

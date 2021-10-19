@@ -18,13 +18,11 @@ const objA = {
     console.log("objA, this", this);
   },
 };
-
 objA.sayThis(); // this代表的值在被呼叫的當下決定, 指向呼叫者
 
 function sayThis() {
   console.log("global this", this);
 }
-
 sayThis(); // 嚴格模式下, this為undefiend, 非嚴格模式下, this指向全域window, 因為等同於window.sayThis()
 
 const objC = {
@@ -35,7 +33,6 @@ const objC = {
     anotherFunction();
   },
 };
-
 objC.sayThis(); // 嚴格模式下, anotherFunction函式的this為undefiend, 因為呼叫anotherFunction者不是objC, 而是sayThis函式
 
 const objD = {
@@ -46,7 +43,6 @@ const objD = {
     return anotherFunction.bind(this); // 這邊的this是sayThis中的this
   },
 };
-
 objD.sayThis()(); // 利用bind的方式可以鎖住this的指向, 此時anotherFunction的this指向為objD
 
 const objE = {
@@ -57,7 +53,6 @@ const objE = {
     anotherFunction();
   },
 };
-
 objE.sayThis(); //也可以利用箭頭函式bind住指向, 此時anotherFunction的this指向為objE
 
 function test(a, b, c) {

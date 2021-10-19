@@ -13,7 +13,7 @@ const objA = {
 objA.sayThis(); // this代表的值在被呼叫的當下決定
 
 function sayThis() {
-  console.log(this);
+  console.log('global this', this);
 }
 
 sayThis(); // 嚴格模式下, this為undefiend, 非嚴格模式下, this指向全域window, 因為等同於window.sayThis()

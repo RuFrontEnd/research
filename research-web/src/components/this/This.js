@@ -3,6 +3,15 @@ import styled from "styled-components/macro";
 import { handleConsoles } from "utils/methods";
 
 // this 就是指當物件中包有函式者, 其所代表的指向
+// this 的好處是可以在物件中的函式下不斷復用這個物件內的值
+
+const person = {
+  name: "小明",
+  sayName: function () {
+    console.log("name", this.name);
+  },
+};
+person.sayName(); // 此時就可以拿到屬性name的值
 
 const objA = {
   sayThis: function () {
@@ -13,7 +22,7 @@ const objA = {
 objA.sayThis(); // this代表的值在被呼叫的當下決定, 指向呼叫者
 
 function sayThis() {
-  console.log('global this', this);
+  console.log("global this", this);
 }
 
 sayThis(); // 嚴格模式下, this為undefiend, 非嚴格模式下, this指向全域window, 因為等同於window.sayThis()

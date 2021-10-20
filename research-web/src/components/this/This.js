@@ -55,6 +55,37 @@ const objE = {
 };
 objE.sayThis(); //也可以利用箭頭函式bind住指向, 此時anotherFunction的this指向為objE
 
+const wizard = {
+  health: 30,
+  enrichTheBlood: function (num, num2) {
+    this.health += num + num2;
+  },
+};
+
+const archer = {
+  health: 50,
+};
+
+const sworder = {
+  health: 180,
+};
+
+const thief = {
+  health: 80,
+};
+
+wizard.enrichTheBlood(20, 40); // 將巫師的血補滿
+console.log("wizard", wizard);
+wizard.enrichTheBlood.call(archer, 20, 40); // call()改變this指向不同物件, 第一個參數接要指向的物件, 第二個之後為該function的參數
+console.log("archer", archer);
+wizard.enrichTheBlood.apply(sworder, [20, 40]); // apply()與call()功能相同, 差別在於接參數的方式用陣列表示
+console.log("sworder", sworder);
+const enrichTheBloodToThief = wizard.enrichTheBlood.bind(thief, 20, 40); // bind()與call()功能相同, 但不會立即執行, 而是回傳一個新函式出來
+enrichTheBloodToThief();
+// const enrichTheBloodToThief = wizard.enrichTheBlood.bind(thief); // bind也可以這樣寫
+// enrichTheBloodToThief(20,40);
+console.log("thief", thief);
+
 function test(a, b, c) {
   return [this, a, b, c];
 }

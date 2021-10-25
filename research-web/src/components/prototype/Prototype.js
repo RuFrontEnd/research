@@ -27,6 +27,12 @@ function Prototype() {
   // console.log("lizard.hasOwnProperty('name')", lizard.hasOwnProperty("name")); // hasOwnProperty()判斷該屬性是否為非繼承而來的屬性
   // console.log("lizard.hasOwnProperty('name')", lizard.hasOwnProperty("isFire"));
 
+  function funcA() {}
+  // console.log(
+  //   "funcA.__proto__ === Function.prototype",
+  //   funcA.__proto__ === Function.prototype
+  // ); // prototype為function獨有的屬性, 實例的__proto__就是建構子的prototype
+
   let human = {
     mortal: true,
   };

@@ -76,9 +76,15 @@ function OOP(props) {
   }
 
   let charles = newFake("charles", "student");
-  console.log("charles", charles);
-  console.log("charles.sayJob()", charles.sayJob());
-  console.log("charles.__proto__", charles.__proto__);
+  // console.log("charles", charles);
+  // console.log("charles.sayJob()", charles.sayJob());
+  // console.log("charles.__proto__", charles.__proto__);
+
+  // OOP 四原則
+  // 1. 封裝(Encapsulation) => 將屬性、方法包裝成一個類別(建構子)
+  // 2. 抽象(Abstraction) => 隱藏使用者(開發者)不需要知道的實作邏輯
+  // 3. 繼承(Inheritance) => 不同類別(建構子)之間可以互相繼承屬性、方法
+  // 4. 多型(Polymorphism) => 相同名稱的方法，傳入不同的參數，會執行不同的指令
 
   return <Container className={className}>check console.</Container>;
 }

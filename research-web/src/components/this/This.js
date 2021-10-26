@@ -10,52 +10,52 @@ function This() {
   const person = {
     name: "小明",
     sayName: function () {
-      console.log("name", this.name);
+      return this.name;
     },
   };
-  person.sayName(); // 此時就可以拿到屬性name的值
+  // console.log('person.sayName()',person.sayName()); // 此時就可以拿到屬性name的值
 
   const objA = {
     sayThis: function () {
-      console.log("objA, this", this);
+      return this;
     },
   };
-  objA.sayThis(); // this代表的值在被呼叫的當下決定, 指向呼叫者
+  // console.log("objA.sayThis()", objA.sayThis()); // this代表的值在被呼叫的當下決定, 指向呼叫者
 
   function sayThis() {
-    console.log("global this", this);
+    return this;
   }
-  sayThis(); // 嚴格模式下, this為undefiend, 非嚴格模式下, this指向全域window, 因為等同於window.sayThis()
+  // console.log("sayThis()", sayThis()); // 嚴格模式下, this為undefiend, 非嚴格模式下, this指向全域window, 因為等同於window.sayThis()
 
   const objC = {
     sayThis: function () {
       function anotherFunction() {
-        console.log("objC, this", this);
+        return "objC, this", this;
       }
       anotherFunction();
     },
   };
-  objC.sayThis(); // 嚴格模式下, anotherFunction函式的this為undefiend, 因為呼叫anotherFunction者不是objC, 而是sayThis函式
+  // console.log("objC.sayThis()", objC.sayThis()); // 嚴格模式下, anotherFunction函式的this為undefiend, 因為呼叫anotherFunction者不是objC, 而是sayThis函式
 
   const objD = {
     sayThis: function () {
       function anotherFunction() {
-        console.log("objD, this", this); // 這邊的this是被bind住指向的this
+        return "objD, this", this; // 這邊的this是被bind住指向的this
       }
       return anotherFunction.bind(this); // 這邊的this是sayThis中的this
     },
   };
-  objD.sayThis()(); // 利用bind的方式可以鎖住this的指向, 此時anotherFunction的this指向為objD
+  // console.log("objD.sayThis()()", objD.sayThis()()); // 利用bind的方式可以鎖住this的指向, 此時anotherFunction的this指向為objD
 
   const objE = {
     sayThis: function () {
       const anotherFunction = () => {
-        console.log("objE, this", this);
+        return "objE, this", this;
       };
       anotherFunction();
     },
   };
-  objE.sayThis(); //也可以利用箭頭函式bind住指向, 此時anotherFunction的this指向為objE
+  // console.log("objE.sayThis()", objE.sayThis()); //也可以利用箭頭函式bind住指向, 此時anotherFunction的this指向為objE
 
   const wizard = {
     health: 30,
@@ -77,16 +77,46 @@ function This() {
   };
 
   wizard.enrichTheBlood(20, 40); // 將巫師的血補滿
-  console.log("wizard", wizard);
+  // console.log("wizard", wizard);
   wizard.enrichTheBlood.call(archer, 20, 40); // call()改變this指向不同物件, 第一個參數接要指向的物件, 第二個之後為該function的參數
-  console.log("archer", archer);
+  // console.log("archer", archer);
   wizard.enrichTheBlood.apply(sworder, [20, 40]); // apply()與call()功能相同, 差別在於接參數的方式用陣列表示
-  console.log("sworder", sworder);
+  // console.log("sworder", sworder);
   const enrichTheBloodToThief = wizard.enrichTheBlood.bind(thief, 20, 40); // bind()與call()功能相同, 但不會立即執行, 而是回傳一個新函式出來
   enrichTheBloodToThief();
   // const enrichTheBloodToThief = wizard.enrichTheBlood.bind(thief); // bind也可以這樣寫
   // enrichTheBloodToThief(20,40);
-  console.log("thief", thief);
+  // console.log("thief", thief);
+
+  // this三種binding
+  // 1. new binding
+  function Person(name) {
+    this.name = name;
+  }
+  const abby = new Person("Addy"); // this指向abby
+
+  // 2. implicit binding
+  const soldierA = {
+    id: "1",
+    class: "army",
+    weapon: "rifle",
+    shoot() {
+      return `${this.weapon} fired`;
+    },
+  };
+
+  // 3. arrow function
+  const soldierB = {
+    id: "1",
+    class: "army",
+    weapon: "rifle",
+    shoot() {
+      const pullTheTrigger = () => {
+        return `${this.weapon} fired`;
+      };
+      return pullTheTrigger();
+    },
+  };
 
   function test(a, b, c) {
     return [this, a, b, c];

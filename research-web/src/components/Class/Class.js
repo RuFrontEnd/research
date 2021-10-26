@@ -1,9 +1,10 @@
 import styled from "styled-components/macro";
 
 function Class() {
-  // JS中類別仍是函式, 是原型繼承的語法糖, 記得class名稱要大寫
+  // JS中類別仍是函式, 是原型繼承的語法糖
+  // class名稱要大寫
   class Polygon {
-    // constructor 只能有一個
+    // constructor 在使用new關鍵字時會執行, 只能有一個
     constructor(height, width) {
       this.height = height;
       this.width = width;
@@ -23,7 +24,7 @@ function Class() {
 
     calcArea() {
       return this.height * this.width;
-    } // 原型方法(method)
+    } // 原型方法(method) 等同於Polygon.prototype.calcArea = function(){ return this.height * this.width; }
 
     getWhoAmI() {
       return this;
@@ -61,23 +62,52 @@ function Class() {
   // console.log(banana); // Error
 
   class Square extends Polygon {
-    constructor(width) {
-      super(); // 繼承中的constructor要使用this前必須呼叫super()
-      this.width = width;
+    constructor(height, width, id) {
+      super(height, width); // 繼承中的constructor要使用this前必須呼叫super() => super(參數)回傳的值為母層中constructor的值, 參數個數對照母層中constructor值的個數
+      // console.log("super()", super());
+      this.id = id;
     }
 
-    getWhoAmI() {
-      return super.getWhoAmI(); // 使用super獲取父層的方法
+    getInformation() {
+      return `Id ${this.id} square, width "${
+        this.width
+      }", area "${this.calcArea()}"`;
     }
 
     calcArea() {
-      return this.width * this.width;
-    } // 改變原方法
+      return Math.pow(this.width, 2);
+    } // 覆蓋原方法
   } // extends 繼承
 
-  const square4 = new Square(10);
-  // console.log(square4.getWhoAmI());
+  const square4 = new Square(10, 10, 4);
+  console.log("square4", square4);
+  console.log(square4.getInformation());
   // console.log(square4.calcArea());
+
+  // 皇后範例
+  class Character {
+    constructor(name, weapon) {
+      this.name = name;
+      this.weapon = weapon;
+    }
+    attack() {
+      return "atack with " + this.weapon;
+    }
+  }
+
+  class Queen extends Character {
+    constructor(name, weapon, type) {
+      super(name, weapon);
+      this.type = type;
+    }
+    attack() {
+      console.log(super.attack());
+      return `I am the ${this.name} of ${this.type}, now bow down to me! `;
+    }
+  }
+
+  const victoria = new Queen("Victoria", "army", "hearts");
+  victoria.attack();
 
   return (
     <section style={{ fontSize: "20px" }}>check the console first plz.</section>

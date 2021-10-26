@@ -2,6 +2,11 @@ import styled from "styled-components/macro";
 import { handleConsoles } from "utils/methods";
 
 function Prototype() {
+  console.log("Object", Object);
+  console.log("Object.prototype", Object.prototype);
+  console.log("Array", Array);
+  console.log("Array.prototype", Array.prototype);
+  console.log("Function", Function);
   // __proto__為繼承父層
   const arr = [];
   // console.log("arr.__proto__", arr.__proto__); // arr的繼承父層為Array constructor(建構子)
@@ -42,17 +47,6 @@ function Prototype() {
   socrates.age = 45;
   // console.log("socrates", socrates);
   // console.log("socrates.isPrototypeOf(human)", human.isPrototypeOf(socrates));
-
-  // console.log("Date", Date);
-  Date.prototype.lastYear = function () {
-    console.log("this", this.getFullYear());
-    // return this.
-  };
-  const day = new Date("1900-10-10");
-  // console.log("day", day);
-
-  function Player() {}
-  const object = {};
   function Dog(name, color, size) {
     this.name = name; // this指向呼叫的對象
     this.color = color;
@@ -63,55 +57,6 @@ function Prototype() {
   } // 建構函式
 
   const newSring = new String("字串");
-
-  const informations = [
-    {
-      title: "Player",
-      method: Player,
-      content: "創建出來的一個函式",
-    },
-    { title: "object", method: object, content: "創建出來的一個物件" },
-    {
-      title: "Player.prototype",
-      method: Player.prototype,
-      content: "Player.prototype指向一個特殊的prototype物件",
-    },
-    {
-      title: "object.prototype",
-      method: object.prototype,
-      content: "物件沒有prototype屬性",
-    },
-    {
-      title: "Player.prototype.constructor",
-      method: Player.prototype.constructor,
-      content: "Player.prototype.constructor指回player",
-    },
-    {
-      title: "Player.__proto__",
-      method: Player.__proto__,
-      content:
-        "Player.__proto__向上指向父層, proto是每個「物件」都有的屬性, 代表該物件繼承而來的源頭",
-    },
-    {
-      title: "Player.prototype.__proto__",
-      method: Player.prototype.__proto__,
-      content: "指回原生Object物件",
-    },
-    {
-      title: "Object.prototype.__proto__",
-      method: Object.prototype.__proto__,
-      content: "Object為最頂層, __proto__為null值",
-    },
-    {
-      title: "***整理***",
-      // method: Object.prototype.__proto__,
-      content:
-        "(1)每個「函式」中都會有prototype屬性, 指向一個prototype物件, (2)每個函式的prototype物件, 會有一個constructor屬性, 指回到這個函式, (3)每個物件都有一個__proto__內部屬性，指向它的繼承而來的原型prototype物件, (4)由__proto__指向連接起來的結構, 稱之為原型鏈(prototype chain)",
-    },
-  ];
-  // console.log("－－－－－－－－－－　protoType研究開始　－－－－－－－－－－");
-
-  // const messages = handleConsoles(informations);
 
   // 建構函式研究
   let Bibi = new Dog("逼逼", "紅色", "小");
@@ -134,6 +79,7 @@ function Prototype() {
   const date = new Date();
   // console.log("date", date);
   // console.dir(date); // console.dir打印出該物件所有屬性
+
   Date.prototype.getFullDate = function () {
     let dd = String(this.getDate());
     let mm = String(this.getMonth() + 1);
@@ -144,10 +90,7 @@ function Prototype() {
   // console.log("date.getFullDate()", date.getFullDate());
 
   return (
-    <section style={{ fontSize: "20px" }}>
-      check the console first plz.
-      {/* {messages.map((message) => message)} */}
-    </section>
+    <section style={{ fontSize: "20px" }}>check the console first plz.</section>
   );
 }
 

@@ -14,13 +14,6 @@ function FP(props) {
   // 6. pure 必須是pure function
   // 7. no shared state 無共享狀態(函式內的方法改變相同值)
 
-  let user = {
-    name: "Kim",
-    active: true,
-    cart: [],
-    purchase: [],
-  };
-
   // pure function(純粹函式)
   // 1.  不可以改變本身以外的任何東西(沒有任何side effects)
   // 2. 一個function給予一個input, 必定出現同一個的output(referential transparency 參照透明性)
@@ -117,7 +110,74 @@ function FP(props) {
   const partialMultiplyBy5 = multiplyB.bind(null, 5);
   partialMultiplyBy5(4 * 10);
 
-  return <Container className={className}></Container>;
+  // compose 與 pipe
+  // compose 與 pipe 都是要解決 function hell 的問題 fn1(fn2(fn3(fn...)))
+  // compose 與 pipe 執行結果完全一樣, 只是程式碼閱讀順序的差異
+  const multipleBy5 = (num) => num * 5;
+  const makePositive = (num) => Math.abs(num);
+  // const compose = (f, g) => (data) => f(g(data)); // compose 由g執行完再執行f(由右至左執行)
+  const pipe = (f, g) => (data) => g(f(data)); // pipe 由f執行完再執行g(由左至右執行)
+  // const multipleBy5AndAbsoluteNumber = compose(multipleBy5, makePositive)(-50);
+  const multipleBy5AndAbsoluteNumber = pipe(multipleBy5, makePositive)(-50);
+  // console.log("multipleBy5AndAbsoluteNumber", multipleBy5AndAbsoluteNumber);
+
+  // FP example - Amazon shopping
+  // implement a cart feature(done with these actions called "purchaseItem"):
+  // 1. Add items to cart
+  // 2. Add 3% tax to item in cart
+  // 3. Buy item: cart --> purchase
+  // 4. Empty cart
+  let user = {
+    name: "Kim",
+    active: true,
+    cart: [],
+    purchases: [],
+  };
+  let userHistory = [];
+
+  const purchaseItem = (a, b, c, d) => (user, item) => d(c(b(a(user, item))));
+  // const purchaseItem = (...fns) => (...args) => fns.reduce((a,b) => a(b(args)))
+
+  function addItemToCart(user, item) {
+    const upadatedCart = user.cart.concat(item);
+    userHistory.push(user);
+    return Object.assign({}, user, { cart: upadatedCart });
+  }
+
+  function appyTaxToItems(user) {
+    const { cart } = user;
+    const taxRate = 1.3;
+    const upadatedCart = cart.map((item) => {
+      return {
+        name: item.name,
+        price: item.price * taxRate,
+      };
+    });
+    userHistory.push(user);
+    return Object.assign({}, user, { cart: upadatedCart });
+  }
+
+  function buyItem(user) {
+    userHistory.push(user);
+    return Object.assign({}, user, { purchases: user.cart });
+  }
+
+  function emptyCart(user) {
+    userHistory.push(user);
+    return Object.assign({}, user, { cart: [] });
+  }
+
+  const buyedUser = purchaseItem(
+    addItemToCart,
+    appyTaxToItems,
+    buyItem,
+    emptyCart
+  )(user, { name: "laptop", price: 200 });
+
+  // console.log("buyedUser", buyedUser);
+  console.log("userHistory", userHistory);
+
+  return <Container className={className}>check console</Container>;
 }
 
 const Container = styled.section``;

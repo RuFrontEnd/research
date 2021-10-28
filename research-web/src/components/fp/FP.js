@@ -135,8 +135,12 @@ function FP(props) {
   };
   let userHistory = [];
 
-  const purchaseItem = (a, b, c, d) => (user, item) => d(c(b(a(user, item))));
-  // const purchaseItem = (...fns) => (...args) => fns.reduce((a,b) => a(b(args)))
+  // const purchaseItem = (a, b, c, d) => (user, item) => d(c(b(a(user, item))));
+  const piper =
+    (f, g) =>
+    (...args) =>
+      g(f(...args));
+  const purchaseItem = (...fns) => fns.reduce(piper);
 
   function addItemToCart(user, item) {
     const upadatedCart = user.cart.concat(item);
@@ -174,7 +178,7 @@ function FP(props) {
     emptyCart
   )(user, { name: "laptop", price: 200 });
 
-  // console.log("buyedUser", buyedUser);
+  console.log("buyedUser", buyedUser);
   console.log("userHistory", userHistory);
 
   return <Container className={className}>check console</Container>;

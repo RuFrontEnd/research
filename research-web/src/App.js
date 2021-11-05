@@ -1,5 +1,7 @@
+import "App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom"; // npm install react-router-dom
 import { CSSTransition } from "react-transition-group";
+import axios from "axios";
 import UploadFile from "components/uploadFile/UploadFile";
 import Reveal from "components/reveal/Reveal";
 import Carousel from "components/carousel/Carousel";
@@ -19,10 +21,10 @@ import DesignPattern from "components/designPattern/DesignPattern";
 import UseCallback from "components/useCallback/UseCallback";
 import OOP from "components/oop/OOP";
 import FP from "components/fp/FP";
-import "App.css";
-import axios from "axios";
+import Test from "components/test/Test";
 
 export const routes = [
+  { path: "/test", component: <Test /> },
   { path: "/fp", component: <FP /> },
   { path: "/oop", component: <OOP /> },
   { path: "/useCallback", component: <UseCallback /> },

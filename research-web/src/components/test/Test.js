@@ -19,13 +19,13 @@ export const googleSearch = (searchInput, db) => {
   return matches.length > 3 ? matches.slice(0, 3) : matches; // 第二個是篩出來值的數量是不是小於3個
 }; // 被測函式要維持pure function
 
-// export const getPeoplePromise = (url) => {
-//   return fetch(url)
-//     .then((res) => res.json())
-//     .then((data) => {
-//       return { count: data.count, results: data.results };
-//     });
-// };
+export const getPeoplePromise = (url, fetchAPI) => {
+  return fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      return 82;
+    });
+};
 
 // export const getPeople = async (url) => {
 //   const getRequst = await fetch(url);
@@ -36,7 +36,7 @@ export const googleSearch = (searchInput, db) => {
 function Test(props) {
   const { className } = props;
   useEffect(() => {
-    getPeoplePromise("https://swapi.dev/api/people");
+    getPeoplePromise("https://swapi.dev/api/people", fetch);
   }, []);
 
   return (

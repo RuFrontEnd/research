@@ -1,10 +1,10 @@
 import {
   googleSearch,
-  // getPeoplePromise,
+  getPeoplePromise,
   // getPeople,
 } from "components/test/Test";
 
-jest.setTimeout(6 * 1000);
+jest.setTimeout(12 * 1000);
 
 const dbMock = ["dog.com", "cheesepuff.com", "disney.com", "dogpicture.com"]; // 模擬db資料結構
 
@@ -23,12 +23,14 @@ it("does not return more than 3 matches", () => {
   expect(googleSearch(".com", dbMock).length).toEqual(3);
 });
 
+it("calls swapi to get people with promise", (done) => {
+  getPeoplePromise("https://swapi.dev/api/people").then((data) => {
+    expect(data).toEqual(82);
+  });
+}); // 非同步測試
+
 // it("calls swapi to get people", (done) => {
 //   getPeople("https://swapi.dev/api/people").then((data) => {
 //     expect(data.count).toEqual(82);
 //   });
-// }); // 非同步測試
-
-// it("calls swapi to get people with promise", (done) => {
-//   getPeoplePromise("https://swapi.dev/api/people");
 // }); // 非同步測試

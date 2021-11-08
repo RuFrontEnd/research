@@ -1,8 +1,4 @@
-import {
-  googleSearch,
-  getPeoplePromise,
-  // getPeople,
-} from "components/test/Test";
+import { googleSearch, getPeople } from "components/test/Test";
 
 jest.setTimeout(12 * 1000);
 
@@ -23,14 +19,26 @@ it("does not return more than 3 matches", () => {
   expect(googleSearch(".com", dbMock).length).toEqual(3);
 });
 
-it("calls swapi to get people with promise", (done) => {
-  getPeoplePromise("https://swapi.dev/api/people").then((data) => {
-    expect(data).toEqual(82);
-  });
-}); // 非同步測試
+it("getPeople returns count results", () => {
+  expect.assertions(1);
+  return getPeople("https://swapi.dev/api/people").then((data) => {
+    expect(data.count).toBe(82);
+  }); // 測試Promise的後要return出去
+});
 
-// it("calls swapi to get people", (done) => {
-//   getPeople("https://swapi.dev/api/people").then((data) => {
-//     expect(data.count).toEqual(82);
-//   });
+// it("getPeople returns count results", () => {
+//   const mockFetch = jest.fn().mockReturnValue(
+//     Promise.resolve({
+//       json: () => Promise.resolve({ count: 87, results: [0, 1, 2, 3, 4, 5] }),
+//     })
+//   );
+//   // expect.assertions(1);
+//   getPeople("https://swapi.dev/api/people").then(data=>{
+//     expect(()=>{return 1}).toBe(1)
+//   })
+// });
+
+// getPeople("https://swapi.dev/api/people").then((data) => {
+//   expect(data).toEqual(82);
+// });
 // }); // 非同步測試

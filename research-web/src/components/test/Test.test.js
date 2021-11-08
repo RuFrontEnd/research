@@ -20,7 +20,7 @@ it("does not return more than 3 matches", () => {
 });
 
 it("getPeople returns count results", () => {
-  expect.assertions(1);
+  expect.assertions(1); // 確保expect被執行的次數
   return getPeople("https://swapi.dev/api/people").then((data) => {
     expect(data.count).toBe(82);
   }); // 測試Promise的後要return出去

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expect to render MapTest component 1`] = `
+<div
+  className="test"
+>
+  <p
+    key="A"
+  >
+    A
+  </p>
+  <p
+    key="B"
+  >
+    B
+  </p>
+  <p
+    key="C"
+  >
+    C
+  </p>
+</div>
+`;
+
+exports[`expect to render Test component 1`] = `
+<div
+  className="test"
+>
+  Hello World
+</div>
+`;

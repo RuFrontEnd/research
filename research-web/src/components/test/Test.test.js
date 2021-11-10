@@ -1,10 +1,15 @@
+import { shallow, mount, render } from "enzyme";
 import { googleSearch, getPeople } from "components/test/Test";
+import Test from "components/test/Test";
+import MapTest from "components/test/MapTest";
+
+// enzyme需要初始化 => (CRA專案中)在src/setUpTests.js做設定
 
 jest.setTimeout(12 * 1000);
 
 const dbMock = ["dog.com", "cheesepuff.com", "disney.com", "dogpicture.com"]; // 模擬db資料結構
 
-// it() === describe()
+// it() === describe()W
 it("is searching google", () => {
   expect(googleSearch("沒有這個關鍵字", dbMock)).toEqual([]);
   expect(googleSearch("dog", dbMock)).toEqual(["dog.com", "dogpicture.com"]);
@@ -23,22 +28,22 @@ it("getPeople returns count results", () => {
   expect.assertions(1); // 確保expect被執行的次數
   return getPeople("https://swapi.dev/api/people").then((data) => {
     expect(data.count).toBe(82);
-  }); // 測試Promise的後要return出去
+  }); // 測試Promise的話要return出去
 });
 
-// it("getPeople returns count results", () => {
-//   const mockFetch = jest.fn().mockReturnValue(
-//     Promise.resolve({
-//       json: () => Promise.resolve({ count: 87, results: [0, 1, 2, 3, 4, 5] }),
-//     })
-//   );
-//   // expect.assertions(1);
-//   getPeople("https://swapi.dev/api/people").then(data=>{
-//     expect(()=>{return 1}).toBe(1)
-//   })
-// });
+// shallow 只 render 一層 component(不會有子/孫層)
+it("expect to render Test component", () => {
+  const $test = shallow(<Test />);
+  expect($test.length).toEqual(1);
+  expect($test).toMatchSnapshot(); // 自動生成__snapshots__資料夾
+});
 
-// getPeople("https://swapi.dev/api/people").then((data) => {
-//   expect(data).toEqual(82);
-// });
-// }); // 非同步測試
+// snapshot為紀錄上一次DOM結構, 這樣可以避免一個一個去抓DOM來測試
+// 解決 snapshot為`Shallow Wrapper {}` https://backbencher.dev/articles/empty-shallowwrapper-snapshot-jest-enzyme
+// yarn test -- --coverage => 顯示測試覆蓋率
+
+it("expect to render MapTest component", () => {
+  const mockItems = ["A", "B", "C"];
+  const $mapTest = shallow(<MapTest items={mockItems} />);
+  expect($mapTest).toMatchSnapshot();
+});

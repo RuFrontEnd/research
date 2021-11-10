@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import styled from "styled-components/macro";
 
@@ -29,12 +29,9 @@ export const getPeople = (url) => {
 
 function Test(props) {
   const { className } = props;
+  const [state, setState] = useState(0);
 
-  return (
-    <Container className={className}>
-      <p>using yarn test</p>
-    </Container>
-  );
+  return <div className="test">Hello World</div>;
 }
 
 const Container = styled.section``;

@@ -5,7 +5,7 @@ import MapTest from "components/test/MapTest";
 
 // enzyme需要初始化 => (CRA專案中)在src/setUpTests.js做設定
 
-jest.setTimeout(12 * 1000);
+jest.setTimeout(20 * 1000);
 
 const dbMock = ["dog.com", "cheesepuff.com", "disney.com", "dogpicture.com"]; // 模擬db資料結構
 

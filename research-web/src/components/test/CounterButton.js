@@ -8,11 +8,14 @@ function CounterButton(props) {
 
   return (
     <button
+      id="counter"
       color={color}
       onClick={() => {
         setCount((count) => count + 1);
       }}
-    >++</button>
+    >
+      {count}
+    </button>
   );
 }
 

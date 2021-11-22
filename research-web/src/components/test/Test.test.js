@@ -51,6 +51,5 @@ it("expect to render MapTest component", () => {
 
 it("expect to render StyledComponent", () => {
   const $StyledComp = shallow(<StyledComp />);
-  console.log('$StyledComp',$StyledComp)
   expect($StyledComp.find("StyledBox").length).toBe(1);
 });

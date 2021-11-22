@@ -2,6 +2,7 @@ import { shallow, mount, render } from "enzyme";
 import { googleSearch, getPeople } from "components/test/Test";
 import Test from "components/test/Test";
 import MapTest from "components/test/MapTest";
+import StyledComp from "components/test/StyledComp";
 
 // enzyme需要初始化 => (CRA專案中)在src/setUpTests.js做設定
 
@@ -46,4 +47,10 @@ it("expect to render MapTest component", () => {
   const mockItems = ["A", "B", "C"];
   const $mapTest = shallow(<MapTest items={mockItems} />);
   expect($mapTest).toMatchSnapshot();
+});
+
+it("expect to render StyledComponent", () => {
+  const $StyledComp = shallow(<StyledComp />);
+  console.log('$StyledComp',$StyledComp)
+  expect($StyledComp.find("StyledBox").length).toBe(1);
 });

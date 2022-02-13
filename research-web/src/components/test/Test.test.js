@@ -52,4 +52,5 @@ it("expect to render MapTest component", () => {
 it("expect to render StyledComponent", () => {
   const $StyledComp = shallow(<StyledComp />);
   expect($StyledComp.find("StyledBox").length).toBe(1);
+  expect($StyledComp).toMatchSnapshot();
 });

@@ -22,6 +22,8 @@ exports[`expect to render MapTest component 1`] = `
 </div>
 `;
 
+exports[`expect to render StyledComponent 1`] = `<StyledBox />`;
+
 exports[`expect to render Test component 1`] = `
 <div
   className="test"

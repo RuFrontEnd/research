@@ -22,10 +22,8 @@ import UseCallback from "components/useCallback/UseCallback";
 import OOP from "components/oop/OOP";
 import FP from "components/fp/FP";
 import Test from "components/test/Test";
-import TypeScript from "components/typescript/Typescript";
 
 export const routes = [
-  { path: "/typesscript", component: <TypeScript /> },
   { path: "/test", component: <Test /> },
   { path: "/fp", component: <FP /> },
   { path: "/oop", component: <OOP /> },

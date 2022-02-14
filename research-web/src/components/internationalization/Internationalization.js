@@ -14,6 +14,7 @@
 import "components/internationalization/Internationalization.css";
 import { useTranslation, Trans } from "react-i18next";
 import "components/internationalization/i18nConfig";
+import GoogleSheetI18n from "./googleSheetI18n";
 
 const lngs = {
   en: { nativeName: "English" },
@@ -27,14 +28,14 @@ function Internationalization() {
       <div className={"internation"}>
         {/* Object.keys 回傳陣列*/}
         {Object.keys(lngs).map((lng) => (
-          <a
+          <button
             key={lng}
             style={{ fontWeight: i18n.language === lng ? "bold" : "normal" }}
             type="submit"
             onClick={() => i18n.changeLanguage(lng)}
           >
             {lngs[lng].nativeName}
-          </a>
+          </button>
         ))}
       </div>
       <div className={"internation"}>

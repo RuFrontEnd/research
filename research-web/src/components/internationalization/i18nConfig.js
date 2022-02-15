@@ -2,40 +2,51 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import axios from "axios";
-import papa from 'papaparse';
+import papa from "papaparse";
 
-const _resources = {}
+const _resources = {};
 
 axios
-  .get("https://docs.google.com/spreadsheets/d/e/2PACX-1vSJkTChP7jo0FdCOitgHpZjA5X95SlHrHHSW3401fbJB74vsKiKfWAZBDhHpnINo-UbcQtOztPgqLMa/pub?output=csv")
+  .get(
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJkTChP7jo0FdCOitgHpZjA5X95SlHrHHSW3401fbJB74vsKiKfWAZBDhHpnINo-UbcQtOztPgqLMa/pub?output=csv"
+  )
   .then((response) => {
-    const parseCsvInfos = papa.parse(response.data)
-    console.log('parseCsvInfosAAA', parseCsvInfos)
-    parseCsvInfos.data[0].filter((parseCsvInfo, index) => index !== 0).map(parseCsvInfo => {
-      _resources[parseCsvInfo] = {
-        translation: {
-          description: {
-            part1: "test-part1",
-            part2: "test-part2",
-          },
-        },
-      }
-    })
-    
-    parseCsvInfos.data[0].filter((parseCsvInfo, index) => index !== 0).map(parseCsvInfo => {
-      _resources[parseCsvInfo] = {
-        translation: {
-          description: {
-            part1: "test-part1",
-            part2: "test-part2",
-          },
-        },
-      }
-    })
+    const parseCsvInfos = papa.parse(response.data);
 
+    const languages = parseCsvInfos.data[0].filter(
+      (parseCsvInfo, index) => index !== 0
+    );
 
-    console.log('_resources', _resources)
-  })
+    const languageKeyValues = parseCsvInfos.data
+      .filter((parseCsvInfo, index) => index !== 0)
+      .map((parseInfos) => {
+        return {
+          key: parseInfos[0],
+          values: parseInfos.filter(
+            (parseInfo, parseInfoIndex) => parseInfoIndex !== 0
+          ),
+        };
+      });
+
+    const _resources = {};
+
+    languages.forEach((language, languageIndex) => {
+      _resources[language] = {
+        translation: {
+          description: {},
+        },
+      };
+      languageKeyValues.forEach((languageKeyValue) => {
+        languageKeyValue.values.forEach((value, valueIndex) => {
+          if (languageIndex === valueIndex) {
+            _resources[language]["translation"]["description"][
+              languageKeyValue.key
+            ] = value;
+          }
+        });
+      });
+    });
+  });
 
 const _resourcesO = {
   en: {
@@ -72,7 +83,7 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
-    resources: _resources
+    resources: _resources,
   });
 
 export default i18n;

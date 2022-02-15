@@ -14,7 +14,7 @@
 import "components/internationalization/Internationalization.css";
 import { useTranslation, Trans } from "react-i18next";
 import "components/internationalization/i18nConfig";
-import GoogleSheetI18n from "./googleSheetI18n";
+// import GoogleSheetI18n from "./googleSheetI18n";
 
 const lngs = {
   en: { nativeName: "English" },

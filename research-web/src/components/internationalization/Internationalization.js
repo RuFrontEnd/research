@@ -11,6 +11,7 @@
 // step5 const lngs = { en: { nativeName: "English" }, zh: { nativeName: "中文" }};
 // step6 onClick={() => i18n.changeLanguage(lng)}
 
+import { useEffect } from "react";
 import "components/internationalization/Internationalization.css";
 import { useTranslation, Trans } from "react-i18next";
 // import GoogleSheetI18n from "./googleSheetI18n";

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import styled from "styled-components/macro";
 
@@ -29,9 +30,33 @@ export const getPeople = (url) => {
 
 function Test(props) {
   const { className } = props;
-  const [state, setState] = useState(0);
+  const [state, setState] = useState([]);
 
-  return <div className="test">Hello World</div>;
+  useEffect(() => {
+    setState({ id: 1 });
+  }, []);
+
+  const onClick = () => {
+    state.id = 4;
+
+    setState((_state) => {
+      console.log(_state === state);
+      return state;
+    });
+  };
+
+  return (
+    <div className="test">
+      Hello World
+      <br />
+      {/* <Link to="/abc">/test</Link> */}
+      <button onClick={onClick}>123</button>
+      {state.id}
+      <br />
+      {/* <Link to="abc">test</Link> */}
+      <button>456</button>
+    </div>
+  );
 }
 
 const Container = styled.section``;

@@ -13,16 +13,22 @@
 
 import "components/internationalization/Internationalization.css";
 import { useTranslation, Trans } from "react-i18next";
-import "components/internationalization/i18nConfig";
 // import GoogleSheetI18n from "./googleSheetI18n";
+import "components/internationalization/i18nConfig";
+// import { initReactI18next } from "react-i18next";
+// import LanguageDetector from "i18next-browser-languagedetector";
+// import axios from "axios";
+// import papa from "papaparse";
+// import { useEffect, useState } from "react";
 
 const lngs = {
-  en: { nativeName: "English" },
-  zh: { nativeName: "中文" },
+  en_US: { nativeName: "English" },
+  zh_TW: { nativeName: "中文" },
 };
 
 function Internationalization() {
   const { t, i18n } = useTranslation();
+
   return (
     <section>
       <div className={"internation"}>
@@ -39,9 +45,9 @@ function Internationalization() {
         ))}
       </div>
       <div className={"internation"}>
-        <Trans i18nKey="description.part1"></Trans>
+        <Trans i18nKey="description.key_1"></Trans>
         <br />
-        {t("description.part2")}
+        {t("description.key_2")}
       </div>
     </section>
   );

@@ -6,6 +6,13 @@ import papa from "papaparse";
 
 const _resources = {};
 
+// const I18nConfiguration = ()=>{
+
+// retrun ()=>{
+
+// }
+// }
+
 axios
   .get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vSId6k3l5baXqS0sBNC9zUvQzyaQNFBP_iajSzhW0TF7todofv5DUnrjdylP5_rKGvF6_-tK2y-HN3A/pub?output=csv"
@@ -86,4 +93,4 @@ i18nConfig
 //   },
 // }; // resource 範例結構
 
-export default i18nConfig;
+// export default I18nConfiguration;

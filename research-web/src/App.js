@@ -22,6 +22,7 @@ import UseCallback from "components/useCallback/UseCallback";
 import OOP from "components/oop/OOP";
 import FP from "components/fp/FP";
 import Test from "components/test/Test";
+import { Select, Tag } from "antd";
 
 export const routes = [
   { path: "/test", component: <Test /> },
@@ -47,9 +48,49 @@ export const routes = [
 
 axios.defaults.baseURL = "http://localhost:8000";
 
+const { Option } = Select;
+const children = [];
+
+const options = [
+  { value: "gold" },
+  { value: "lime" },
+  { value: "green" },
+  { value: "cyan" },
+];
+
+const tagRender = (props) => {
+  const { label, value, closable, onClose } = props;
+  const onPreventMouseDown = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  return (
+    <div title="456">
+      <Tag
+        color={value}
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3 }}
+      >
+        {label}
+      </Tag>
+    </div>
+  );
+};
+
 function App() {
   return (
     <div style={{ position: "relative" }}>
+      <Select
+        mode="multiple"
+        showArrow
+        tagRender={tagRender}
+        defaultValue={["gold", "cyan"]}
+        style={{ width: "100%" }}
+        options={options}
+      />
+
       <BrowserRouter>
         <Route exact path="/">
           {({ match }) => (

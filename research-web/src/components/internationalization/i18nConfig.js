@@ -6,7 +6,7 @@ import papa from "papaparse";
 import en from "./i18n/en.json";
 import zh from "./i18n/zh.json";
 
-// const _resources = {};
+const _resources = {};
 
 axios
   .get(
@@ -15,20 +15,20 @@ axios
   .then((response) => {
     const parseCsvInfos = papa.parse(response.data);
 
-    //     const languages = parseCsvInfos.data[0].filter(
-    //       (parseCsvInfo, index) => index !== 0
-    //     );
+    const languages = parseCsvInfos.data[0].filter(
+      (parseCsvInfo, index) => index !== 0
+    );
 
-    //     const languageKeyValues = parseCsvInfos.data
-    //       .filter((parseCsvInfo, index) => index !== 0)
-    //       .map((parseInfos) => {
-    //         return {
-    //           key: parseInfos[0],
-    //           values: parseInfos.filter(
-    //             (parseInfo, parseInfoIndex) => parseInfoIndex !== 0
-    //           ),
-    //         };
-    //       });
+    const languageKeyValues = parseCsvInfos.data
+      .filter((parseCsvInfo, index) => index !== 0)
+      .map((parseInfos) => {
+        return {
+          key: parseInfos[0],
+          values: parseInfos.filter(
+            (parseInfo, parseInfoIndex) => parseInfoIndex !== 0
+          ),
+        };
+      });
 
     languages.forEach((language, languageIndex) => {
       _resources[language] = {

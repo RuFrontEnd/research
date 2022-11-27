@@ -82,15 +82,6 @@ const tagRender = (props) => {
 function App() {
   return (
     <div style={{ position: "relative" }}>
-      <Select
-        mode="multiple"
-        showArrow
-        tagRender={tagRender}
-        defaultValue={["gold", "cyan"]}
-        style={{ width: "100%" }}
-        options={options}
-      />
-
       <BrowserRouter>
         <Route exact path="/">
           {({ match }) => (

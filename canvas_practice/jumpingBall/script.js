@@ -29,26 +29,42 @@ Ball.prototype.draw = function () {
     ctx.fillStyle = controls.color
     ctx.fill()
     ctx.restore()
+
+    this.drawV()
+}
+Ball.prototype.drawV = function () {
+    ctx.beginPath()
+    ctx.save()
+    ctx.scale(3, 3)
+    ctx.translate(this.p.x, this.p.y)
+    ctx.moveTo(0, 0)
+    ctx.lineTo(this.v.x, this.v.y)
+    ctx.strokeStyle = "blue"
+    ctx.stroke()
+    ctx.restore()
 }
 Ball.prototype.update = function () {
-    this.p.x += this.v.x
-    this.p.y += this.v.y
+    if (this.dragging === false) {
+        this.p.x += this.v.x
+        this.p.y += this.v.y
 
-    // velocity should be changed by adding acceleration
-    this.v.x += this.a.x
-    this.v.y += this.a.y
+        // velocity should be changed by adding acceleration
+        this.v.x += this.a.x
+        this.v.y += this.a.y
 
-    this.v.x *= 0.99
-    this.v.y *= 0.99
+        this.v.x *= 0.99
+        this.v.y *= 0.99
 
-    this.v.x *= controls.fade
-    this.v.y *= controls.fade
+        this.v.x *= controls.fade
+        this.v.y *= controls.fade
 
-    controls.vx = this.v.x
-    controls.vy = this.v.y
-    controls.ay = this.a.y
+        controls.vx = this.v.x
+        controls.vy = this.v.y
+        controls.ay = this.a.y
 
-    this.checkBoundary()
+        this.checkBoundary()
+    }
+
 }
 Ball.prototype.checkBoundary = function () {
     // reverse move direction when contact to the edge of window
@@ -120,6 +136,55 @@ function draw() {
 }
 
 draw()
+
+let mousePos = {
+    x: 0, y: 0
+}
+
+function getDistance(p1, p2) {
+    let temp1 = p1.x - p2.x,
+        temp2 = p1.y - p2.y
+    let dist = Math.pow(temp1, 2) + Math.pow(temp2, 2)
+    return Math.sqrt(dist)
+}
+
+canvas.addEventListener('mousedown', function (evt) {
+    mousePos = { x: evt.x, y: evt.y }
+    console.log('mousePos', mousePos)
+    let dist = getDistance(mousePos, ball.p)
+    console.log('dist', dist)
+    if (dist < ball.r) { // if ball is clicked
+        console.log('ball clicked')
+        ball.dragging = true
+    }
+})
+
+canvas.addEventListener('mousemove', function (evt) {
+    let nowPos = { x: evt.x, y: evt.y }
+    if (ball.dragging) {
+        let dx = nowPos.x - ball.p.x, // mousemove trigger once every steady time, so dx won't always be 1 or -1
+            dy = nowPos.y - ball.p.y
+
+        ball.p.x += dx
+        ball.p.y += dy
+
+        ball.v.x = dx
+        ball.v.y = dy
+    }
+    mousePos = nowPos
+
+    let dist = getDistance(mousePos, ball.p)
+    if (dist < ball.r) {
+        canvas.style.cursor = 'move'
+    } else {
+        canvas.style.cursor = 'initial'
+    }
+
+})
+
+canvas.addEventListener('mouseup', function (evt) {
+    ball.dragging = false
+})
 
 // requestAnimationFrame(draw) // using fastest speed to re-render browser view
 

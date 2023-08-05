@@ -20,7 +20,7 @@ class Person {
 
 let person = new Person("wu", 'majer')
 person.fullname = 'chen frank'
-console.log(person.fullname)
+// console.log(person.fullname)
 
 class Worker extends Person {
     constructor(f, b, w) {
@@ -35,9 +35,9 @@ class Worker extends Person {
 
 let worker = new Worker("wu", "majer", "designer")
 
-console.log('worker.frontname', worker.frontname)
-console.log('worker.backname', worker.backname)
-console.log('worker.work', worker.work)
+// console.log('worker.frontname', worker.frontname)
+// console.log('worker.backname', worker.backname)
+// console.log('worker.work', worker.work)
 worker.sayHello()
 
 
@@ -48,19 +48,28 @@ let updateFPS = 30,
     bgColor = 'black'
 
 let controls = {
-    value: 0
+    value: 0,
+    gcount: 1,
+    ay: 0.6, // gravity
+    fade: 0.99,
+    v: 5,
+    clearForce: function () {
+        forcefields = []
+    }
 }
 
 let gui = new dat.GUI()
-gui.add(controls, "value", -2, 2).step(0.01).onChange(function (value) {
-
-})
+gui.add(controls, "gcount", 0, 30).step(1).onChange(function (value) { })
+gui.add(controls, "ay", -1, 1).step(0.01).onChange(function (value) { })
+gui.add(controls, "fade", 0, 1).step(0.01).onChange(function (value) { })
+gui.add(controls, "v", 0, 30).step(0.01).onChange(function (value) { })
+gui.add(controls, "clearForce")
 
 // ---
 class Vec2 {
     constructor(x, y) {
-        this.x = x
-        this.y = y
+        this.x = x || 0
+        this.y = y || 0
     }
 
     set(x, y) {
@@ -115,6 +124,82 @@ class Vec2 {
     }
 }
 
+class Particle {
+    constructor(args) {
+        let def = {
+            p: new Vec2(),
+            v: new Vec2(1, 0),
+            a: new Vec2(),
+            r: Math.random() * 20,
+            color: `rgb(255,${parseInt(Math.random() * 255)},${parseInt(Math.random() * 150)})` // more red because the multiply value of B is less
+        } // default value
+        Object.assign(def, args) // assgin customize value
+        Object.assign(this, def) // assgin this instance with above properties
+    }
+
+    draw() {
+        ctx.save()
+        ctx.translate(this.p.x, this.p.y)
+        ctx.beginPath()
+        ctx.arc(0, 0, this.r, 0, Math.PI * 2)
+        ctx.fillStyle = this.color
+        ctx.fill()
+        ctx.restore()
+    }
+
+    update() {
+        this.p = this.p.add(this.v)
+        this.v = this.v.add(this.a)
+        this.v.move(0, controls.ay)
+        this.v = this.v.mul(0.99)
+        this.r *= controls.fade
+
+        // check boundary
+        if (this.p.y + this.r > wh) {
+            this.v.y = -Math.abs(this.v.y)
+        }
+        if (this.p.x + this.r > ww) {
+            this.v.x = -Math.abs(this.v.x)
+        }
+        if (this.p.x + this.r < 0) {
+            this.v.x = Math.abs(this.v.x)
+        }
+        if (this.p.x - this.r < 0) {
+            this.v.x = Math.abs(this.v.x)
+        }
+
+    }
+}
+
+class Forcefield {
+    constructor(args) {
+        let def = {
+            p: new Vec2(),
+            value: 100, // negtive value will appeal the particles, ex: -100
+        }
+        Object.assign(def, args)
+        Object.assign(this, def)
+    }
+
+    draw() {
+        ctx.save()
+        ctx.translate(this.p.x, this.p.y)
+        ctx.beginPath()
+        ctx.arc(0, 0, Math.sqrt(Math.abs(this.value)), 0, Math.PI * 2)
+        ctx.fillStyle = "white"
+        ctx.fill()
+        ctx.restore()
+    }
+
+    affect(particle) {
+        let delta = particle.p.sub(this.p),
+            len = this.value / (1 + delta.length),
+            force = delta.unit.mul(len);
+
+        particle.v.move(force.x, force.y)
+    }
+}
+
 // ---
 
 let canvas = document.getElementById('mycanvas'),
@@ -131,26 +216,54 @@ ctx.line = function (v1, v2) {
 
 function initCanvas() {
     ww = canvas.width = window.innerWidth
-    hh = canvas.height = window.innerHeight
+    wh = canvas.height = window.innerHeight
 }
 
 initCanvas()
+
+let particles = [],
+    forcefields = []
 
 function init() {
 
 }
 
 function update() {
-    time++
+    particles = particles.concat(Array.from({ length: controls.gcount }, (d, i) => {
+        return new Particle({
+            p: mousePos.clone(),
+            v: new Vec2(Math.random() * controls.v - controls.v / 2, Math.random() * controls.v - controls.v / 2)
+        })
+    }))
+
+    let sp = particles.slice() // shallow copy particles
+
+    sp.forEach((p, pi) => {
+        p.update()
+        forcefields.forEach(f => {
+            f.affect(p)
+        })
+        if (p.r < 0.1) {
+            let pp = sp.splice(pi, 1)
+            delete pp
+        }
+    }) // filter too big particles
+    particles = sp
 }
 
 function draw() {
+    time++
     ctx.fillStyle = bgColor
-    ctx.fillRect(0, 0, ww, hh)
+    ctx.fillRect(0, 0, ww, wh)
 
     // ---
     // draw here
-
+    particles.forEach((particle) => {
+        particle.draw()
+    })
+    forcefields.forEach((f) => {
+        f.draw()
+    })
     // ---
 
     ctx.fillStyle = 'red'
@@ -190,6 +303,14 @@ window.addEventListener('resize', initCanvas)
 window.addEventListener('mousemove', mousemove)
 window.addEventListener('mouseup', mouseup)
 window.addEventListener('mousedown', mousedown)
+window.addEventListener('dblclick', dblclick)
+
+function dblclick(evt) {
+    mousePos.set(evt.x, evt.y)
+    forcefields.push(new Forcefield({
+        p: mousePos.clone()
+    }))
+}
 
 function mousemove(evt) {
     mousePos.set(evt.x, evt.y)

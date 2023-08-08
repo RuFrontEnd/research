@@ -107,7 +107,7 @@ initCanvas()
 
 function draw() {
     const rect_1_vec = new Vec2(30, 90)
-    const rect_1 = new Rectangle(100, 100, rect_1_vec, colors.red);
+    const rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red);
     console.log('rect_1', rect_1)
     rect_1.draw()
 }

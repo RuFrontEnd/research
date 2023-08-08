@@ -1,10 +1,7 @@
 const canvas = document.getElementById("mycanvas");
 const ctx = canvas.getContext("2d")
 
-// assign canvas size
-ww = canvas.width = window.innerWidth
-wh = canvas.height = window.innerHeight
-
+// classes
 class Vec2 {
     constructor(x, y) {
         this.x = x || 0
@@ -63,28 +60,77 @@ class Vec2 {
     }
 }
 
+// default name
+// w => width
+// h => height
+// p => position
+// c => color
+
+const colors = {
+    white: 'white',
+    black: 'black',
+    red: 'red',
+    blue: 'blue'
+}
+
+class Rectangle {
+    constructor(w, h, p, c) {
+        this.w = w ? w : 100
+        this.h = h ? h : 50
+        this.p = p ? p : { x: 0, y: 0 }
+        this.c = c ? c : colors.black
+    }
+
+    draw() {
+        ctx.save()
+        ctx.translate(this.p.x, this.p.y)
+        ctx.fillStyle = this.c
+        ctx.fillRect(0, 0, this.w, this.h)
+        ctx.restore()
+    }
+}
+
 // ctx.translate(ww)
 
-ctx.translate(0, wh)
-ctx.scale(-1, 1);
-ctx.rotate(Math.PI)
+function initCanvas() {
+    // assign canvas size
+    ww = canvas.width = window.innerWidth
+    wh = canvas.height = window.innerHeight
+
+    // transform coordinate system to Descartes
+    ctx.translate(0, wh)
+    ctx.scale(-1, 1);
+    ctx.rotate(Math.PI)
+}
+
+initCanvas()
+
+function draw() {
+    const rect_1_vec = new Vec2(30, 90)
+    const rect_1 = new Rectangle(100, 100, rect_1_vec, colors.red);
+    console.log('rect_1', rect_1)
+    rect_1.draw()
+}
+
+draw()
 
 
-ctx.beginPath()
-ctx.moveTo(0, 0)
-ctx.lineTo(0, 45)
-ctx.lineWidth = 15;
-ctx.strokeStyle = "red"
-ctx.stroke()
-ctx.beginPath()
-ctx.lineTo(0, 0)
-ctx.lineTo(45, 0)
-ctx.lineWidth = 15;
-ctx.strokeStyle = "blue"
-ctx.stroke()
-// ctx.arc(10, 10, 5, 0, Math.PI * 2)
-// ctx.fillStyle = 'red'
-// ctx.fill()
+
+// ctx.beginPath()
+// ctx.moveTo(0, 0)
+// ctx.lineTo(0, 45)
+// ctx.lineWidth = 15;
+// ctx.strokeStyle = "red"
+// ctx.stroke()
+
+
+
+// ctx.beginPath()
+// ctx.lineTo(0, 0)
+// ctx.lineTo(45, 0)
+// ctx.lineWidth = 15;
+// ctx.strokeStyle = "blue"
+// ctx.stroke()
 
 
 

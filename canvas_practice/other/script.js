@@ -1,6 +1,20 @@
 const canvas = document.getElementById("mycanvas");
 const ctx = canvas.getContext("2d")
 
+// default name
+// w => width
+// h => height
+// p => position
+// c => color
+
+// colors
+const colors = {
+    white: 'white',
+    black: 'black',
+    red: 'red',
+    blue: 'blue'
+}
+
 // classes
 class Vec2 {
     constructor(x, y) {
@@ -60,24 +74,11 @@ class Vec2 {
     }
 }
 
-// default name
-// w => width
-// h => height
-// p => position
-// c => color
-
-const colors = {
-    white: 'white',
-    black: 'black',
-    red: 'red',
-    blue: 'blue'
-}
-
 class Rectangle {
     constructor(w, h, p, c) {
         this.w = w ? w : 100
         this.h = h ? h : 50
-        this.p = p ? p : { x: 0, y: 0 }
+        this.p = p ? p : new Vec2()
         this.c = c ? c : colors.black
     }
 

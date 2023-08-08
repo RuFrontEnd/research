@@ -1,0 +1,15 @@
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* don't do this, width & height of canvas need absolute value*/
+canvas {
+    /* width: 100%;
+    height: 100%; */
+}

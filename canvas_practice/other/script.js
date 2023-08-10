@@ -6,6 +6,7 @@ const ctx = canvas.getContext("2d")
 // h => height
 // p => position
 // c => color
+// r => radius
 
 // colors
 const colors = {
@@ -74,6 +75,32 @@ class Vec2 {
     }
 }
 
+class Circle {
+    constructor(r, p, c) {
+        this.r = r ? r : 10
+        this.p = p ? p : new Vec2()
+        this.c = c ? c : colors.black
+    }
+
+    draw() {
+        ctx.save()
+        ctx.translate(this.p.x, this.p.y)
+        ctx.beginPath()
+        ctx.arc(0, 0, this.r, 0, Math.PI * 2)
+        ctx.fillStyle = this.c
+        ctx.fill()
+        ctx.restore()
+    }
+
+    clear() {
+        this.r = 0
+        this.p = new Vec2()
+        this.c = colors.black
+        this.draw()
+    }
+
+}
+
 class Rectangle {
     constructor(w, h, p, c) {
         this.w = w ? w : 100
@@ -91,18 +118,23 @@ class Rectangle {
     }
 
     click(p) {
+        const leftBottom_circle = new Circle(5, this.p, colors.black)
         if (p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h) {
             console.log('A')
+            leftBottom_circle.draw()
+        } else {
+            console.log('B')
+            leftBottom_circle.clear()
         }
+
+
 
     }
 }
 
-// ctx.translate(ww)
-
-
 let mousePos = { x: undefined, y: undefined }
-let rect_1 = undefined
+let rect_1,
+    circle_1
 
 function initCanvas() {
     // assign canvas size
@@ -119,9 +151,15 @@ function initCanvas() {
 
 // events
 const draw = () => {
-    const rect_1_vec = new Vec2(30, 90)
-    rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red);
+    const rect_1_vec = new Vec2(30, 90);
+    rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red),
+        circle_1 = new Circle(5, this.p, colors.black)
+
+
+
     rect_1.draw()
+    circle_1.draw()
+
 }
 
 // actions

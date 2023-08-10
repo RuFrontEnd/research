@@ -89,9 +89,20 @@ class Rectangle {
         ctx.fillRect(0, 0, this.w, this.h)
         ctx.restore()
     }
+
+    click(p) {
+        if (p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h) {
+            console.log('A')
+        }
+
+    }
 }
 
 // ctx.translate(ww)
+
+
+let mousePos = { x: undefined, y: undefined }
+let rect_1 = undefined
 
 function initCanvas() {
     // assign canvas size
@@ -99,21 +110,42 @@ function initCanvas() {
     wh = canvas.height = window.innerHeight
 
     // transform coordinate system to Descartes
-    ctx.translate(0, wh)
-    ctx.scale(-1, 1);
-    ctx.rotate(Math.PI)
+    // ctx.translate(0, wh)
+    // ctx.scale(-1, 1);
+    // ctx.rotate(Math.PI)
+
+    draw()
 }
 
-initCanvas()
-
-function draw() {
+// events
+const draw = () => {
     const rect_1_vec = new Vec2(30, 90)
-    const rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red);
-    console.log('rect_1', rect_1)
+    rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red);
     rect_1.draw()
 }
 
-draw()
+// actions
+const resize = () => {
+    initCanvas()
+    draw()
+}
+
+const mousemove = (e) => {
+    mousePos = {
+        x: e.x,
+        y: e.y
+    }
+}
+
+const click = (e) => {
+    rect_1.click(new Vec2(e.x, e.y))
+}
+
+window.addEventListener('resize', resize)
+window.addEventListener('mousemove', mousemove)
+window.addEventListener('click', click)
+
+initCanvas()
 
 
 

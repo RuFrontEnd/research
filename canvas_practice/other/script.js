@@ -102,11 +102,12 @@ class Circle {
 }
 
 class Rectangle {
-    constructor(w, h, p, c) {
-        this.w = w ? w : 100
-        this.h = h ? h : 50
-        this.p = p ? p : new Vec2()
-        this.c = c ? c : colors.black
+    constructor(w, h, p, c, selected) {
+        this.w = w ? w : 100;
+        this.h = h ? h : 50;
+        this.p = p ? p : new Vec2();
+        this.c = c ? c : colors.black;
+        this.selected = selected
     }
 
     draw() {
@@ -115,26 +116,22 @@ class Rectangle {
         ctx.fillStyle = this.c
         ctx.fillRect(0, 0, this.w, this.h)
         ctx.restore()
+        if (this.selected) {
+            const leftBottom_circle = new Circle(5, this.p, colors.black)
+            leftBottom_circle.draw()
+        }
     }
 
     click(p) {
-        const leftBottom_circle = new Circle(5, this.p, colors.black)
-        if (p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h) {
-            console.log('A')
-            leftBottom_circle.draw()
-        } else {
-            console.log('B')
-            leftBottom_circle.clear()
-        }
-
-
-
+        this.selected = p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h
     }
 }
 
-let mousePos = { x: undefined, y: undefined }
-let rect_1,
-    circle_1
+let mousePos = { x: undefined, y: undefined };
+let time = 0;
+const rect_1_vec = new Vec2(30, 90),
+    rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red),
+    circle_1 = new Circle(5, this.p, colors.black)
 
 function initCanvas() {
     // assign canvas size
@@ -151,15 +148,15 @@ function initCanvas() {
 
 // events
 const draw = () => {
-    const rect_1_vec = new Vec2(30, 90);
-    rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red),
-        circle_1 = new Circle(5, this.p, colors.black)
+    time++
+    ctx.clearRect(0, 0, ww, wh)
 
 
 
     rect_1.draw()
-    circle_1.draw()
+    // circle_1.draw()
 
+    requestAnimationFrame(draw)
 }
 
 // actions

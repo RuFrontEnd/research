@@ -98,6 +98,47 @@ class Circle {
         this.c = colors.black
         this.draw()
     }
+}
+
+class DragCircle extends Circle {
+    constructor(r, p, c) {
+        super(r, p, c)
+        this.drag = false
+        this.innerCircle = {
+            r: this.r / 2,
+            c: colors.white
+        }
+    }
+
+    draw() {
+        ctx.save()
+        ctx.translate(this.p.x, this.p.y)
+        ctx.beginPath()
+        ctx.arc(0, 0, this.r, 0, Math.PI * 2)
+        ctx.fillStyle = this.c
+        ctx.fill()
+        ctx.beginPath()
+        ctx.arc(0, 0, this.r / 1.5, 0, Math.PI * 2)
+        ctx.fillStyle = this.innerCircle.c
+        ctx.fill()
+        ctx.restore()
+    }
+
+    mouseDown(p) {
+        if (p.x >= this.p.x - this.r && p.x <= this.p.x + this.r && p.y >= this.p.y - this.r && p.y <= this.p.y + this.r) {
+            this.drag = true
+        }
+    }
+
+    mouseMove(p) {
+        if (this.drag) {
+            this.p = p
+        }
+    }
+
+    mouseUp() {
+        this.drag = false
+    }
 
 }
 
@@ -107,7 +148,13 @@ class Rectangle {
         this.h = h ? h : 50;
         this.p = p ? p : new Vec2();
         this.c = c ? c : colors.black;
-        this.selected = selected
+        this.selected = selected;
+        this.dragCircles = {
+            leftTop: new DragCircle(5, this.p, colors.black),
+            rightTop: new DragCircle(5, this.p.add(new Vec2(this.w, 0)), colors.black),
+            roghtBottom: new DragCircle(5, this.p.add(new Vec2(this.w, this.h)), colors.black),
+            leftBottom: new DragCircle(5, this.p.add(new Vec2(0, this.h)), colors.black)
+        }
     }
 
     draw() {
@@ -117,20 +164,53 @@ class Rectangle {
         ctx.fillRect(0, 0, this.w, this.h)
         ctx.restore()
         if (this.selected) {
-            const leftBottom_circle = new Circle(5, this.p, colors.black)
-            leftBottom_circle.draw()
+            this.dragCircles.leftTop.draw()
+            this.dragCircles.rightTop.draw()
+            this.dragCircles.roghtBottom.draw()
+            this.dragCircles.leftBottom.draw()
         }
     }
 
     click(p) {
-        this.selected = p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h
+        if (!this.selected) {
+            this.selected = p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h
+        } else {
+
+        }
+    }
+
+    mouseDown(p) {
+        if (this.selected) {
+            this.dragCircles.leftTop.mouseDown(p)
+            this.dragCircles.rightTop.mouseDown(p)
+            this.dragCircles.roghtBottom.mouseDown(p)
+            this.dragCircles.leftBottom.mouseDown(p)
+        }
+    }
+
+    mouseMove(p) {
+        if (this.selected) {
+            this.dragCircles.leftTop.mouseMove(p)
+            this.dragCircles.rightTop.mouseMove(p)
+            this.dragCircles.roghtBottom.mouseMove(p)
+            this.dragCircles.leftBottom.mouseMove(p)
+        }
+    }
+
+    mouseUp() {
+        if (this.selected) {
+            this.dragCircles.leftTop.mouseUp()
+            this.dragCircles.rightTop.mouseUp()
+            this.dragCircles.roghtBottom.mouseUp()
+            this.dragCircles.leftBottom.mouseUp()
+        }
     }
 }
 
 let mousePos = { x: undefined, y: undefined };
 let time = 0;
-const rect_1_vec = new Vec2(30, 90),
-    rect_1 = new Rectangle(160, 100, rect_1_vec, colors.red),
+const rect_1_vec = new Vec2(50, 100),
+    rect_1 = new Rectangle(200, 100, rect_1_vec, colors.red),
     circle_1 = new Circle(5, this.p, colors.black)
 
 function initCanvas() {
@@ -170,6 +250,15 @@ const mousemove = (e) => {
         x: e.x,
         y: e.y
     }
+    rect_1.mouseMove(new Vec2(e.x, e.y))
+}
+
+const mousedown = (e) => {
+    rect_1.mouseDown(new Vec2(e.x, e.y))
+}
+
+const mouseup = (e) => {
+    rect_1.mouseUp()
 }
 
 const click = (e) => {
@@ -178,6 +267,8 @@ const click = (e) => {
 
 window.addEventListener('resize', resize)
 window.addEventListener('mousemove', mousemove)
+window.addEventListener('mousedown', mousedown)
+window.addEventListener('mouseup', mouseup)
 window.addEventListener('click', click)
 
 initCanvas()

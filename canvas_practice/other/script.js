@@ -181,6 +181,8 @@ class Rectangle {
 
     mouseDown(p) {
         if (this.selected) {
+            console.log('p.x', p.x)
+            console.log('p.y', p.y)
             this.dragCircles.leftTop.mouseDown(p)
             this.dragCircles.rightTop.mouseDown(p)
             this.dragCircles.roghtBottom.mouseDown(p)
@@ -194,6 +196,15 @@ class Rectangle {
             this.dragCircles.rightTop.mouseMove(p)
             this.dragCircles.roghtBottom.mouseMove(p)
             this.dragCircles.leftBottom.mouseMove(p)
+            if (this.dragCircles.roghtBottom.drag) {
+                this.w = Math.abs(this.p.x - p.x)
+                this.h = Math.abs(this.p.y - p.y)
+                console.log('this.p.x', this.p.x)
+                console.log('this.p.y', this.p.y)
+                console.log('this.w', this.w)
+                console.log('this.h', this.h)
+                this.dragCircles.rightTop.p = new Vec2(this.p.x + this.w, this.p.y)
+            }
         }
     }
 

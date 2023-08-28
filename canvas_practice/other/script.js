@@ -111,6 +111,7 @@ class DragCircle extends Circle {
     }
 
     draw() {
+        // console.log('this.p', this.p)
         ctx.save()
         ctx.translate(this.p.x, this.p.y)
         ctx.beginPath()
@@ -149,6 +150,7 @@ class Rectangle {
         this.p = p ? p : new Vec2();
         this.c = c ? c : colors.black;
         this.selected = selected;
+        this.grab = false;
         this.dragCircles = {
             leftTop: new DragCircle(5, this.p, colors.black),
             rightTop: new DragCircle(5, this.p.add(new Vec2(this.w, 0)), colors.black),
@@ -157,7 +159,13 @@ class Rectangle {
         }
     }
 
+    // private
+    #getIsInside(p) {
+        return p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h
+    }
+
     draw() {
+        console.log('this.p', this.p)
         ctx.save()
         ctx.translate(this.p.x, this.p.y)
         ctx.fillStyle = this.c
@@ -172,38 +180,48 @@ class Rectangle {
     }
 
     click(p) {
-        if (!this.selected) {
-            this.selected = p.x >= this.p.x && p.x <= this.p.x + this.w && p.y >= this.p.y && p.y <= this.p.y + this.h
-        } else {
-
-        }
+        this.selected = this.#getIsInside(p)
     }
 
     mouseDown(p) {
         if (this.selected) {
-            console.log('p.x', p.x)
-            console.log('p.y', p.y)
-            this.dragCircles.leftTop.mouseDown(p)
-            this.dragCircles.rightTop.mouseDown(p)
-            this.dragCircles.roghtBottom.mouseDown(p)
-            this.dragCircles.leftBottom.mouseDown(p)
+            this.grab = this.#getIsInside(p)
+
+            //     console.log('p.x', p.x)
+            //     console.log('p.y', p.y)
+            //     this.dragCircles.leftTop.mouseDown(p)
+            //     this.dragCircles.rightTop.mouseDown(p)
+            //     this.dragCircles.roghtBottom.mouseDown(p)
+            //     this.dragCircles.leftBottom.mouseDown(p)
         }
     }
 
     mouseMove(p) {
         if (this.selected) {
-            this.dragCircles.leftTop.mouseMove(p)
-            this.dragCircles.rightTop.mouseMove(p)
-            this.dragCircles.roghtBottom.mouseMove(p)
-            this.dragCircles.leftBottom.mouseMove(p)
-            if (this.dragCircles.roghtBottom.drag) {
-                this.w = Math.abs(this.p.x - p.x)
-                this.h = Math.abs(this.p.y - p.y)
-                console.log('this.p.x', this.p.x)
-                console.log('this.p.y', this.p.y)
-                console.log('this.w', this.w)
-                console.log('this.h', this.h)
-                this.dragCircles.rightTop.p = new Vec2(this.p.x + this.w, this.p.y)
+            //     this.dragCircles.leftTop.mouseMove(p)
+            //     this.dragCircles.rightTop.mouseMove(p)
+            //     this.dragCircles.roghtBottom.mouseMove(p)
+            //     this.dragCircles.leftBottom.mouseMove(p)
+            //     if (this.dragCircles.roghtBottom.drag) {
+            //         this.w = Math.abs(this.p.x - p.x)
+            //         this.h = Math.abs(this.p.y - p.y)
+            //         console.log('this.p.x', this.p.x)
+            //         console.log('this.p.y', this.p.y)
+            //         console.log('this.w', this.w)
+            //         console.log('this.h', this.h)
+            //         this.dragCircles.rightTop.p = new Vec2(this.p.x + this.w, this.p.y)
+            //     }
+
+            if (this.#getIsInside(p)) {
+                canvas.style.cursor = 'move'
+            } else {
+                canvas.style.cursor = 'auto'
+            }
+
+            if (this.grab) {
+                console.log('A')
+                this.p = p
+
             }
         }
     }
@@ -214,6 +232,7 @@ class Rectangle {
             this.dragCircles.rightTop.mouseUp()
             this.dragCircles.roghtBottom.mouseUp()
             this.dragCircles.leftBottom.mouseUp()
+            this.grab = false
         }
     }
 }

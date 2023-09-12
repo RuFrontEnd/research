@@ -103,7 +103,7 @@ class Circle {
 class DragCircle extends Circle {
     constructor(r, p, c) {
         super(r, p, c)
-        this.drag = false
+        this.dragging = false
         this.innerCircle = {
             r: this.r / 2,
             c: colors.white
@@ -127,18 +127,18 @@ class DragCircle extends Circle {
 
     mouseDown(p) {
         if (p.x >= this.p.x - this.r && p.x <= this.p.x + this.r && p.y >= this.p.y - this.r && p.y <= this.p.y + this.r) {
-            this.drag = true
+            this.dragging = true
         }
     }
 
     mouseMove(p) {
-        if (this.drag) {
+        if (this.dragging) {
             this.p = p
         }
     }
 
     mouseUp() {
-        this.drag = false
+        this.dragging = false
     }
 
 }
@@ -154,7 +154,7 @@ class Rectangle {
         this.dragCircles = {
             leftTop: new DragCircle(5, this.p, colors.black),
             rightTop: new DragCircle(5, this.p.add(new Vec2(this.w, 0)), colors.black),
-            roghtBottom: new DragCircle(5, this.p.add(new Vec2(this.w, this.h)), colors.black),
+            rightBottom: new DragCircle(5, this.p.add(new Vec2(this.w, this.h)), colors.black),
             leftBottom: new DragCircle(5, this.p.add(new Vec2(0, this.h)), colors.black)
         }
     }
@@ -174,7 +174,7 @@ class Rectangle {
         if (this.selected) {
             this.dragCircles.leftTop.draw()
             this.dragCircles.rightTop.draw()
-            this.dragCircles.roghtBottom.draw()
+            this.dragCircles.rightBottom.draw()
             this.dragCircles.leftBottom.draw()
         }
     }
@@ -191,7 +191,7 @@ class Rectangle {
             //     console.log('p.y', p.y)
             //     this.dragCircles.leftTop.mouseDown(p)
             //     this.dragCircles.rightTop.mouseDown(p)
-            //     this.dragCircles.roghtBottom.mouseDown(p)
+            //     this.dragCircles.rightBottom.mouseDown(p)
             //     this.dragCircles.leftBottom.mouseDown(p)
         }
     }
@@ -200,9 +200,9 @@ class Rectangle {
         if (this.selected) {
             //     this.dragCircles.leftTop.mouseMove(p)
             //     this.dragCircles.rightTop.mouseMove(p)
-            //     this.dragCircles.roghtBottom.mouseMove(p)
+            //     this.dragCircles.rightBottom.mouseMove(p)
             //     this.dragCircles.leftBottom.mouseMove(p)
-            //     if (this.dragCircles.roghtBottom.drag) {
+            //     if (this.dragCircles.rightBottom.drag) {
             //         this.w = Math.abs(this.p.x - p.x)
             //         this.h = Math.abs(this.p.y - p.y)
             //         console.log('this.p.x', this.p.x)
@@ -219,8 +219,8 @@ class Rectangle {
             }
 
             if (this.grab) {
-                console.log('A')
-                this.p = p
+                // console.log('A')
+                // this.p = p
 
             }
         }
@@ -228,10 +228,12 @@ class Rectangle {
 
     mouseUp() {
         if (this.selected) {
-            this.dragCircles.leftTop.mouseUp()
-            this.dragCircles.rightTop.mouseUp()
-            this.dragCircles.roghtBottom.mouseUp()
-            this.dragCircles.leftBottom.mouseUp()
+            if (!this.dragCircles.leftTop.dragging || !this.dragCircles.rightTop.dragging || !this.dragCircles.rightBottom.dragging || !this.dragCircles.leftBottom.dragging) {
+                this.dragCircles.leftTop.mouseUp()
+                this.dragCircles.rightTop.mouseUp()
+                this.dragCircles.rightBottom.mouseUp()
+                this.dragCircles.leftBottom.mouseUp()
+            }
             this.grab = false
         }
     }
@@ -239,7 +241,7 @@ class Rectangle {
 
 let mousePos = { x: undefined, y: undefined };
 let time = 0;
-const rect_1_vec = new Vec2(50, 100),
+const rect_1_vec = new Vec2(300, 300),
     rect_1 = new Rectangle(200, 100, rect_1_vec, colors.red),
     circle_1 = new Circle(5, this.p, colors.black)
 
@@ -302,26 +304,3 @@ window.addEventListener('mouseup', mouseup)
 window.addEventListener('click', click)
 
 initCanvas()
-
-
-
-// ctx.beginPath()
-// ctx.moveTo(0, 0)
-// ctx.lineTo(0, 45)
-// ctx.lineWidth = 15;
-// ctx.strokeStyle = "red"
-// ctx.stroke()
-
-
-
-// ctx.beginPath()
-// ctx.lineTo(0, 0)
-// ctx.lineTo(45, 0)
-// ctx.lineWidth = 15;
-// ctx.strokeStyle = "blue"
-// ctx.stroke()
-
-
-
-
-

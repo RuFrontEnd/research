@@ -13,7 +13,7 @@ export default function Toolbox(props: Types.Props) {
         <div className={styles['toolbox']}>
             <div
                 className={styles[`tool${props.currentTool === 'box-draw' ? ' active' : ''}`]}
-            // onClick={() => props.onToolChange('box-draw')}
+                onClick={() => props.onToolChange('box-draw')}
             >
                 <FontAwesomeIcon icon={faSquare} />
             </div>

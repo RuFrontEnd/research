@@ -1,6 +1,6 @@
 type Props = {
     currentTool: string;
-    // onToolChange: (toolName: string) => void;
+    onToolChange: (toolName: string) => void;
 }
 
 export { Props }

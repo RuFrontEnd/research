@@ -21,6 +21,15 @@ class BoxDrawingTool {
         this._endPos = pos;
         this._activate = true;
     }
+
+    onMove(pos: Point): void {
+        this._activate = true;
+        this._endPos = pos;
+    }
+
+    onEnd(pos: Point): void {
+        this._endPos = pos;
+    }
 }
 
 export default BoxDrawingTool;

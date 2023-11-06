@@ -1,0 +1,19 @@
+#block {
+  display: block;
+  width: 200px;
+  height: 100px;
+}
+
+#inline {
+  display: inline;
+  width: 200px;
+  /* width property will be ignored */
+  height: 100px;
+  /* height property will be ignored */
+}
+
+#inline-block {
+  display: inline-block;
+  width: 200px;
+  height: 100px;
+}

@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <title>Resizable Textarea</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        textarea {
+            min-height: 50px;
+            padding: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+            resize: none;
+            /* disable resizing */
+        }
+    </style>
+</head>
+
+<body>
+    <textarea id="myTextarea"></textarea>
+    <script>
+        $(document).ready(function () {
+            $("#myTextarea").on("input", function () {
+                console.log('this',this)
+                this.style.height = "auto";
+                this.style.height = this.scrollHeight + 10 + "px";
+            });
+        });
+    </script>
+</body>
+
+</html>

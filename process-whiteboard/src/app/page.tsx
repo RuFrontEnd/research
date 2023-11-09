@@ -187,6 +187,50 @@ export default function Home() {
     clickedArea = findCurrentArea(x1, y1);
   }, []);
 
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (mousedown && clickedArea.box === -1) { // clickedArea.box === -1 means not pressing on any boxes
+      x2 = e.nativeEvent.offsetX;
+      y2 = e.nativeEvent.offsetY;
+      redraw();
+    } else if (mousedown && clickedArea.box != -1) {
+      x2 = e.nativeEvent.offsetX;
+      y2 = e.nativeEvent.offsetY;
+
+      let xOffset = x2 - x1,
+        yOffset = y2 - y1;
+
+      x1 = x2;
+      y1 = y2;
+      
+      if (clickedArea.pos === 'i' ||
+        clickedArea.pos === 'tl' ||
+        clickedArea.pos === 'l' ||
+        clickedArea.pos === 'bl') {
+        boxes[clickedArea.box].x1 += xOffset;
+      }
+      if (clickedArea.pos === 'i' ||
+        clickedArea.pos === 'tl' ||
+        clickedArea.pos === 't' ||
+        clickedArea.pos === 'tr') {
+        boxes[clickedArea.box].y1 += yOffset;
+      }
+      if (clickedArea.pos === 'i' ||
+        clickedArea.pos === 'tr' ||
+        clickedArea.pos === 'r' ||
+        clickedArea.pos === 'br') {
+        boxes[clickedArea.box].x2 += xOffset;
+      }
+      if (clickedArea.pos === 'i' ||
+        clickedArea.pos === 'bl' ||
+        clickedArea.pos === 'b' ||
+        clickedArea.pos === 'br') {
+        boxes[clickedArea.box].y2 += yOffset;
+      }
+
+      redraw();
+    }
+  }, []);
+
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     if (clickedArea.box === -1 && tmpBox !== null) {
       boxes.push(tmpBox);
@@ -206,14 +250,6 @@ export default function Home() {
     // }
     tmpBox = null;
     mousedown = false;
-  }, []);
-
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (mousedown && clickedArea.box === -1) {
-      x2 = e.nativeEvent.offsetX;
-      y2 = e.nativeEvent.offsetY;
-      redraw();
-    }
   }, []);
 
   useEffect(() => {

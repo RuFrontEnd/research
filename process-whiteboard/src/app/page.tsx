@@ -184,7 +184,7 @@ export default function Home() {
     y1 = e.nativeEvent.offsetY;
     x2 = e.nativeEvent.offsetX;
     y2 = e.nativeEvent.offsetY;
-    clickedArea = findCurrentArea(x1, x2);
+    clickedArea = findCurrentArea(x1, y1);
   }, []);
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {

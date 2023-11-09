@@ -1,8 +1,8 @@
-"use client"
-import { useState, useRef, useEffect, useCallback, EventHandler } from 'react'
-import Image from 'next/image'
+"use client";
+import { useState, useRef, useEffect, useCallback, EventHandler } from "react";
+import Image from "next/image";
 
-let lineOffset = 4,
+let lineOffset = 4, // increase operation area
   anchrSize = 2;
 
 type Box = {
@@ -12,32 +12,15 @@ type Box = {
   y2: number;
   lineWidth: number;
   color: string;
-}
+};
+
+let ctx: CanvasRenderingContext2D | null | undefined = null;
 
 export default function Home() {
-
-  // const $textArea = useRef<HTMLTextAreaElement | null>(null)
-  // const [height, setHeight] = useState<number | string>('auto'),
-  //   [text, setText] = useState(''),
-  //   [editing, setEditing] = useState(false)
-
-  // useEffect(() => {
-  //   if ($textArea.current && editing) {
-  //     $textArea.current.focus()
-  //   }
-  // }, [editing])
-
-  const $canvas = useRef<HTMLCanvasElement | null>(null)
-  const ctx = (() => {
-    if ($canvas.current) {
-      return $canvas.current.getContext('2d')
-    }
-
-    return null
-  })()
-  let { current: mousedown } = useRef(false),
-    { current: clickedArea } = useRef({ box: -1, pos: 'o' }),
-    { current: tmpBox } = useRef<Box | null>(null)
+  let { current: $canvas } = useRef<HTMLCanvasElement | null>(null),
+    { current: mousedown } = useRef(false),
+    { current: clickedArea } = useRef({ box: -1, pos: "o" }),
+    { current: tmpBox } = useRef<Box | null>(null);
 
   let x1 = -1;
   let y1 = -1;
@@ -45,79 +28,170 @@ export default function Home() {
   let y2 = -1;
   let boxes: any[] = [];
 
-  const newBox = useCallback((x1: number, y1: number, x2: number, y2: number) => {
-    const _x1 = x1 < x2 ? x1 : x2,
-      _y1 = y1 < y2 ? y1 : y2,
-      _x2 = x1 > x2 ? x1 : x2,
-      _y2 = y1 > y2 ? y1 : y2;
+  const findCurrentArea = (x: number, y: number) => {
+    // x, y means the coordinate of mouse clicked point
+    for (var i = 0; i < boxes.length; i++) {
+      let box = boxes[i];
 
-    // if (_x2 - _x1 > lineOffset * 2 && _y2 - _y1 > lineOffset * 2) {
-    return {
-      x1: _x1,
-      y1: _y1,
-      x2: _x2,
-      y2: _y2,
-      lineWidth: 1,
-      color: 'DeepSkyBlue'
-    };
-    // } else {
-    //   return null;
-    // }
-  }, [])
+      const xCenter = box.x1 + (box.x2 - box.x1) / 2,
+        yCenter = box.y1 + (box.y2 - box.y1) / 2;
+
+      if (box.x1 - lineOffset < x && x < box.x1 + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
+          return { box: i, pos: "tl" };
+        } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
+          return { box: i, pos: "bl" };
+        } else if (yCenter - lineOffset < y && y < yCenter + lineOffset) {
+          return { box: i, pos: "l" };
+        }
+      } else if (box.x2 - lineOffset < x && x < box.x2 + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
+          return { box: i, pos: "tr" };
+        } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
+          return { box: i, pos: "br" };
+        } else if (yCenter - lineOffset < y && y < yCenter + lineOffset) {
+          return { box: i, pos: "r" };
+        }
+      } else if (xCenter - lineOffset < x && x < xCenter + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y1 + lineOffset) {
+          return { box: i, pos: "t" };
+        } else if (box.y2 - lineOffset < y && y < box.y2 + lineOffset) {
+          return { box: i, pos: "b" };
+        } else if (box.y1 - lineOffset < y && y < box.y2 + lineOffset) {
+          return { box: i, pos: "i" };
+        }
+      } else if (box.x1 - lineOffset < x && x < box.x2 + lineOffset) {
+        if (box.y1 - lineOffset < y && y < box.y2 + lineOffset) {
+          return { box: i, pos: "i" };
+        }
+      }
+    }
+    return { box: -1, pos: "o" };
+  };
+
+  const newBox = useCallback(
+    (x1: number, y1: number, x2: number, y2: number) => {
+      const _x1 = x1 < x2 ? x1 : x2,
+        _y1 = y1 < y2 ? y1 : y2,
+        _x2 = x1 > x2 ? x1 : x2,
+        _y2 = y1 > y2 ? y1 : y2;
+
+      // if (_x2 - _x1 > lineOffset * 2 && _y2 - _y1 > lineOffset * 2) {
+      return {
+        x1: _x1,
+        y1: _y1,
+        x2: _x2,
+        y2: _y2,
+        lineWidth: 1,
+        color: "DeepSkyBlue",
+      };
+      // } else {
+      //   return null;
+      // }
+    },
+    []
+  );
 
   const drawBoxOn = useCallback((box: Box, ctx: CanvasRenderingContext2D) => {
     const xCenter = box.x1 + (box.x2 - box.x1) / 2,
       yCenter = box.y1 + (box.y2 - box.y1) / 2;
 
+    ctx.beginPath();
+
     ctx.strokeStyle = box.color;
     ctx.fillStyle = box.color;
-
-    ctx.rect(box.x1, box.y1, (box.x2 - box.x1), (box.y2 - box.y1));
     ctx.lineWidth = box.lineWidth;
+
+    ctx.rect(box.x1, box.y1, box.x2 - box.x1, box.y2 - box.y1);
     ctx.stroke();
 
     // draw anchors
-    ctx.fillRect(box.x1 - anchrSize, box.y1 - anchrSize, 2 * anchrSize, 2 * anchrSize); // x, y, width, height
-    ctx.fillRect(box.x1 - anchrSize, yCenter - anchrSize, 2 * anchrSize, 2 * anchrSize);
-    ctx.fillRect(box.x1 - anchrSize, box.y2 - anchrSize, 2 * anchrSize, 2 * anchrSize);
-    ctx.fillRect(xCenter - anchrSize, box.y1 - anchrSize, 2 * anchrSize, 2 * anchrSize);
-    ctx.fillRect(xCenter - anchrSize, yCenter - anchrSize, 2 * anchrSize, 2 * anchrSize);
-    ctx.fillRect(xCenter - anchrSize, box.y2 - anchrSize, 2 * anchrSize, 2 * anchrSize);
-    ctx.fillRect(box.x2 - anchrSize, box.y1 - anchrSize, 2 * anchrSize, 2 * anchrSize);
-    ctx.fillRect(box.x2 - anchrSize, yCenter - anchrSize, 2 * anchrSize, 2 * anchrSize);
-    ctx.fillRect(box.x2 - anchrSize, box.y2 - anchrSize, 2 * anchrSize, 2 * anchrSize);
-  }, [])
+    ctx.fillRect(
+      box.x1 - anchrSize,
+      box.y1 - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    ); // x, y, width, height
+    ctx.fillRect(
+      box.x1 - anchrSize,
+      yCenter - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+    ctx.fillRect(
+      box.x1 - anchrSize,
+      box.y2 - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+    ctx.fillRect(
+      xCenter - anchrSize,
+      box.y1 - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+    ctx.fillRect(
+      xCenter - anchrSize,
+      yCenter - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+    ctx.fillRect(
+      xCenter - anchrSize,
+      box.y2 - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+    ctx.fillRect(
+      box.x2 - anchrSize,
+      box.y1 - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+    ctx.fillRect(
+      box.x2 - anchrSize,
+      yCenter - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+    ctx.fillRect(
+      box.x2 - anchrSize,
+      box.y2 - anchrSize,
+      2 * anchrSize,
+      2 * anchrSize
+    );
+
+    ctx.closePath();
+  }, []);
 
   const redraw = useCallback(() => {
-    if (!ctx) return
+    if (!ctx) return;
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx.beginPath();
-    // for (var i = 0; i < boxes.length; i++) {
-    //   drawBoxOn(boxes[i], ctx);
-    // }
+    for (var i = 0; i < boxes.length; i++) {
+      drawBoxOn(boxes[i], ctx);
+    }
     if (clickedArea.box === -1) {
       tmpBox = newBox(x1, y1, x2, y2);
       if (tmpBox !== null) {
         drawBoxOn(tmpBox, ctx);
       }
     }
-  }, [])
+  }, []);
 
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-
     mousedown = true;
-    // clickedArea = findCurrentArea(e.offsetX, e.offsetY);
     x1 = e.nativeEvent.offsetX;
     y1 = e.nativeEvent.offsetY;
     x2 = e.nativeEvent.offsetX;
     y2 = e.nativeEvent.offsetY;
-    console.log('mousedown', mousedown)
-  }, [])
+    clickedArea = findCurrentArea(x1, x2);
+  }, []);
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    // if (clickedArea.box == -1 && tmpBox != null) {
-    //   boxes.push(tmpBox);
-    // } else if (clickedArea.box != -1) {
+    if (clickedArea.box === -1 && tmpBox !== null) {
+      boxes.push(tmpBox);
+    }
+    // else if (clickedArea.box != -1) {
     //   var selectedBox = boxes[clickedArea.box];
     //   if (selectedBox.x1 > selectedBox.x2) {
     //     var previousX1 = selectedBox.x1;
@@ -130,33 +204,35 @@ export default function Home() {
     //     selectedBox.y2 = previousY1;
     //   }
     // }
-    clickedArea = { box: -1, pos: 'o' };
     tmpBox = null;
     mousedown = false;
-    // console.log(boxes);
-    console.log('mousedown', mousedown)
-    console.log(`(x1:${x1} y2:${y1}), (x2:${x2} y2:${y2})`)
-  }, [])
+  }, []);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (mousedown && clickedArea.box == -1) {
+    if (mousedown && clickedArea.box === -1) {
       x2 = e.nativeEvent.offsetX;
       y2 = e.nativeEvent.offsetY;
       redraw();
     }
-
-  }, [])
-
+  }, []);
 
   useEffect(() => {
-    if ($canvas.current) {
-      $canvas.current.width = window.innerWidth
-      $canvas.current.height = window.innerHeight
+    if ($canvas) {
+      $canvas.width = window.innerWidth;
+      $canvas.height = window.innerHeight;
     }
-  }, [])
+  }, []);
 
   return (
-    <canvas ref={$canvas} onMouseDown={onMouseDown} onMouseUp={onMouseUp} onMouseMove={onMouseMove} />
+    <canvas
+      ref={(el) => {
+        $canvas = el;
+        ctx = $canvas?.getContext("2d");
+      }}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseMove={onMouseMove}
+    />
     // <main style={{ width: '100px', height: '100px' }}
 
     //   onClick={() => {
@@ -184,5 +260,5 @@ export default function Home() {
     //       }} />
     //   </div>
     // </main >
-  )
+  );
 }

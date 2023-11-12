@@ -1,18 +1,5 @@
 "use client";
-import { useState, useRef, useEffect, useCallback, EventHandler } from "react";
-import Image from "next/image";
-
-let lineOffset = 4, // increase operation area
-  anchrSize = 2;
-
-type Box = {
-  x1: 0;
-  y1: number;
-  x2: number;
-  y2: number;
-  lineWidth: number;
-  color: string;
-};
+import { useRef, useEffect, useCallback } from "react";
 
 let ctx: CanvasRenderingContext2D | null | undefined = null,
   point: {

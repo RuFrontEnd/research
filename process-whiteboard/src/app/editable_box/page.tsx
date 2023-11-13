@@ -30,10 +30,8 @@ export default function EditableBox() {
   let y2 = -1;
   let boxes: Box[] = [];
 
-
-
   const getEditShapeIndex = useCallback((x: number, y: number) => {
-    for (let i = 0; i < boxes.length; i++) {
+    for (let i = boxes.length - 1; i >= 0; i--) {
       let box = boxes[i]
 
       if (x > box.x1 - lineOffset && x < box.x2 + lineOffset && y > box.y1 - lineOffset && y < box.y2 + lineOffset) {
@@ -46,7 +44,8 @@ export default function EditableBox() {
 
   const findCurrentArea = (x: number, y: number) => {
     // x, y means the coordinate of mouse clicked point
-    for (var i = 0; i < boxes.length; i++) {
+
+    for (let i = boxes.length - 1; i >= 0; i--) {
       let box = boxes[i];
 
       const xCenter = box.x1 + (box.x2 - box.x1) / 2,

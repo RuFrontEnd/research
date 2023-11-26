@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 let ctx: CanvasRenderingContext2D | null | undefined = null;
 
 
-class Arrow {
+export class Arrow {
   w: number;
   h: number
 

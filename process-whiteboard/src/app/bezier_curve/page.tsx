@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useEffect, useCallback } from "react";
+import Arrow from "@/shapes/arrow";
 
 let ctx: CanvasRenderingContext2D | null | undefined = null;
 
@@ -45,7 +46,6 @@ class Curve {
     activate: boolean;
     p: PressingP | null;
   };
-  created: boolean;
 
   constructor(cpline: Line, curve: Line, initOffset: number) {
     this.cpline = cpline;
@@ -57,7 +57,6 @@ class Curve {
     this.cp2 = null;
     this.initOffset = initOffset;
     this.pressing = this.initPressing;
-    this.created = false;
   }
 
   checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
@@ -117,22 +116,20 @@ class Curve {
   }
 
   init(initP: Vec) {
-    if (!this.created) {
-      this.p1 = { x: initP.x - this.initOffset, y: initP.y };
-      this.p2 = initP;
-      this.cp1 = {
-        x: this.p1.x + this.initOffset / 3,
-        y: this.p1.y,
-      };
-      this.cp2 = {
-        x: this.p2.x - this.initOffset / 3,
-        y: this.p2.y,
-      };
-      this.pressing = {
-        activate: true,
-        p: PressingP.p2,
-      };
-    }
+    this.p1 = { x: initP.x - this.initOffset, y: initP.y };
+    this.p2 = initP;
+    this.cp1 = {
+      x: this.p1.x + this.initOffset / 3,
+      y: this.p1.y,
+    };
+    this.cp2 = {
+      x: this.p2.x - this.initOffset / 3,
+      y: this.p2.y,
+    };
+    this.pressing = {
+      activate: true,
+      p: PressingP.p2,
+    };
   }
 
   onMouseDown($canvas: HTMLCanvasElement) {
@@ -266,6 +263,9 @@ class Curve {
     ctx.arc(this.cp2.x, this.cp2.y, 10, 0, 2 * Math.PI, true); // cp2 control point
     ctx.fill();
     ctx.stroke();
+
+    const arrow = new Arrow(10, 10);
+    arrow.draw(ctx, { x: this.p2.x, y: this.p2.y });
   }
 }
 

@@ -46,6 +46,7 @@ class Curve {
     activate: boolean;
     p: PressingP | null;
   };
+  arrow: Arrow;
 
   constructor(cpline: Line, curve: Line, initOffset: number) {
     this.cpline = cpline;
@@ -57,6 +58,7 @@ class Curve {
     this.cp2 = null;
     this.initOffset = initOffset;
     this.pressing = this.initPressing;
+    this.arrow = new Arrow(20, 20);
   }
 
   checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
@@ -264,8 +266,12 @@ class Curve {
     ctx.fill();
     ctx.stroke();
 
-    const arrow = new Arrow(10, 10);
-    arrow.draw(ctx, { x: this.p2.x, y: this.p2.y });
+    this.arrow.draw(
+      ctx,
+      { x: this.p2.x, y: this.p2.y },
+      Math.atan2(this.p2.y - this.cp2.y, this.p2.x - this.cp2.x) +
+        90 * (Math.PI / 180)
+    );
   }
 }
 

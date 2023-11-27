@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect, useCallback, EventHandler } from "react";
 import Image from "next/image";
+import { Vec } from '@/types/vec'
 
 let lineOffset = 4, // increase operation area
   anchrSize = 2;
@@ -15,10 +16,165 @@ type Box = {
   editing: boolean
 };
 
+enum PressingTarget {
+  m = "m",
+  lt = "lt",
+  rt = "rt",
+  lb = "lb",
+  lr = "lr"
+}
+
 let ctx: CanvasRenderingContext2D | null | undefined = null,
   editingShapeIndex = -1
 
-export default function EditableBox() {
+export default class Process {
+  private anchor = {
+    size: {
+      fill: 4,
+      stroke: 2
+    }
+  };
+  private strokeSize = 2
+  private initPressing = {
+    activate: false,
+    target: null,
+  }
+  w: number;
+  h: number
+  p: Vec;
+  c: string
+  editing: boolean;
+  pressing: {
+    activate: boolean,
+    target: PressingTarget | null,
+  };
+
+  constructor(w: number, h: number, p: Vec, c: string) {
+    this.w = w
+    this.h = h
+    this.p = p
+    this.c = c
+    this.editing = false
+    this.pressing = this.initPressing
+  }
+
+  checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
+    if (!$canvas) return false
+
+    let edge = {
+      l: this.p.x - this.w / 2,
+      t: this.p.y - this.h / 2,
+      r: this.p.x + this.w / 2,
+      b: this.p.y + this.h / 2
+    }
+
+    let centerP = {
+      m: {
+        x: this.p.x,
+        y: this.p.y
+      },
+      lt: {
+        x: edge.l,
+        y: edge.t
+      },
+      rt: {
+        x: edge.r,
+        y: edge.t
+      },
+      rb: {
+        x: edge.r,
+        y: edge.b
+      },
+      lb: {
+        x: edge.l,
+        y: edge.b
+      }
+    }
+    if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.m
+      }
+      console.log(this.pressing)
+      return true
+    }
+    if ((p.x - centerP.lt.x) * (p.x - centerP.lt.x) + (p.y - centerP.lt.y) * (p.y - centerP.lt.y) < this.anchor.size.fill * this.anchor.size.fill) {
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.lt
+      }
+      console.log(this.pressing)
+
+      return true
+    }
+
+
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.save()
+    ctx.translate(this.p.x, this.p.y)
+
+    ctx.beginPath();
+    ctx.fillStyle = this.c;
+    ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+    ctx.closePath();
+
+    if (this.editing) {
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "DeepSkyBlue";
+      ctx.lineWidth = this.strokeSize;
+
+      // draw frame
+      ctx.beginPath();
+      ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+      ctx.closePath();
+
+
+      ctx.lineWidth = this.anchor.size.stroke;
+
+      // draw anchors
+      ctx.beginPath();
+      ctx.arc(-this.w / 2, -this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, top
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(this.w / 2, -this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, top
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(-this.w / 2, this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, bottom
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(this.w / 2, this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, bottom
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    ctx.restore()
+  }
+
+  onMouseDown() {
+    this.editing = true
+  }
+
+  onMouseMove() {
+
+  }
+
+  onMouseUp() {
+  }
+}
+
+export function EditableBox() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null),
     { current: mousedown } = useRef(false),
     { current: clickedArea } = useRef({ box: -1, pos: "o" }),

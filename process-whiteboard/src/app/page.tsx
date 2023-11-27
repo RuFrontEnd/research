@@ -16,6 +16,7 @@ type Box = {
 
 let ctx: CanvasRenderingContext2D | null | undefined = null;
 
+
 export default function Home() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null),
     { current: mousedown } = useRef(false),

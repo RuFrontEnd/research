@@ -230,11 +230,14 @@ export default function EditableBox() {
     let $canvas = document.querySelector('canvas')
     shapes.forEach(shape => {
       if (!$canvas) return
-      console.log(shape.checkBoundry($canvas, {
+      // console.log(shape.checkBoundry($canvas, {
+      //   x: e.nativeEvent.offsetX,
+      //   y: e.nativeEvent.offsetY,
+      // }))
+      shape.onMouseDown($canvas, {
         x: e.nativeEvent.offsetX,
         y: e.nativeEvent.offsetY,
-      }))
-      shape.onMouseDown()
+      })
     })
   }, []);
 
@@ -281,7 +284,10 @@ export default function EditableBox() {
     //   redraw();
     // }
     shapes.forEach(shape => {
-      shape.onMouseMove()
+      shape.onMouseMove({
+        x: e.nativeEvent.offsetX,
+        y: e.nativeEvent.offsetY
+      })
     })
   }, []);
 
@@ -310,6 +316,7 @@ export default function EditableBox() {
   }, []);
 
   const draw = useCallback(() => {
+    ctx?.clearRect(0, 0, window.innerWidth, window.innerHeight)
     shapes.forEach(shape => {
       shape.draw(ctx)
     })

@@ -20,8 +20,8 @@ enum PressingTarget {
   m = "m",
   lt = "lt",
   rt = "rt",
-  lb = "lb",
-  lr = "lr"
+  rb = "rb",
+  lb = "lb"
 }
 
 let ctx: CanvasRenderingContext2D | null | undefined = null,
@@ -42,92 +42,219 @@ export default class Process {
   w: number;
   h: number
   p: Vec;
+  private p1: Vec;
+  private p2: Vec;
   c: string
-  editing: boolean;
+  selecting: boolean;
   pressing: {
     activate: boolean,
     target: PressingTarget | null,
   };
+  center: {
+    m: {
+      x: number | null,
+      y: number | null
+    },
+    lt: {
+      x: number | null,
+      y: number | null
+    },
+    rt: {
+      x: number | null,
+      y: number | null
+    },
+    rb: {
+      x: number | null,
+      y: number | null
+    },
+    lb: {
+      x: number | null,
+      y: number | null
+    }
+  } = {
+      m: {
+        x: null,
+        y: null
+      },
+      lt: {
+        x: null,
+        y: null
+      },
+      rt: {
+        x: null,
+        y: null
+      },
+      rb: {
+        x: null,
+        y: null
+      },
+      lb: {
+        x: null,
+        y: null
+      }
+    };
+  dragP: Vec | {
+    x: null,
+    y: null
+  }
 
   constructor(w: number, h: number, p: Vec, c: string) {
     this.w = w
     this.h = h
     this.p = p
+    this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 }
+    this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 }
     this.c = c
-    this.editing = false
+    this.selecting = false
     this.pressing = this.initPressing
+    this.dragP = {
+      x: null,
+      y: null
+    }
   }
 
   checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
     if (!$canvas) return false
 
-    let edge = {
+    const edge = {
       l: this.p.x - this.w / 2,
       t: this.p.y - this.h / 2,
       r: this.p.x + this.w / 2,
-      b: this.p.y + this.h / 2
+      b: this.p.y + this.w / 2
     }
 
-    let centerP = {
-      m: {
-        x: this.p.x,
-        y: this.p.y
-      },
-      lt: {
-        x: edge.l,
-        y: edge.t
-      },
-      rt: {
-        x: edge.r,
-        y: edge.t
-      },
-      rb: {
-        x: edge.r,
-        y: edge.b
-      },
-      lb: {
-        x: edge.l,
-        y: edge.b
+    return p.x > edge.l - this.anchor.size.fill &&
+      p.y > edge.t - this.anchor.size.fill &&
+      p.x < edge.r + this.anchor.size.fill &&
+      p.y < edge.b + this.anchor.size.fill
+  }
+
+  onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
+    if (this.checkBoundry($canvas, p)) {
+      this.selecting = true
+    } else {
+      this.selecting = false
+      this.pressing = this.initPressing
+    }
+
+    const edge = {
+      l: this.p.x - this.w / 2,
+      t: this.p.y - this.h / 2,
+      r: this.p.x + this.w / 2,
+      b: this.p.y + this.w / 2
+    },
+      center = {
+        m: {
+          x: this.p.x,
+          y: this.p.y
+        },
+        lt: {
+          x: edge.l,
+          y: edge.t
+        },
+        rt: {
+          x: edge.r,
+          y: edge.t
+        },
+        rb: {
+          x: edge.r,
+          y: edge.b
+        },
+        lb: {
+          x: edge.l,
+          y: edge.b
+        }
+      }
+
+
+    if (this.selecting) {
+      if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.m
+        }
+      }
+      if ((p.x - center.lt.x) * (p.x - center.lt.x) + (p.y - center.lt.y) * (p.y - center.lt.y) < this.anchor.size.fill * this.anchor.size.fill) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.lt
+        }
+      }
+      if ((p.x - center.rt.x) * (p.x - center.rt.x) + (p.y - center.rt.y) * (p.y - center.rt.y) < this.anchor.size.fill * this.anchor.size.fill) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.rt
+        }
+      }
+      if ((p.x - center.rb.x) * (p.x - center.rb.x) + (p.y - center.rb.y) * (p.y - center.rb.y) < this.anchor.size.fill * this.anchor.size.fill) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.rb
+        }
+      }
+      if ((p.x - center.lb.x) * (p.x - center.lb.x) + (p.y - center.lb.y) * (p.y - center.lb.y) < this.anchor.size.fill * this.anchor.size.fill) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.lb
+        }
+      }
+      this.dragP = p
+    }
+  }
+
+  onMouseMove(p: Vec) {
+    if (this.selecting && this.pressing.activate) {
+      if (!this.dragP.x || !this.dragP.y) return
+      let xOffset = p.x - this.dragP.x,
+        yOffset = p.y - this.dragP.y;
+
+      this.dragP.x = p.x
+      this.dragP.y = p.y
+
+      if (this.pressing.target === PressingTarget.m) {
+        this.p.x += xOffset
+        this.p.y += yOffset
+        this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 }
+        this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 }
+      } else if (this.pressing.target === PressingTarget.lt) {
+        this.p1.x += xOffset
+        this.p1.y += yOffset
+        this.p = { x: (this.p1.x + this.p2.x) / 2, y: (this.p1.y + this.p2.y) / 2 }
+        this.w = Math.abs(this.p1.x - this.p2.x)
+        this.h = Math.abs(this.p1.y - this.p2.y)
       }
     }
-    if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
-      this.pressing = {
-        activate: true,
-        target: PressingTarget.m
-      }
-      console.log(this.pressing)
-      return true
+  }
+
+  onMouseUp() {
+
+    if (this.pressing.activate) {
+      this.pressing = this.initPressing
     }
-    if ((p.x - centerP.lt.x) * (p.x - centerP.lt.x) + (p.y - centerP.lt.y) * (p.y - centerP.lt.y) < this.anchor.size.fill * this.anchor.size.fill) {
-      this.pressing = {
-        activate: true,
-        target: PressingTarget.lt
-      }
-      console.log(this.pressing)
-
-      return true
-    }
-
-
   }
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.save()
     ctx.translate(this.p.x, this.p.y)
-
     ctx.beginPath();
     ctx.fillStyle = this.c;
-    ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+    ctx.fillRect(this.p1.x - this.p.x,
+      this.p1.y - this.p.y,
+      this.p2.x - this.p1.x,
+      this.p2.y - this.p1.y);
     ctx.closePath();
 
-    if (this.editing) {
+    if (this.selecting) {
       ctx.fillStyle = "white";
       ctx.strokeStyle = "DeepSkyBlue";
       ctx.lineWidth = this.strokeSize;
 
       // draw frame
       ctx.beginPath();
-      ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+      ctx.strokeRect(this.p1.x - this.p.x,
+        this.p1.y - this.p.y,
+        this.p2.x - this.p1.x,
+        this.p2.y - this.p1.y);
       ctx.closePath();
 
 
@@ -135,42 +262,31 @@ export default class Process {
 
       // draw anchors
       ctx.beginPath();
-      ctx.arc(-this.w / 2, -this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, top
+      ctx.arc(this.p1.x - this.p.x, this.p1.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, top
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
 
       ctx.beginPath();
-      ctx.arc(this.w / 2, -this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, top
+      ctx.arc(this.p2.x - this.p.x, this.p1.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, top
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
 
       ctx.beginPath();
-      ctx.arc(-this.w / 2, this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, bottom
+      ctx.arc(this.p1.x - this.p.x, this.p2.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, bottom
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
 
       ctx.beginPath();
-      ctx.arc(this.w / 2, this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, bottom
+      ctx.arc(this.p2.x - this.p.x, this.p2.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, bottom
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
     }
 
     ctx.restore()
-  }
-
-  onMouseDown() {
-    this.editing = true
-  }
-
-  onMouseMove() {
-
-  }
-
-  onMouseUp() {
   }
 }
 

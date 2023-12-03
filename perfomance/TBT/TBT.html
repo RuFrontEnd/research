@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TBT</title>
+</head>
+<body>
+    <div>Click the button to simulate TBT</div>
+    <button id="btn">Simulate TBT</button>
+
+    <script>
+        document.getElementById('btn').addEventListener('click', () => {
+            // 模擬一個阻塞主線程的操作
+            const startTime = performance.now();
+            while (performance.now() - startTime < 300) {
+                // 在這個迴圈中模擬一個耗時操作
+            }
+            console.log('TBT operation finished!');
+        });
+    </script>
+</body>
+</html>

@@ -1,17 +1,7 @@
 "use client";
 import Arrow from "@/shapes/arrow";
-
-type Vec = { x: number; y: number };
-type Line = {
-  w: number;
-  c: string;
-};
-enum PressingP {
-  p1 = "p1",
-  cp1 = "cp1",
-  p2 = "p2",
-  cp2 = "cp2",
-}
+import { Vec } from "@/types/vec";
+import { Line, PressingP } from "@/types/shapes/curve";
 
 export default class Curve {
   private initPressing = {

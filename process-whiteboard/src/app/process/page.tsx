@@ -13,12 +13,12 @@ type Box = {
   y2: number;
   lineWidth: number;
   color: string;
-  editing: boolean
+  editing: boolean;
 };
 
 let ctx: CanvasRenderingContext2D | null | undefined = null,
   editingShapeIndex = -1,
-  shapes: any[] = []
+  shapes: any[] = [];
 
 export default function EditableBox() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null),
@@ -34,15 +34,20 @@ export default function EditableBox() {
 
   const getEditShapeIndex = useCallback((x: number, y: number) => {
     for (let i = boxes.length - 1; i >= 0; i--) {
-      let box = boxes[i]
+      let box = boxes[i];
 
-      if (x > box.x1 - lineOffset && x < box.x2 + lineOffset && y > box.y1 - lineOffset && y < box.y2 + lineOffset) {
-        return i
+      if (
+        x > box.x1 - lineOffset &&
+        x < box.x2 + lineOffset &&
+        y > box.y1 - lineOffset &&
+        y < box.y2 + lineOffset
+      ) {
+        return i;
       }
     }
 
-    return -1
-  }, [])
+    return -1;
+  }, []);
 
   const findCurrentArea = (x: number, y: number) => {
     // x, y means the coordinate of mouse clicked point
@@ -102,7 +107,7 @@ export default function EditableBox() {
         lineWidth: 1,
         // color: "DeepSkyBlue",
         color: "orange",
-        editing: false
+        editing: false,
       };
       // } else {
       //   return null;
@@ -123,7 +128,6 @@ export default function EditableBox() {
 
     ctx.rect(box.x1, box.y1, box.x2 - box.x1, box.y2 - box.y1);
     ctx.fill();
-
 
     if (box.editing) {
       ctx.fillStyle = "DeepSkyBlue";
@@ -227,9 +231,9 @@ export default function EditableBox() {
 
     // redraw()
 
-    let $canvas = document.querySelector('canvas')
-    shapes.forEach(shape => {
-      if (!$canvas) return
+    let $canvas = document.querySelector("canvas");
+    shapes.forEach((shape) => {
+      if (!$canvas) return;
       // console.log(shape.checkBoundry($canvas, {
       //   x: e.nativeEvent.offsetX,
       //   y: e.nativeEvent.offsetY,
@@ -237,8 +241,8 @@ export default function EditableBox() {
       shape.onMouseDown($canvas, {
         x: e.nativeEvent.offsetX,
         y: e.nativeEvent.offsetY,
-      })
-    })
+      });
+    });
   }, []);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -283,12 +287,12 @@ export default function EditableBox() {
 
     //   redraw();
     // }
-    shapes.forEach(shape => {
+    shapes.forEach((shape) => {
       shape.onMouseMove({
         x: e.nativeEvent.offsetX,
-        y: e.nativeEvent.offsetY
-      })
-    })
+        y: e.nativeEvent.offsetY,
+      });
+    });
   }, []);
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -310,30 +314,30 @@ export default function EditableBox() {
     // }
     // tmpBox = null;
     // mousedown = false;
-    shapes.forEach(shape => {
-      shape.onMouseUp()
-    })
+    shapes.forEach((shape) => {
+      shape.onMouseUp();
+    });
   }, []);
 
   const draw = useCallback(() => {
-    ctx?.clearRect(0, 0, window.innerWidth, window.innerHeight)
-    shapes.forEach(shape => {
-      shape.draw(ctx)
-    })
-    requestAnimationFrame(draw)
-
-  }, [])
+    ctx?.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    shapes.forEach((shape) => {
+      shape.draw(ctx);
+    });
+    requestAnimationFrame(draw);
+  }, []);
 
   useEffect(() => {
     if ($canvas) {
       $canvas.width = window.innerWidth;
       $canvas.height = window.innerHeight;
-      if (!ctx) return
-      let process = new Process(200, 100, { x: 300, y: 300 }, 'red')
-      shapes.push(process)
+      if (!ctx) return;
+      let process = new Process(200, 100, { x: 300, y: 300 }, "red");
+      let process_2 = new Process(200, 100, { x: 1200, y: 300 }, "blue");
+      shapes.push(process);
+      shapes.push(process_2);
 
-
-      requestAnimationFrame(draw)
+      requestAnimationFrame(draw);
     }
   }, []);
 

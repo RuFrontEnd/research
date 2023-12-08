@@ -98,6 +98,11 @@ export default class Process {
         x: null;
         y: null;
       };
+  curveTrigger: {
+    d: number;
+  } = {
+    d: 30,
+  };
 
   constructor(w: number, h: number, p: Vec, c: string) {
     this.w = w;
@@ -112,17 +117,50 @@ export default class Process {
       x: null,
       y: null,
     };
+    this.curveTrigger = {
+      d: 30,
+    };
   }
+
+  private getEdge = () => {
+    return {
+      l: this.p.x - this.w / 2,
+      t: this.p.y - this.h / 2,
+      r: this.p.x + this.w / 2,
+      b: this.p.y + this.h / 2,
+    };
+  };
+
+  private getCenter = () => {
+    const edge = this.getEdge();
+    return {
+      m: {
+        x: this.p.x,
+        y: this.p.y,
+      },
+      lt: {
+        x: edge.l,
+        y: edge.t,
+      },
+      rt: {
+        x: edge.r,
+        y: edge.t,
+      },
+      rb: {
+        x: edge.r,
+        y: edge.b,
+      },
+      lb: {
+        x: edge.l,
+        y: edge.b,
+      },
+    };
+  };
 
   checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
     if (!$canvas) return false;
 
-    const edge = {
-      l: this.p.x - this.w / 2,
-      t: this.p.y - this.h / 2,
-      r: this.p.x + this.w / 2,
-      b: this.p.y + this.w / 2,
-    };
+    const edge = this.getEdge();
 
     return (
       p.x > edge.l - this.anchor.size.fill &&
@@ -140,34 +178,8 @@ export default class Process {
       this.pressing = this.initPressing;
     }
 
-    const edge = {
-        l: this.p.x - this.w / 2,
-        t: this.p.y - this.h / 2,
-        r: this.p.x + this.w / 2,
-        b: this.p.y + this.h / 2,
-      },
-      center = {
-        m: {
-          x: this.p.x,
-          y: this.p.y,
-        },
-        lt: {
-          x: edge.l,
-          y: edge.t,
-        },
-        rt: {
-          x: edge.r,
-          y: edge.t,
-        },
-        rb: {
-          x: edge.r,
-          y: edge.b,
-        },
-        lb: {
-          x: edge.l,
-          y: edge.b,
-        },
-      };
+    const edge = this.getEdge(),
+      center = this.getCenter();
 
     if (this.selecting) {
       if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
@@ -348,6 +360,59 @@ export default class Process {
         2 * Math.PI,
         false
       ); // right, bottom
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+
+      // draw curve triggers
+      ctx.beginPath();
+      ctx.arc(
+        -this.w / 2 - this.curveTrigger.d,
+        0,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // left
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(
+        0,
+        -this.h / 2 - this.curveTrigger.d,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // top
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(
+        this.w / 2 + this.curveTrigger.d,
+        0,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // right
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(
+        0,
+        this.h / 2 + this.curveTrigger.d,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // bottom
       ctx.stroke();
       ctx.fill();
       ctx.closePath();

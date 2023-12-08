@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect, useCallback, EventHandler } from "react";
 import Image from "next/image";
-import { Vec } from '@/types/vec'
+import { Vec } from "@/types/vec";
 
 let lineOffset = 4, // increase operation area
   anchrSize = 2;
@@ -13,7 +13,7 @@ type Box = {
   y2: number;
   lineWidth: number;
   color: string;
-  editing: boolean
+  editing: boolean;
 };
 
 enum PressingTarget {
@@ -21,227 +21,266 @@ enum PressingTarget {
   lt = "lt",
   rt = "rt",
   rb = "rb",
-  lb = "lb"
+  lb = "lb",
 }
 
 let ctx: CanvasRenderingContext2D | null | undefined = null,
-  editingShapeIndex = -1
+  editingShapeIndex = -1;
 
 export default class Process {
   private anchor = {
     size: {
       fill: 4,
-      stroke: 2
-    }
+      stroke: 2,
+    },
   };
-  private strokeSize = 2
+  private strokeSize = 2;
   private initPressing = {
     activate: false,
     target: null,
-  }
+  };
   w: number;
-  h: number
+  h: number;
   p: Vec;
   private p1: Vec;
   private p2: Vec;
-  c: string
+  c: string;
   selecting: boolean;
   pressing: {
-    activate: boolean,
-    target: PressingTarget | null,
+    activate: boolean;
+    target: PressingTarget | null;
   };
   center: {
     m: {
-      x: number | null,
-      y: number | null
+      x: number | null;
+      y: number | null;
+    };
+    lt: {
+      x: number | null;
+      y: number | null;
+    };
+    rt: {
+      x: number | null;
+      y: number | null;
+    };
+    rb: {
+      x: number | null;
+      y: number | null;
+    };
+    lb: {
+      x: number | null;
+      y: number | null;
+    };
+  } = {
+    m: {
+      x: null,
+      y: null,
     },
     lt: {
-      x: number | null,
-      y: number | null
+      x: null,
+      y: null,
     },
     rt: {
-      x: number | null,
-      y: number | null
+      x: null,
+      y: null,
     },
     rb: {
-      x: number | null,
-      y: number | null
+      x: null,
+      y: null,
     },
     lb: {
-      x: number | null,
-      y: number | null
-    }
-  } = {
-      m: {
-        x: null,
-        y: null
-      },
-      lt: {
-        x: null,
-        y: null
-      },
-      rt: {
-        x: null,
-        y: null
-      },
-      rb: {
-        x: null,
-        y: null
-      },
-      lb: {
-        x: null,
-        y: null
-      }
-    };
-  dragP: Vec | {
-    x: null,
-    y: null
-  }
+      x: null,
+      y: null,
+    },
+  };
+  dragP:
+    | Vec
+    | {
+        x: null;
+        y: null;
+      };
 
   constructor(w: number, h: number, p: Vec, c: string) {
-    this.w = w
-    this.h = h
-    this.p = p
-    this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 }
-    this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 }
-    this.c = c
-    this.selecting = false
-    this.pressing = this.initPressing
+    this.w = w;
+    this.h = h;
+    this.p = p;
+    this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 };
+    this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 };
+    this.c = c;
+    this.selecting = false;
+    this.pressing = this.initPressing;
     this.dragP = {
       x: null,
-      y: null
-    }
+      y: null,
+    };
   }
 
   checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
-    if (!$canvas) return false
+    if (!$canvas) return false;
 
     const edge = {
       l: this.p.x - this.w / 2,
       t: this.p.y - this.h / 2,
       r: this.p.x + this.w / 2,
-      b: this.p.y + this.w / 2
-    }
+      b: this.p.y + this.w / 2,
+    };
 
-    return p.x > edge.l - this.anchor.size.fill &&
+    return (
+      p.x > edge.l - this.anchor.size.fill &&
       p.y > edge.t - this.anchor.size.fill &&
       p.x < edge.r + this.anchor.size.fill &&
       p.y < edge.b + this.anchor.size.fill
+    );
   }
 
   onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
     if (this.checkBoundry($canvas, p)) {
-      this.selecting = true
+      this.selecting = true;
     } else {
-      this.selecting = false
-      this.pressing = this.initPressing
+      this.selecting = false;
+      this.pressing = this.initPressing;
     }
 
     const edge = {
-      l: this.p.x - this.w / 2,
-      t: this.p.y - this.h / 2,
-      r: this.p.x + this.w / 2,
-      b: this.p.y + this.w / 2
-    },
+        l: this.p.x - this.w / 2,
+        t: this.p.y - this.h / 2,
+        r: this.p.x + this.w / 2,
+        b: this.p.y + this.h / 2,
+      },
       center = {
         m: {
           x: this.p.x,
-          y: this.p.y
+          y: this.p.y,
         },
         lt: {
           x: edge.l,
-          y: edge.t
+          y: edge.t,
         },
         rt: {
           x: edge.r,
-          y: edge.t
+          y: edge.t,
         },
         rb: {
           x: edge.r,
-          y: edge.b
+          y: edge.b,
         },
         lb: {
           x: edge.l,
-          y: edge.b
-        }
-      }
-
+          y: edge.b,
+        },
+      };
 
     if (this.selecting) {
       if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.m
-        }
+          target: PressingTarget.m,
+        };
       }
-      if ((p.x - center.lt.x) * (p.x - center.lt.x) + (p.y - center.lt.y) * (p.y - center.lt.y) < this.anchor.size.fill * this.anchor.size.fill) {
+      if (
+        (p.x - center.lt.x) * (p.x - center.lt.x) +
+          (p.y - center.lt.y) * (p.y - center.lt.y) <
+        this.anchor.size.fill * this.anchor.size.fill
+      ) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.lt
-        }
+          target: PressingTarget.lt,
+        };
       }
-      if ((p.x - center.rt.x) * (p.x - center.rt.x) + (p.y - center.rt.y) * (p.y - center.rt.y) < this.anchor.size.fill * this.anchor.size.fill) {
+      if (
+        (p.x - center.rt.x) * (p.x - center.rt.x) +
+          (p.y - center.rt.y) * (p.y - center.rt.y) <
+        this.anchor.size.fill * this.anchor.size.fill
+      ) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.rt
-        }
+          target: PressingTarget.rt,
+        };
       }
-      if ((p.x - center.rb.x) * (p.x - center.rb.x) + (p.y - center.rb.y) * (p.y - center.rb.y) < this.anchor.size.fill * this.anchor.size.fill) {
+      if (
+        (p.x - center.rb.x) * (p.x - center.rb.x) +
+          (p.y - center.rb.y) * (p.y - center.rb.y) <
+        this.anchor.size.fill * this.anchor.size.fill
+      ) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.rb
-        }
+          target: PressingTarget.rb,
+        };
       }
-      if ((p.x - center.lb.x) * (p.x - center.lb.x) + (p.y - center.lb.y) * (p.y - center.lb.y) < this.anchor.size.fill * this.anchor.size.fill) {
+      if (
+        (p.x - center.lb.x) * (p.x - center.lb.x) +
+          (p.y - center.lb.y) * (p.y - center.lb.y) <
+        this.anchor.size.fill * this.anchor.size.fill
+      ) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.lb
-        }
+          target: PressingTarget.lb,
+        };
       }
-      this.dragP = p
+      this.dragP = p;
     }
   }
 
   onMouseMove(p: Vec) {
     if (this.selecting && this.pressing.activate) {
-      if (!this.dragP.x || !this.dragP.y) return
+      if (!this.dragP.x || !this.dragP.y) return;
       let xOffset = p.x - this.dragP.x,
         yOffset = p.y - this.dragP.y;
 
-      this.dragP.x = p.x
-      this.dragP.y = p.y
+      this.dragP.x = p.x;
+      this.dragP.y = p.y;
+
+      const recalculate = () => {
+        this.p = {
+          x: (this.p1.x + this.p2.x) / 2,
+          y: (this.p1.y + this.p2.y) / 2,
+        };
+        this.w = Math.abs(this.p1.x - this.p2.x);
+        this.h = Math.abs(this.p1.y - this.p2.y);
+      };
 
       if (this.pressing.target === PressingTarget.m) {
-        this.p.x += xOffset
-        this.p.y += yOffset
-        this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 }
-        this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 }
+        this.p.x += xOffset;
+        this.p.y += yOffset;
+        this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 };
+        this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 };
       } else if (this.pressing.target === PressingTarget.lt) {
-        this.p1.x += xOffset
-        this.p1.y += yOffset
-        this.p = { x: (this.p1.x + this.p2.x) / 2, y: (this.p1.y + this.p2.y) / 2 }
-        this.w = Math.abs(this.p1.x - this.p2.x)
-        this.h = Math.abs(this.p1.y - this.p2.y)
+        this.p1.x += xOffset;
+        this.p1.y += yOffset;
+        recalculate();
+      } else if (this.pressing.target === PressingTarget.rt) {
+        this.p2.x += xOffset;
+        this.p1.y += yOffset;
+        recalculate();
+      } else if (this.pressing.target === PressingTarget.rb) {
+        this.p2.x += xOffset;
+        this.p2.y += yOffset;
+        recalculate();
+      } else if (this.pressing.target === PressingTarget.lb) {
+        this.p1.x += xOffset;
+        this.p2.y += yOffset;
+        recalculate();
       }
     }
   }
 
   onMouseUp() {
-
     if (this.pressing.activate) {
-      this.pressing = this.initPressing
+      this.pressing = this.initPressing;
     }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.save()
-    ctx.translate(this.p.x, this.p.y)
+    ctx.save();
+    ctx.translate(this.p.x, this.p.y);
     ctx.beginPath();
     ctx.fillStyle = this.c;
-    ctx.fillRect(this.p1.x - this.p.x,
+    ctx.fillRect(
+      this.p1.x - this.p.x,
       this.p1.y - this.p.y,
       this.p2.x - this.p1.x,
-      this.p2.y - this.p1.y);
+      this.p2.y - this.p1.y
+    );
     ctx.closePath();
 
     if (this.selecting) {
@@ -251,42 +290,71 @@ export default class Process {
 
       // draw frame
       ctx.beginPath();
-      ctx.strokeRect(this.p1.x - this.p.x,
+      ctx.strokeRect(
+        this.p1.x - this.p.x,
         this.p1.y - this.p.y,
         this.p2.x - this.p1.x,
-        this.p2.y - this.p1.y);
+        this.p2.y - this.p1.y
+      );
       ctx.closePath();
-
 
       ctx.lineWidth = this.anchor.size.stroke;
 
       // draw anchors
       ctx.beginPath();
-      ctx.arc(this.p1.x - this.p.x, this.p1.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, top
+      ctx.arc(
+        this.p1.x - this.p.x,
+        this.p1.y - this.p.y,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // left, top
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
 
       ctx.beginPath();
-      ctx.arc(this.p2.x - this.p.x, this.p1.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, top
+      ctx.arc(
+        this.p2.x - this.p.x,
+        this.p1.y - this.p.y,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // right, top
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
 
       ctx.beginPath();
-      ctx.arc(this.p1.x - this.p.x, this.p2.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // left, bottom
+      ctx.arc(
+        this.p1.x - this.p.x,
+        this.p2.y - this.p.y,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // left, bottom
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
 
       ctx.beginPath();
-      ctx.arc(this.p2.x - this.p.x, this.p2.y - this.p.y, this.anchor.size.fill, 0, 2 * Math.PI, false); // right, bottom
+      ctx.arc(
+        this.p2.x - this.p.x,
+        this.p2.y - this.p.y,
+        this.anchor.size.fill,
+        0,
+        2 * Math.PI,
+        false
+      ); // right, bottom
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
     }
 
-    ctx.restore()
+    ctx.restore();
   }
 }
 
@@ -304,15 +372,20 @@ export function EditableBox() {
 
   const getEditShapeIndex = useCallback((x: number, y: number) => {
     for (let i = boxes.length - 1; i >= 0; i--) {
-      let box = boxes[i]
+      let box = boxes[i];
 
-      if (x > box.x1 - lineOffset && x < box.x2 + lineOffset && y > box.y1 - lineOffset && y < box.y2 + lineOffset) {
-        return i
+      if (
+        x > box.x1 - lineOffset &&
+        x < box.x2 + lineOffset &&
+        y > box.y1 - lineOffset &&
+        y < box.y2 + lineOffset
+      ) {
+        return i;
       }
     }
 
-    return -1
-  }, [])
+    return -1;
+  }, []);
 
   const findCurrentArea = (x: number, y: number) => {
     // x, y means the coordinate of mouse clicked point
@@ -372,7 +445,7 @@ export function EditableBox() {
         lineWidth: 1,
         // color: "DeepSkyBlue",
         color: "orange",
-        editing: false
+        editing: false,
       };
       // } else {
       //   return null;
@@ -393,7 +466,6 @@ export function EditableBox() {
 
     ctx.rect(box.x1, box.y1, box.x2 - box.x1, box.y2 - box.y1);
     ctx.fill();
-
 
     if (box.editing) {
       ctx.fillStyle = "DeepSkyBlue";
@@ -481,25 +553,26 @@ export function EditableBox() {
     y2 = e.nativeEvent.offsetY;
     clickedArea = findCurrentArea(x1, y1);
 
-    const editShapeIndex = getEditShapeIndex(e.nativeEvent.x, e.nativeEvent.y)
+    const editShapeIndex = getEditShapeIndex(e.nativeEvent.x, e.nativeEvent.y);
 
     if (editShapeIndex !== -1 && editingShapeIndex === -1) {
-      boxes[editShapeIndex].editing = true
-      editingShapeIndex = editShapeIndex
+      boxes[editShapeIndex].editing = true;
+      editingShapeIndex = editShapeIndex;
     } else if (editShapeIndex !== -1 && editingShapeIndex !== -1) {
-      boxes[editingShapeIndex].editing = false
-      boxes[editShapeIndex].editing = true
-      editingShapeIndex = editShapeIndex
+      boxes[editingShapeIndex].editing = false;
+      boxes[editShapeIndex].editing = true;
+      editingShapeIndex = editShapeIndex;
     } else if (editingShapeIndex !== -1) {
-      boxes[editingShapeIndex].editing = false
-      editingShapeIndex = -1
+      boxes[editingShapeIndex].editing = false;
+      editingShapeIndex = -1;
     }
 
-    redraw()
+    redraw();
   }, []);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (mousedown && clickedArea.box === -1) { // clickedArea.box === -1 means not pressing on any boxes
+    if (mousedown && clickedArea.box === -1) {
+      // clickedArea.box === -1 means not pressing on any boxes
       x2 = e.nativeEvent.offsetX;
       y2 = e.nativeEvent.offsetY;
       redraw();
@@ -513,28 +586,36 @@ export function EditableBox() {
       x1 = x2;
       y1 = y2;
 
-      if (clickedArea.pos === 'i' ||
-        clickedArea.pos === 'tl' ||
-        clickedArea.pos === 'l' ||
-        clickedArea.pos === 'bl') {
+      if (
+        clickedArea.pos === "i" ||
+        clickedArea.pos === "tl" ||
+        clickedArea.pos === "l" ||
+        clickedArea.pos === "bl"
+      ) {
         boxes[clickedArea.box].x1 += xOffset;
       }
-      if (clickedArea.pos === 'i' ||
-        clickedArea.pos === 'tl' ||
-        clickedArea.pos === 't' ||
-        clickedArea.pos === 'tr') {
+      if (
+        clickedArea.pos === "i" ||
+        clickedArea.pos === "tl" ||
+        clickedArea.pos === "t" ||
+        clickedArea.pos === "tr"
+      ) {
         boxes[clickedArea.box].y1 += yOffset;
       }
-      if (clickedArea.pos === 'i' ||
-        clickedArea.pos === 'tr' ||
-        clickedArea.pos === 'r' ||
-        clickedArea.pos === 'br') {
+      if (
+        clickedArea.pos === "i" ||
+        clickedArea.pos === "tr" ||
+        clickedArea.pos === "r" ||
+        clickedArea.pos === "br"
+      ) {
         boxes[clickedArea.box].x2 += xOffset;
       }
-      if (clickedArea.pos === 'i' ||
-        clickedArea.pos === 'bl' ||
-        clickedArea.pos === 'b' ||
-        clickedArea.pos === 'br') {
+      if (
+        clickedArea.pos === "i" ||
+        clickedArea.pos === "bl" ||
+        clickedArea.pos === "b" ||
+        clickedArea.pos === "br"
+      ) {
         boxes[clickedArea.box].y2 += yOffset;
       }
 

@@ -1,6 +1,5 @@
 "use client";
-import { useState, useRef, useEffect, useCallback, EventHandler } from "react";
-import Image from "next/image";
+import { useRef, useEffect, useCallback } from "react";
 import { Vec } from "@/types/vec";
 
 let lineOffset = 4, // increase operation area

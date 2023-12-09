@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Scroll with Intersection Observer</title>
+    <style>
+        /* Some basic styling for the content */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #content {
+            padding: 20px;
+        }
+        .item {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            /* display: none; */
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <!-- Placeholder for items -->
+    </div>
+    <div class="loading" id="loading">Loading...</div>
+
+    <script>
+        let page = 1;
+        let isLoading = false;
+
+        // Function to fetch more items
+        function fetchMoreItems() {
+            isLoading = true;
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+
+            fetch(`http://localhost:3000/data?page=${page}&limit=10`)
+                .then(response => response.json())
+                .then(data => {
+                    const content = document.getElementById('content');
+                    data.data.forEach(item => {
+                        const itemElem = document.createElement('div');
+                        itemElem.classList.add('item');
+                        itemElem.textContent = `ID: ${item.id}, Name: ${item.name}`;
+                        content.appendChild(itemElem);
+                    });
+                    isLoading = false;
+                    loading.style.display = 'none';
+                    page++;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    isLoading = false;
+                    loading.style.display = 'none';
+                });
+        }
+
+        // Intersection Observer to detect when the loading element is visible
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5 // The threshold at which the callback will be executed
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isLoading) {
+                    fetchMoreItems();
+                }
+            });
+        }, options);
+
+        // Observe the loading element
+        const loading = document.getElementById('loading');
+        observer.observe(loading);
+    </script>
+</body>
+</html>

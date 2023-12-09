@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debounce Example</title>
+</head>
+
+<body>
+    keyword: Laptop
+    <br />
+    <br />
+    normal
+    <input type="text" id="searchInput" placeholder="Type something...">
+    <br />
+    <br />
+    debounce
+    <input type="text" id="searchInput_debounce" placeholder="Type something...">
+
+    <script>
+        function debounce(func, delay) {
+            let timeoutId;
+            return function () {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(context, args);
+                }, delay);
+            };
+        }
+
+        function fetchData(url) {
+            return fetch(url)
+                .then(response => {
+                    console.log('response', response)
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    throw error;
+                });
+        }
+
+        function search() {
+            // Replace this with your actual function (e.g., an API call, DOM manipulation, etc.)
+            const searchTerm = document.getElementById('searchInput').value;
+            fetchData(`https://dummyjson.com/products/search?q=${searchTerm}`).then((res) => {
+                console.log('res', res)
+            })
+        }
+
+        const debounceSearch = debounce(search, 300);
+
+        const inputElement = document.getElementById('searchInput'),
+            inputElement_debounce = document.getElementById('searchInput_debounce')
+
+        // switch here
+        inputElement.addEventListener('keyup', search);
+        inputElement_debounce.addEventListener('keyup', debounceSearch);
+    </script>
+</body>
+
+</html>

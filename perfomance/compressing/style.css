@@ -4,48 +4,51 @@ body {
     padding: 0;
 }
 
+
+/* delete body selector */
+
 /* Header styles */
-.header {
+body .header {
     background-color: #333;
     color: #fff;
     padding: 20px;
 }
 
-.header h1 {
+body .header h1 {
     font-size: 24px;
     margin: 0;
 }
 
 /* Navigation styles */
-.navbar {
+body .navbar {
     background-color: #444;
     padding: 10px;
 }
 
-.navbar ul {
+body .navbar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.navbar li {
+body .navbar li {
     display: inline-block;
     margin-right: 10px;
 }
 
-.navbar a {
+body .navbar a {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
 }
 
 /* Main content styles */
-.content {
+body .content {
     padding: 20px;
 }
 
 /* Footer styles */
-.footer {
+body .footer {
     background-color: #333;
     color: #fff;
     padding: 10px;

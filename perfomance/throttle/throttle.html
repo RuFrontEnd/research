@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Throttle Example</title>
+</head>
+<body>
+    <div style="height: 2000px; background-color: #f0f0f0;">
+        <p>Scroll down to see throttle in action.</p>
+    </div>
+
+    <script>
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const context = this;
+                const args = arguments;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        }
+
+        function handleScroll() {
+            console.log('Scrolled!');
+            // Replace this with the functionality you want to throttle
+            // For example, updating UI elements or making API calls
+        }
+
+        const throttledScroll = throttle(handleScroll, 1000); // Throttle the handleScroll function to execute at most once per 1000ms (1 second)
+
+        // window.addEventListener('scroll', handleScroll); // Use the throttled function as an event handler for scroll events
+        window.addEventListener('scroll', throttledScroll); // Use the throttled function as an event handler for scroll events
+    </script>
+</body>
+</html>

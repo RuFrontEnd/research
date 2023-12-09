@@ -1,6 +1,9 @@
 const fs = require('fs');
 const UglifyJS = require('uglify-es');
 const CleanCSS = require('clean-css');
+const imagemin = require('imagemin');
+const imageminMozjpeg = require('imagemin-mozjpeg');
+const imageminPngquant = require('imagemin-pngquant');
 
 function compressJS() {
 
@@ -41,8 +44,21 @@ function compressCSS() {
     });
 }
 
+async function compressIMG() {
+    const files = await imagemin(['images/*.{jpg,png}'], {
+        destination: 'compressed_images',
+        plugins: [
+            imageminMozjpeg({ quality: 80 }),
+            imageminPngquant({ quality: [0.6, 0.8] })
+        ]
+    });
+
+    console.log('Images optimized:', files);
+}
+
 compressJS()
 compressCSS()
+compressIMG()
 
 
 

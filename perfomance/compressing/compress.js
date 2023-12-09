@@ -45,7 +45,7 @@ function compressCSS() {
 }
 
 async function compressIMG() {
-    const files = await imagemin(['images/*.{jpg,png}'], {
+    const files = await imagemin(['*.{jpg,png}'], {
         destination: 'compressed_images',
         plugins: [
             imageminMozjpeg({ quality: 80 }),

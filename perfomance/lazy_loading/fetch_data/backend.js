@@ -1,5 +1,7 @@
+// nodemon backend.js
 const express = require('express');
 const cors = require('cors');
+const nodemon = require('nodemon');
 
 const app = express();
 

@@ -5,3 +5,6 @@
 ### Radium
 https://github.com/FormidableLabs/radium
 
+### node version
+v16.20.2
+

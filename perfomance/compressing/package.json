@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "clean-css": "^5.3.3",
+    "imagemin": "^7.0.1",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "uglify-es": "^3.3.9"
+  }
+}

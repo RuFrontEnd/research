@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>image_lazy</title>
+    <style>
+        #imgs {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="imgs">
+        <img data-src="./1.jpg" width="300" height="534"></img>
+        <img data-src="./2.jpg" width="300" height="412"></img>
+        <img data-src="./3.jpg" width="300" height="447"></img>
+        <img data-src="./4.jpg" width="300" height="649"></img>
+        <img data-src="./5.jpg" width="300" height="162"></img>
+        <img data-src="./6.jpg" width="300" height="450"></img>
+        <img data-src="./7.jpg" width="300" height="532"></img>
+        <img data-src="./8.jpg" width="300" height="584"></img>
+        <img data-src="./9.jpg" width="300" height="375"></img>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = document.querySelectorAll('img[data-src]');
+            const imgObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.getAttribute('data-src');
+                        img.removeAttribute('data-src');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(image => {
+                imgObserver.observe(image);
+            });
+        });
+    </script>
+</body>
+
+</html>

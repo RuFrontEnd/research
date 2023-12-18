@@ -38,7 +38,7 @@ export default class Curve {
   checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
     if (!$canvas || !this.p1 || !this.p2 || !this.cp1 || !this.cp2) {
       this.pressing = this.initPressing;
-      return false;
+      return this.pressing;
     }
 
     let dx, dy;
@@ -51,7 +51,7 @@ export default class Curve {
         activate: true,
         p: PressingP.p2,
       };
-      return true;
+      return this.pressing;
     }
 
     dx = this.cp2.x - p.x;
@@ -62,7 +62,7 @@ export default class Curve {
         activate: true,
         p: PressingP.cp2,
       };
-      return true;
+      return this.pressing;
     }
 
     dx = this.cp1.x - p.x;
@@ -73,7 +73,7 @@ export default class Curve {
         activate: true,
         p: PressingP.cp1,
       };
-      return true;
+      return this.pressing;
     }
 
     dx = this.p1.x - p.x;
@@ -84,28 +84,42 @@ export default class Curve {
         activate: true,
         p: PressingP.p1,
       };
-      return true;
+      return this.pressing;
     }
 
     this.pressing = this.initPressing;
-    return false;
+    return this.pressing;
   }
 
-  init(initP: Vec) {
-    this.p1 = { x: initP.x - this.initOffset, y: initP.y };
-    this.p2 = initP;
-    this.cp1 = {
-      x: this.p1.x + this.initOffset / 3,
-      y: this.p1.y,
-    };
-    this.cp2 = {
-      x: this.p2.x - this.initOffset / 3,
-      y: this.p2.y,
-    };
-    this.pressing = {
-      activate: true,
-      p: PressingP.p2,
-    };
+  init(initP1: Vec, initP2: Vec) {
+    if (initP1.y - initP2.y === 0) {
+      // horizental line
+      this.p1 = {
+        x: (initP1.x < initP2.x ? initP2.x : initP1.x) - this.initOffset,
+        y: initP1.y,
+      };
+      this.p2 = {
+        x: (initP1.x < initP2.x ? initP1.x : initP2.x) - this.initOffset,
+        y: initP1.y,
+      };
+      // initP;
+      this.cp1 = {
+        x: this.p1.x - this.initOffset / 3,
+        y: this.p1.y,
+      };
+      this.cp2 = {
+        x: this.p2.x + this.initOffset / 3,
+        y: this.p2.y,
+      };
+      this.pressing = {
+        activate: true,
+        p: PressingP.p2,
+      };
+    } else if (initP1.x - initP2.x === 0) {
+      // virtical line
+    } else {
+      // oblique line
+    }
   }
 
   onMouseDown($canvas: HTMLCanvasElement) {
@@ -115,6 +129,7 @@ export default class Curve {
   }
 
   onMouseMove(p: Vec) {
+
     if (this.pressing.activate) {
       if (this.pressing.p === PressingP.p1 && this.p1?.x && this.p1?.y) {
         this.p1 = {
@@ -130,7 +145,7 @@ export default class Curve {
           x: p.x,
           y: p.y,
         };
-      } else if (this.pressing.p === PressingP.p2 && this.p2?.x && this.p2?.y) {
+      } else if (this.pressing.p === PressingP.p2) {
         this.p2 = {
           x: p.x,
           y: p.y,
@@ -165,31 +180,35 @@ export default class Curve {
 
     ctx.beginPath();
     ctx.moveTo(this.p1.x, this.p1.y);
-    ctx.fillText(
-      `(this.p1.x:${this.p1.x}, this.p1.y:${this.p1.y})`,
-      this.p1.x + 14,
-      this.p1.y
-    );
+    ctx.fillText(`p1`, this.p1.x + 14, this.p1.y);
+    // ctx.fillText(
+    //   `(this.p1.x:${this.p1.x}, this.p1.y:${this.p1.y})`,
+    //   this.p1.x + 14,
+    //   this.p1.y
+    // );
     ctx.lineTo(this.cp1.x, this.cp1.y);
-    ctx.fillText(
-      `(this.cp1.x:${this.cp1.x}, this.cp1.y:${this.cp1.y})`,
-      this.cp1.x + 14,
-      this.cp1.y
-    );
+    ctx.fillText(`cp1`, this.cp1.x + 14, this.cp1.y);
+    // ctx.fillText(
+    //   `(this.cp1.x:${this.cp1.x}, this.cp1.y:${this.cp1.y})`,
+    //   this.cp1.x + 14,
+    //   this.cp1.y
+    // );
 
     if (this.cp2) {
       ctx.moveTo(this.p2.x, this.p2.y);
-      ctx.fillText(
-        `(this.p2.x:${this.p2.x}, this.p2.y:${this.p2.y})`,
-        this.p2.x + 14,
-        this.p2.y
-      );
+      ctx.fillText(`p2`, this.p2.x + 14, this.p2.y);
+      // ctx.fillText(
+      //   `(this.p2.x:${this.p2.x}, this.p2.y:${this.p2.y})`,
+      //   this.p2.x + 14,
+      //   this.p2.y
+      // );
       ctx.lineTo(this.cp2.x, this.cp2.y);
-      ctx.fillText(
-        `(this.cp2.x:${this.cp2.x}, this.cp2.y:${this.cp2.y})`,
-        this.cp2.x + 14,
-        this.cp2.y
-      );
+      ctx.fillText(`cp2`, this.cp2.x + 14, this.cp2.y);
+      // ctx.fillText(
+      //   `(this.cp2.x:${this.cp2.x}, this.cp2.y:${this.cp2.y})`,
+      //   this.cp2.x + 14,
+      //   this.cp2.y
+      // );
     } else {
       ctx.lineTo(this.p2.x, this.p2.y);
     }

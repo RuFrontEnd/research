@@ -1,7 +1,7 @@
 "use client";
 import Curve from "@/shapes/curve";
 import { Vec } from "@/types/vec";
-import { Line, PressingP } from "@/types/shapes/curve";
+import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 
 type Box = {
   x1: number;
@@ -23,6 +23,11 @@ enum PressingTarget {
   ctt = "ctt",
   ctr = "ctr",
   ctb = "ctb",
+
+  ctlp1 = "ctlp1",
+  ctlcp1 = "ctlcp1",
+  ctlcp2 = "ctlcp2",
+  ctlp2 = "ctlp2",
 }
 
 export default class Process {
@@ -41,7 +46,7 @@ export default class Process {
     cpline: Line;
     curve: Line;
   } = {
-    d: 30,
+    d: 100, // 30
     size: {
       fill: 4,
       stroke: 2,
@@ -120,6 +125,12 @@ export default class Process {
         x: null;
         y: null;
       };
+  curves: {
+    l: null | Curve;
+    t: null | Curve;
+    r: null | Curve;
+    b: null | Curve;
+  };
 
   constructor(w: number, h: number, p: Vec, c: string) {
     this.w = w;
@@ -133,6 +144,12 @@ export default class Process {
     this.dragP = {
       x: null,
       y: null,
+    };
+    this.curves = {
+      l: null,
+      t: null,
+      r: null,
+      b: null,
     };
   }
 
@@ -175,6 +192,10 @@ export default class Process {
           x: edge.l - this.curveTrigger.d,
           y: pivot.y,
         },
+        t: {
+          x: pivot.x,
+          y: edge.t - this.curveTrigger.d,
+        },
       },
     };
   };
@@ -193,7 +214,12 @@ export default class Process {
   }
 
   onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
-    if (this.checkBoundry($canvas, p)) {
+    const pressingCurve = this.curves.l?.checkBoundry($canvas, {
+      x: p.x - this.p.x,
+      y: p.y - this.p.y,
+    })
+
+    if (this.checkBoundry($canvas, p) || pressingCurve) {
       this.selecting = true;
     }
 
@@ -251,11 +277,41 @@ export default class Process {
           activate: true,
           target: PressingTarget.ctl,
         };
+      } else if (
+        // t curve trigger
+        (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
+          (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
+        this.curveTrigger.size.fill * this.curveTrigger.size.fill
+      ) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.ctt,
+        };
       } else if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
         // center
         this.pressing = {
           activate: true,
           target: PressingTarget.m,
+        };
+      } else if (pressingCurve?.p === CurvePressingP.p1) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.ctlp1,
+        };
+      } else if (pressingCurve?.p === CurvePressingP.cp1) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.ctlcp1,
+        };
+      } else if (pressingCurve?.p === CurvePressingP.cp2) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.ctlcp2,
+        };
+      } else if (pressingCurve?.p === CurvePressingP.p2) {
+        this.pressing = {
+          activate: true,
+          target: PressingTarget.ctlp2,
         };
       } else {
         this.selecting = false;
@@ -267,7 +323,7 @@ export default class Process {
     }
   }
 
-  onMouseMove(p: Vec) {
+  onMouseMove(ctx: CanvasRenderingContext2D, p: Vec) {
     if (this.selecting && this.pressing.activate) {
       if (!this.dragP.x || !this.dragP.y) return;
       let xOffset = p.x - this.dragP.x,
@@ -307,6 +363,8 @@ export default class Process {
         this.p2.y += yOffset;
         recalculate();
       } else if (this.pressing.target === PressingTarget.ctl) {
+      } else if (this.pressing.target === PressingTarget.ctlp2) {
+        this.curves.l?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });
       }
     }
   }
@@ -457,15 +515,34 @@ export default class Process {
     }
 
     if (this.pressing.target === PressingTarget.ctl) {
-      let newCurve = new Curve(
+      this.curves.l = new Curve(
         this.curveTrigger.cpline,
         this.curveTrigger.curve,
-        300
+        this.curveTrigger.d
       );
-
-      newCurve.init({ x: 20, y: 20 });
-      newCurve.draw(ctx);
+      this.curves.l.init(
+        {
+          x: 0,
+          y: 0,
+        },
+        { x: -this.curveTrigger.d, y: 0 }
+      );
+    } else if (this.pressing.target === PressingTarget.ctt) {
+      this.curves.t = new Curve(
+        this.curveTrigger.cpline,
+        this.curveTrigger.curve,
+        this.curveTrigger.d
+      );
     }
+
+    //  draw curves
+    if (this.curves.l) {
+      this.curves.l.draw(ctx);
+    }
+    // if (this.curves.t) {
+    //   this.curves.t.init({ x: 0, y: -this.h / 2 });
+    //   this.curves.t.draw(ctx);
+    // }
 
     ctx.restore();
   }

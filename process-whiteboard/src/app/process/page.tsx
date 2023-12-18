@@ -16,7 +16,8 @@ type Box = {
   editing: boolean;
 };
 
-let ctx: CanvasRenderingContext2D | null | undefined = null,
+let useEffected = false,
+  ctx: CanvasRenderingContext2D | null | undefined = null,
   editingShapeIndex = -1,
   shapes: any[] = [];
 
@@ -288,7 +289,7 @@ export default function EditableBox() {
     //   redraw();
     // }
     shapes.forEach((shape) => {
-      shape.onMouseMove({
+      shape.onMouseMove(ctx, {
         x: e.nativeEvent.offsetX,
         y: e.nativeEvent.offsetY,
       });
@@ -328,6 +329,8 @@ export default function EditableBox() {
   }, []);
 
   useEffect(() => {
+    if (useEffected) return;
+
     if ($canvas) {
       $canvas.width = window.innerWidth;
       $canvas.height = window.innerHeight;
@@ -335,10 +338,12 @@ export default function EditableBox() {
       let process = new Process(200, 100, { x: 300, y: 300 }, "red");
       let process_2 = new Process(200, 100, { x: 1200, y: 300 }, "blue");
       shapes.push(process);
-      shapes.push(process_2);
+      // shapes.push(process_2);
 
       requestAnimationFrame(draw);
     }
+
+    useEffected = true;
   }, []);
 
   return (

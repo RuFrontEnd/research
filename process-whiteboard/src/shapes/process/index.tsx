@@ -272,19 +272,28 @@ export default class Process {
       ) {
         this.curves.l = new Curve(
           this.curveTrigger.cpline,
-          this.curveTrigger.curve,
-          this.curveTrigger.d
+          this.curveTrigger.curve
         );
         this.pressing = {
           activate: true,
           target: PressingTarget.clp2,
         };
+
+        // init offset this.curveTrigger.d
         this.curves.l.init(
           {
-            x: 0,
+            x: -this.w / 2,
             y: 0,
           },
-          { x: -this.curveTrigger.d, y: 0 }
+          {
+            x: -this.w / 2 + (-this.curveTrigger.d * 1) / 3,
+            y: 0,
+          },
+          {
+            x: -this.w / 2 + (-this.curveTrigger.d * 2) / 3,
+            y: 0,
+          },
+          { x: -this.w / 2 - this.curveTrigger.d, y: 0 }
         );
       } else if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
         // inside the shape
@@ -344,18 +353,66 @@ export default class Process {
         this.p1.x += xOffset;
         this.p1.y += yOffset;
         recalculate();
+        const leftCurve = this.curves.l;
+        if (
+          leftCurve?.p1 &&
+          leftCurve?.cp1 &&
+          leftCurve?.cp2 &&
+          leftCurve?.p2
+        ) {
+          leftCurve.p1.x += xOffset / 2;
+          leftCurve.cp1.x += xOffset / 2;
+          leftCurve.cp2.x += xOffset / 2;
+          leftCurve.p2.x += xOffset / 2;
+        }
       } else if (this.pressing.target === PressingTarget.rt) {
         this.p2.x += xOffset;
         this.p1.y += yOffset;
         recalculate();
+        const leftCurve = this.curves.l;
+        if (
+          leftCurve?.p1 &&
+          leftCurve?.cp1 &&
+          leftCurve?.cp2 &&
+          leftCurve?.p2
+        ) {
+          leftCurve.p1.x -= xOffset / 2;
+          leftCurve.cp1.x -= xOffset / 2;
+          leftCurve.cp2.x -= xOffset / 2;
+          leftCurve.p2.x -= xOffset / 2;
+        }
       } else if (this.pressing.target === PressingTarget.rb) {
         this.p2.x += xOffset;
         this.p2.y += yOffset;
+        const leftCurve = this.curves.l;
         recalculate();
+        if (
+          leftCurve?.p1 &&
+          leftCurve?.cp1 &&
+          leftCurve?.cp2 &&
+          leftCurve?.p2
+        ) {
+          leftCurve.p1.x -= xOffset / 2;
+          leftCurve.cp1.x -= xOffset / 2;
+          leftCurve.cp2.x -= xOffset / 2;
+          leftCurve.p2.x -= xOffset / 2;
+        }
       } else if (this.pressing.target === PressingTarget.lb) {
         this.p1.x += xOffset;
         this.p2.y += yOffset;
         recalculate();
+        const leftCurve = this.curves.l;
+        if (
+          leftCurve?.p1 &&
+          leftCurve?.cp1 &&
+          leftCurve?.cp2 &&
+          leftCurve?.p2
+        ) {
+          leftCurve.p1.x += xOffset / 2;
+          leftCurve.cp1.x += xOffset / 2;
+          leftCurve.cp2.x += xOffset / 2;
+          leftCurve.p2.x += xOffset / 2;
+        }
       } else if (
         (this.pressing.target === PressingTarget.clcp1 ||
           this.pressing.target === PressingTarget.clcp2 ||

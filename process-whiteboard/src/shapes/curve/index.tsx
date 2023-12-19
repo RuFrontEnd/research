@@ -15,14 +15,13 @@ export default class Curve {
   p2: Vec | null;
   cp1: Vec | null;
   cp2: Vec | null;
-  initOffset: number;
   pressing: {
     activate: boolean;
     p: PressingP | null;
   };
   arrow: Arrow;
 
-  constructor(cpline: Line, curve: Line, initOffset: number) {
+  constructor(cpline: Line, curve: Line) {
     this.cpline = cpline;
     this.curve = curve;
     this.radius = 10;
@@ -30,7 +29,6 @@ export default class Curve {
     this.p2 = null;
     this.cp1 = null;
     this.cp2 = null;
-    this.initOffset = initOffset;
     this.pressing = this.initPressing;
     this.arrow = new Arrow(20, 20);
   }
@@ -91,35 +89,15 @@ export default class Curve {
     return this.pressing;
   }
 
-  init(initP1: Vec, initP2: Vec) {
-    if (initP1.y - initP2.y === 0) {
-      // horizental line
-      this.p1 = {
-        x: (initP1.x < initP2.x ? initP2.x : initP1.x) - this.initOffset,
-        y: initP1.y,
-      };
-      this.p2 = {
-        x: (initP1.x < initP2.x ? initP1.x : initP2.x) - this.initOffset,
-        y: initP1.y,
-      };
-      // initP;
-      this.cp1 = {
-        x: this.p1.x - this.initOffset / 3,
-        y: this.p1.y,
-      };
-      this.cp2 = {
-        x: this.p2.x + this.initOffset / 3,
-        y: this.p2.y,
-      };
-      this.pressing = {
-        activate: true,
-        p: PressingP.p2,
-      };
-    } else if (initP1.x - initP2.x === 0) {
-      // virtical line
-    } else {
-      // oblique line
-    }
+  init(initP1: Vec, initCP1: Vec, initCP2: Vec, initP2: Vec) {
+    this.p1 = initP1;
+    this.cp1 = initCP1;
+    this.cp2 = initCP2;
+    this.p2 = initP2;
+    this.pressing = {
+      activate: true,
+      p: PressingP.p2,
+    };
   }
 
   onMouseDown($canvas: HTMLCanvasElement) {

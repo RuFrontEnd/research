@@ -14,16 +14,13 @@ type Box = {
 };
 
 enum PressingTarget {
+  // anchor points
   m = "m",
   lt = "lt",
   rt = "rt",
   rb = "rb",
   lb = "lb",
-  ctl = "ctl",
-  ctt = "ctt",
-  ctr = "ctr",
-  ctb = "ctb",
-
+  // l curve control points
   ctlp1 = "ctlp1",
   ctlcp1 = "ctlcp1",
   ctlcp2 = "ctlcp2",
@@ -214,10 +211,10 @@ export default class Process {
   }
 
   onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
-    const pressingCurve = this.curves.l?.checkBoundry($canvas, {
+    let pressingCurve = this.curves.l?.checkBoundry($canvas, {
       x: p.x - this.p.x,
       y: p.y - this.p.y,
-    })
+    });
 
     if (this.checkBoundry($canvas, p) || pressingCurve) {
       this.selecting = true;
@@ -273,20 +270,22 @@ export default class Process {
           (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
+        this.curves.l = new Curve(
+          this.curveTrigger.cpline,
+          this.curveTrigger.curve,
+          this.curveTrigger.d
+        );
         this.pressing = {
           activate: true,
-          target: PressingTarget.ctl,
+          target: PressingTarget.ctlp2,
         };
-      } else if (
-        // t curve trigger
-        (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
-          (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
-        this.curveTrigger.size.fill * this.curveTrigger.size.fill
-      ) {
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.ctt,
-        };
+        this.curves.l.init(
+          {
+            x: 0,
+            y: 0,
+          },
+          { x: -this.curveTrigger.d, y: 0 }
+        );
       } else if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
         // center
         this.pressing = {
@@ -362,8 +361,10 @@ export default class Process {
         this.p1.x += xOffset;
         this.p2.y += yOffset;
         recalculate();
-      } else if (this.pressing.target === PressingTarget.ctl) {
-      } else if (this.pressing.target === PressingTarget.ctlp2) {
+      } else if (
+        this.pressing.target === PressingTarget.ctlp2 &&
+        this.curves.l
+      ) {
         this.curves.l?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });
       }
     }
@@ -461,18 +462,21 @@ export default class Process {
       // draw curve triggers
       ctx.lineWidth = this.curveTrigger.size.stroke;
 
-      ctx.beginPath();
-      ctx.arc(
-        -this.w / 2 - this.curveTrigger.d,
-        0,
-        this.anchor.size.fill,
-        0,
-        2 * Math.PI,
-        false
-      ); // left
-      ctx.stroke();
-      ctx.fill();
-      ctx.closePath();
+      if (!this.curves.l) {
+        // left
+        ctx.beginPath();
+        ctx.arc(
+          -this.w / 2 - this.curveTrigger.d,
+          0,
+          this.anchor.size.fill,
+          0,
+          2 * Math.PI,
+          false
+        );
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+      }
 
       ctx.beginPath();
       ctx.arc(
@@ -512,27 +516,6 @@ export default class Process {
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
-    }
-
-    if (this.pressing.target === PressingTarget.ctl) {
-      this.curves.l = new Curve(
-        this.curveTrigger.cpline,
-        this.curveTrigger.curve,
-        this.curveTrigger.d
-      );
-      this.curves.l.init(
-        {
-          x: 0,
-          y: 0,
-        },
-        { x: -this.curveTrigger.d, y: 0 }
-      );
-    } else if (this.pressing.target === PressingTarget.ctt) {
-      this.curves.t = new Curve(
-        this.curveTrigger.cpline,
-        this.curveTrigger.curve,
-        this.curveTrigger.d
-      );
     }
 
     //  draw curves

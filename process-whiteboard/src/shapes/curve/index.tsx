@@ -234,6 +234,14 @@ export default class Curve {
     }
     ctx.stroke();
 
+    // arrow
+    this.arrow.draw(
+      ctx,
+      { x: this.p2.x, y: this.p2.y },
+      Math.atan2(this.p2.y - this.cp2.y, this.p2.x - this.cp2.x) +
+        90 * (Math.PI / 180)
+    );
+
     // control points
     ctx.lineWidth = 2;
     ctx.strokeStyle = "#900";
@@ -258,12 +266,5 @@ export default class Curve {
     ctx.arc(this.cp2.x, this.cp2.y, 10, 0, 2 * Math.PI, true); // cp2 control point
     ctx.fill();
     ctx.stroke();
-
-    this.arrow.draw(
-      ctx,
-      { x: this.p2.x, y: this.p2.y },
-      Math.atan2(this.p2.y - this.cp2.y, this.p2.x - this.cp2.x) +
-        90 * (Math.PI / 180)
-    );
   }
 }

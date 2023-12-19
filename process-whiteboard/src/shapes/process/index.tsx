@@ -21,10 +21,10 @@ enum PressingTarget {
   rb = "rb",
   lb = "lb",
   // l curve control points
-  ctlp1 = "ctlp1",
-  ctlcp1 = "ctlcp1",
-  ctlcp2 = "ctlcp2",
-  ctlp2 = "ctlp2",
+  clp1 = "clp1",
+  clcp1 = "clcp1",
+  clcp2 = "clcp2",
+  clp2 = "clp2",
 }
 
 export default class Process {
@@ -216,7 +216,7 @@ export default class Process {
       y: p.y - this.p.y,
     });
 
-    if (this.checkBoundry($canvas, p) || pressingCurve) {
+    if (this.checkBoundry($canvas, p) || pressingCurve?.activate) {
       this.selecting = true;
     }
 
@@ -277,7 +277,7 @@ export default class Process {
         );
         this.pressing = {
           activate: true,
-          target: PressingTarget.ctlp2,
+          target: PressingTarget.clp2,
         };
         this.curves.l.init(
           {
@@ -287,30 +287,25 @@ export default class Process {
           { x: -this.curveTrigger.d, y: 0 }
         );
       } else if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
-        // center
+        // inside the shape
         this.pressing = {
           activate: true,
           target: PressingTarget.m,
         };
-      } else if (pressingCurve?.p === CurvePressingP.p1) {
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.ctlp1,
-        };
       } else if (pressingCurve?.p === CurvePressingP.cp1) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.ctlcp1,
+          target: PressingTarget.clcp1,
         };
       } else if (pressingCurve?.p === CurvePressingP.cp2) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.ctlcp2,
+          target: PressingTarget.clcp2,
         };
       } else if (pressingCurve?.p === CurvePressingP.p2) {
         this.pressing = {
           activate: true,
-          target: PressingTarget.ctlp2,
+          target: PressingTarget.clp2,
         };
       } else {
         this.selecting = false;
@@ -362,7 +357,9 @@ export default class Process {
         this.p2.y += yOffset;
         recalculate();
       } else if (
-        this.pressing.target === PressingTarget.ctlp2 &&
+        (this.pressing.target === PressingTarget.clcp1 ||
+          this.pressing.target === PressingTarget.clcp2 ||
+          this.pressing.target === PressingTarget.clp2) &&
         this.curves.l
       ) {
         this.curves.l?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });

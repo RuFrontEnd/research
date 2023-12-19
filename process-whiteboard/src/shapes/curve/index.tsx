@@ -129,31 +129,38 @@ export default class Curve {
   }
 
   onMouseMove(p: Vec) {
-
     if (this.pressing.activate) {
-      if (this.pressing.p === PressingP.p1 && this.p1?.x && this.p1?.y) {
+      if (
+        this.pressing.p === PressingP.p1 &&
+        this.p1?.x !== null &&
+        this.p1?.y !== null
+      ) {
         this.p1 = {
           x: p.x,
           y: p.y,
         };
       } else if (
         this.pressing.p === PressingP.cp1 &&
-        this.cp1?.x &&
-        this.cp1?.y
+        this.cp1?.x !== null &&
+        this.cp1?.y !== null
       ) {
         this.cp1 = {
           x: p.x,
           y: p.y,
         };
-      } else if (this.pressing.p === PressingP.p2) {
+      } else if (
+        this.pressing.p === PressingP.p2 &&
+        this.p2?.x !== null &&
+        this.p2?.y !== null
+      ) {
         this.p2 = {
           x: p.x,
           y: p.y,
         };
       } else if (
         this.pressing.p === PressingP.cp2 &&
-        this.cp2?.x &&
-        this.cp2?.y
+        this.cp2?.x !== null &&
+        this.cp2?.y !== null
       ) {
         this.cp2 = {
           x: p.x,

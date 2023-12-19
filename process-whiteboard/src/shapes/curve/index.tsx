@@ -20,6 +20,7 @@ export default class Curve {
     p: PressingP | null;
   };
   arrow: Arrow;
+  dragP: Vec | null;
 
   constructor(cpline: Line, curve: Line) {
     this.cpline = cpline;
@@ -31,6 +32,7 @@ export default class Curve {
     this.cp2 = null;
     this.pressing = this.initPressing;
     this.arrow = new Arrow(20, 20);
+    this.dragP = null;
   }
 
   checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
@@ -108,15 +110,24 @@ export default class Curve {
 
   onMouseMove(p: Vec) {
     if (this.pressing.activate) {
+
       if (
         this.pressing.p === PressingP.p1 &&
-        this.p1?.x !== null &&
-        this.p1?.y !== null
+        this.p1 !== null &&
+        this.cp1 !== null
       ) {
+        const offset = {
+          x: p.x - this.p1.x,
+          y: p.y - this.p1.y,
+        };
+
         this.p1 = {
           x: p.x,
           y: p.y,
         };
+
+        this.cp1.x += offset.x;
+        this.cp1.y += offset.y;
       } else if (
         this.pressing.p === PressingP.cp1 &&
         this.cp1?.x !== null &&
@@ -128,13 +139,21 @@ export default class Curve {
         };
       } else if (
         this.pressing.p === PressingP.p2 &&
-        this.p2?.x !== null &&
-        this.p2?.y !== null
+        this.p2 !== null &&
+        this.cp2 !== null
       ) {
+        const offset = {
+          x: p.x - this.p2.x,
+          y: p.y - this.p2.y,
+        };
+
         this.p2 = {
           x: p.x,
           y: p.y,
         };
+
+        this.cp2.x += offset.x;
+        this.cp2.y += offset.y;
       } else if (
         this.pressing.p === PressingP.cp2 &&
         this.cp2?.x !== null &&

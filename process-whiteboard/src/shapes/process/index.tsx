@@ -2,45 +2,7 @@
 import Curve from "@/shapes/curve";
 import { Vec } from "@/types/vec";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
-
-type Box = {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  lineWidth: number;
-  color: string;
-  editing: boolean;
-};
-
-enum PressingTarget {
-  // anchor points
-  m = "m",
-  lt = "lt",
-  rt = "rt",
-  rb = "rb",
-  lb = "lb",
-  // l curve control points
-  clp1 = "clp1",
-  clcp1 = "clcp1",
-  clcp2 = "clcp2",
-  clp2 = "clp2",
-  // t curve control points
-  ctp1 = "ctp1",
-  ctcp1 = "ctcp1",
-  ctcp2 = "ctcp2",
-  ctp2 = "ctp2",
-  // r curve control points
-  crp1 = "crp1",
-  crcp1 = "crcp1",
-  crcp2 = "crcp2",
-  crp2 = "crp2",
-  // b curve control points
-  cbp1 = "cbp1",
-  cbcp1 = "cbcp1",
-  cbcp2 = "cbcp2",
-  cbp2 = "cbp2",
-}
+import { PressingTarget } from "@/types/shapes/process";
 
 export default class Process {
   private anchor = {
@@ -82,8 +44,28 @@ export default class Process {
   p: Vec;
   private p1: Vec;
   private p2: Vec;
+  id: string;
   c: string;
   selecting: boolean;
+  receiving: boolean;
+  conncetion: {
+    l: {
+      pointed: boolean;
+      target: null | any;
+    };
+    t: {
+      pointed: boolean;
+      target: null | any;
+    };
+    r: {
+      pointed: boolean;
+      target: null | any;
+    };
+    b: {
+      pointed: boolean;
+      target: null | any;
+    };
+  };
   pressing: {
     activate: boolean;
     target: PressingTarget | null;
@@ -144,7 +126,8 @@ export default class Process {
     b: null | Curve;
   };
 
-  constructor(w: number, h: number, p: Vec, c: string) {
+  constructor(id: string, w: number, h: number, p: Vec, c: string) {
+    this.id = id;
     this.w = w;
     this.h = h;
     this.p = p;
@@ -153,6 +136,25 @@ export default class Process {
     this.c = c;
     this.selecting = false;
     this.pressing = this.initPressing;
+    this.receiving = false;
+    this.conncetion = {
+      l: {
+        pointed: false,
+        target: null,
+      },
+      t: {
+        pointed: false,
+        target: null,
+      },
+      r: {
+        pointed: false,
+        target: null,
+      },
+      b: {
+        pointed: false,
+        target: null,
+      },
+    };
     this.dragP = {
       x: null,
       y: null,
@@ -217,6 +219,24 @@ export default class Process {
           y: edge.b + this.curveTrigger.d,
         },
       },
+      receivingPoints: {
+        l: {
+          x: pivot.x - this.w / 2,
+          y: pivot.y,
+        },
+        t: {
+          x: pivot.x,
+          y: pivot.y - this.h / 2,
+        },
+        r: {
+          x: pivot.x + this.w / 2,
+          y: pivot.y,
+        },
+        b: {
+          x: pivot.x,
+          y: pivot.y + this.h / 2,
+        },
+      },
     };
   };
 
@@ -232,6 +252,19 @@ export default class Process {
       p.y < edge.b + this.anchor.size.fill
     );
   }
+
+  checkReceivingBoundry = (p: Vec) => {
+    const edge = this.getEdge();
+
+    const receivingBoundryOffset = 75;
+
+    return (
+      p.x > edge.l - receivingBoundryOffset &&
+      p.y > edge.t - receivingBoundryOffset &&
+      p.x < edge.r + receivingBoundryOffset &&
+      p.y < edge.b + receivingBoundryOffset
+    );
+  };
 
   onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
     let pressingCurve = {
@@ -266,7 +299,7 @@ export default class Process {
     const edge = this.getEdge(),
       center = this.getCenter();
 
-    if (this.selecting) {
+    if (this.selecting && !this.receiving) {
       if (
         // lt anchors
         (p.x - center.lt.x) * (p.x - center.lt.x) +
@@ -515,9 +548,14 @@ export default class Process {
     }
   }
 
-  onMouseMove(ctx: CanvasRenderingContext2D, p: Vec) {
-    if (this.selecting && this.pressing.activate) {
-      if (!this.dragP.x || !this.dragP.y) return;
+  onMouseMove(ctx: CanvasRenderingContext2D, p: Vec, receivingShape?: any) {
+    if (
+      this.selecting &&
+      this.pressing.activate &&
+      this.dragP.x &&
+      this.dragP.y &&
+      !this.receiving
+    ) {
       let xOffset = p.x - this.dragP.x,
         yOffset = p.y - this.dragP.y;
 
@@ -764,6 +802,10 @@ export default class Process {
         this.curves.b?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });
       }
     }
+
+    if (receivingShape) {
+      this.receiving = this.checkReceivingBoundry(p);
+    }
   }
 
   onMouseUp() {
@@ -785,7 +827,7 @@ export default class Process {
     );
     ctx.closePath();
 
-    if (this.selecting) {
+    if (this.selecting && !this.receiving) {
       ctx.fillStyle = "white";
       ctx.strokeStyle = "DeepSkyBlue";
       ctx.lineWidth = this.strokeSize;
@@ -923,17 +965,58 @@ export default class Process {
     }
 
     //  draw curves
-    if (this.curves.l) {
+    if (this.curves.l && !this.receiving) {
       this.curves.l.draw(ctx);
     }
-    if (this.curves.t) {
+    if (this.curves.t && !this.receiving) {
       this.curves.t.draw(ctx);
     }
-    if (this.curves.r) {
+    if (this.curves.r && !this.receiving) {
       this.curves.r.draw(ctx);
     }
-    if (this.curves.b) {
+    if (this.curves.b && !this.receiving) {
       this.curves.b.draw(ctx);
+    }
+
+    // draw receiving points
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "DeepSkyBlue";
+    ctx.lineWidth = this.anchor.size.stroke;
+
+    if (this.receiving && this.conncetion.l.target === null) {
+      // left
+      ctx.beginPath();
+      ctx.arc(-this.w / 2, 0, this.anchor.size.fill, 0, 2 * Math.PI, false);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    if (this.receiving && this.conncetion.t.target === null) {
+      // top
+      ctx.beginPath();
+      ctx.arc(0, -this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    if (this.receiving && this.conncetion.r.target === null) {
+      // right
+      ctx.beginPath();
+      ctx.arc(this.w / 2, 0, this.anchor.size.fill, 0, 2 * Math.PI, false);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    if (this.receiving && this.conncetion.b.target === null) {
+      // bottom
+      ctx.beginPath();
+      ctx.arc(0, this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
     }
 
     ctx.restore();

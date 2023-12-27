@@ -54,7 +54,13 @@ export default function ProcessPage() {
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     shapes.forEach((shape) => {
-      shape.onMouseUp();
+      shape.onMouseUp(
+        {
+          x: e.nativeEvent.offsetX,
+          y: e.nativeEvent.offsetY,
+        },
+        shape.id === concatenatingShape?.id ? null : concatenatingShape
+      );
     });
     concatenatingShape = null;
   }, []);

@@ -266,6 +266,57 @@ export default class Process {
     );
   };
 
+  checkReceivingPointsBoundry = (p: Vec) => {
+    const edge = this.getEdge();
+
+    let dx, dy;
+
+    dx = edge.l - p.x;
+    dy = 0;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "l",
+      };
+    }
+
+    dx = 0;
+    dy = edge.t - p.y;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "t",
+      };
+    }
+
+    dx = edge.r + p.x;
+    dy = 0;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "r",
+      };
+    }
+
+    dx = 0;
+    dy = edge.b + p.y;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "b",
+      };
+    }
+
+    return {
+      activate: false,
+      direction: null,
+    };
+  };
+
   onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
     let pressingCurve = {
       l: this.curves.l?.checkBoundry($canvas, {
@@ -545,10 +596,11 @@ export default class Process {
       }
 
       this.dragP = p;
+    } else if (!this.selecting && this.receiving) {
     }
   }
 
-  onMouseMove(ctx: CanvasRenderingContext2D, p: Vec, receivingShape?: any) {
+  onMouseMove(ctx: CanvasRenderingContext2D, p: Vec, receivingShape?: Process) {
     if (
       this.selecting &&
       this.pressing.activate &&
@@ -808,9 +860,31 @@ export default class Process {
     }
   }
 
-  onMouseUp() {
+  onMouseUp(p:Vec,receivingShape?: Process) {
     if (this.pressing.activate) {
       this.pressing = this.initPressing;
+    }
+
+    if (receivingShape && this.receiving) {
+      const pressingReceivingPoint = this.checkReceivingPointsBoundry(p);
+
+      if (pressingReceivingPoint.activate) {
+        this.conncetion.l.pointed = false;
+        switch (pressingReceivingPoint.direction) {
+          case "l":
+            this.conncetion.l.target = receivingShape;
+            break;
+          case "t":
+            this.conncetion.t.target = receivingShape;
+            break;
+          case "r":
+            this.conncetion.r.target = receivingShape;
+            break;
+          case "b":
+            this.conncetion.b.target = receivingShape;
+            break;
+        }
+      }
     }
   }
 

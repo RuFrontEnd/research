@@ -48,22 +48,34 @@ export default class Process {
   c: string;
   selecting: boolean;
   receiving: boolean;
-  conncetion: {
+  connection: {
     l: {
       pointed: boolean;
-      target: null | any;
+      target: {
+        shape: null | Process;
+        curve: null | Curve;
+      };
     };
     t: {
       pointed: boolean;
-      target: null | any;
+      target: {
+        shape: null | Process;
+        curve: null | Curve;
+      };
     };
     r: {
       pointed: boolean;
-      target: null | any;
+      target: {
+        shape: null | Process;
+        curve: null | Curve;
+      };
     };
     b: {
       pointed: boolean;
-      target: null | any;
+      target: {
+        shape: null | Process;
+        curve: null | Curve;
+      };
     };
   };
   pressing: {
@@ -137,22 +149,34 @@ export default class Process {
     this.selecting = false;
     this.pressing = this.initPressing;
     this.receiving = false;
-    this.conncetion = {
+    this.connection = {
       l: {
         pointed: false,
-        target: null,
+        target: {
+          shape: null,
+          curve: null,
+        },
       },
       t: {
         pointed: false,
-        target: null,
+        target: {
+          shape: null,
+          curve: null,
+        },
       },
       r: {
         pointed: false,
-        target: null,
+        target: {
+          shape: null,
+          curve: null,
+        },
       },
       b: {
         pointed: false,
-        target: null,
+        target: {
+          shape: null,
+          curve: null,
+        },
       },
     };
     this.dragP = {
@@ -860,28 +884,40 @@ export default class Process {
     }
   }
 
-  onMouseUp(p:Vec,receivingShape?: Process) {
+  onMouseUp(
+    p: Vec,
+    receiving?: {
+      shape: Process;
+      curve: Curve;
+    }
+  ) {
     if (this.pressing.activate) {
       this.pressing = this.initPressing;
     }
 
-    if (receivingShape && this.receiving) {
+    if (receiving && this.receiving) {
       const pressingReceivingPoint = this.checkReceivingPointsBoundry(p);
 
       if (pressingReceivingPoint.activate) {
-        this.conncetion.l.pointed = false;
+        this.connection.l.pointed = false;
         switch (pressingReceivingPoint.direction) {
           case "l":
-            this.conncetion.l.target = receivingShape;
+            this.connection.l.target = {
+              shape: receiving.shape,
+              curve: receiving.curve,
+            };
+
+            console.log("this.connection.l.target", this.connection.l.target);
+            console.log("this", this);
             break;
-          case "t":
-            this.conncetion.t.target = receivingShape;
-            break;
-          case "r":
-            this.conncetion.r.target = receivingShape;
-            break;
-          case "b":
-            this.conncetion.b.target = receivingShape;
+            // case "t":
+            //   this.connection.t.target = receivingShape;
+            //   break;
+            // case "r":
+            //   this.connection.r.target = receivingShape;
+            //   break;
+            // case "b":
+            //   this.connection.b.target = receivingShape;
             break;
         }
       }
@@ -1057,7 +1093,7 @@ export default class Process {
     ctx.strokeStyle = "DeepSkyBlue";
     ctx.lineWidth = this.anchor.size.stroke;
 
-    if (this.receiving && this.conncetion.l.target === null) {
+    if (this.receiving && this.connection.l.target === null) {
       // left
       ctx.beginPath();
       ctx.arc(-this.w / 2, 0, this.anchor.size.fill, 0, 2 * Math.PI, false);
@@ -1066,7 +1102,7 @@ export default class Process {
       ctx.closePath();
     }
 
-    if (this.receiving && this.conncetion.t.target === null) {
+    if (this.receiving && this.connection.t.target === null) {
       // top
       ctx.beginPath();
       ctx.arc(0, -this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false);
@@ -1075,7 +1111,7 @@ export default class Process {
       ctx.closePath();
     }
 
-    if (this.receiving && this.conncetion.r.target === null) {
+    if (this.receiving && this.connection.r.target === null) {
       // right
       ctx.beginPath();
       ctx.arc(this.w / 2, 0, this.anchor.size.fill, 0, 2 * Math.PI, false);
@@ -1084,7 +1120,7 @@ export default class Process {
       ctx.closePath();
     }
 
-    if (this.receiving && this.conncetion.b.target === null) {
+    if (this.receiving && this.connection.b.target === null) {
       // bottom
       ctx.beginPath();
       ctx.arc(0, this.h / 2, this.anchor.size.fill, 0, 2 * Math.PI, false);

@@ -866,7 +866,8 @@ export default class Process {
     }
 
     if (receivingTarget && this.receiving) {
-      const pressingReceivingPoint = this.checkReceivingPointsBoundry(p);
+      const pressingReceivingPoint = this.checkReceivingPointsBoundry(p),
+        center = this.getCenter();
 
       if (pressingReceivingPoint.activate) {
         switch (pressingReceivingPoint.direction) {
@@ -876,9 +877,20 @@ export default class Process {
               shape: receivingTarget.shape,
               curve: receivingTarget.curve,
             };
+            console.log("center", center);
+            // console.log(
+            //   "this.connection.l.target.curve",
+            //   this.connection.l.target.curve
+            // );
+            // console.log("this.connection.l.target", this.connection.l.target);
+            // console.log("center.receivingPoints.l", center.receivingPoints.l);
 
-            console.log("this.connection.l.target", this.connection.l.target);
-            console.log("this", this);
+            this.connection.l.target.curve.p2 = {
+              x:
+                center.receivingPoints.l.x - this.connection.l.target.shape.p.x,
+              y:
+                center.receivingPoints.l.y - this.connection.l.target.shape.p.x,
+            };
             break;
           // case "t":
           //   this.connection.t.target = receivingShape;

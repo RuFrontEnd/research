@@ -291,7 +291,7 @@ export default class Process {
       };
     }
 
-    dx = edge.r + p.x;
+    dx = p.x - edge.r;
     dy = 0;
 
     if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
@@ -302,7 +302,7 @@ export default class Process {
     }
 
     dx = 0;
-    dy = edge.b + p.y;
+    dy = p.y - edge.b;
 
     if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
       return {
@@ -629,6 +629,7 @@ export default class Process {
         this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 };
         this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 };
 
+        // connected curves follows
         if (
           this.connection.l &&
           !this.connection.l.pointed &&
@@ -636,10 +637,47 @@ export default class Process {
           this.connection.l.target.curve.p2 &&
           this.connection.l.target.curve.cp2
         ) {
+          // left
           this.connection.l.target.curve.p2.x += xOffset;
           this.connection.l.target.curve.p2.y += yOffset;
           this.connection.l.target.curve.cp2.x += xOffset;
           this.connection.l.target.curve.cp2.y += yOffset;
+        } else if (
+          this.connection.t &&
+          !this.connection.t.pointed &&
+          this.connection.t.target &&
+          this.connection.t.target.curve.p2 &&
+          this.connection.t.target.curve.cp2
+        ) {
+          // top
+          this.connection.t.target.curve.p2.x += xOffset;
+          this.connection.t.target.curve.p2.y += yOffset;
+          this.connection.t.target.curve.cp2.x += xOffset;
+          this.connection.t.target.curve.cp2.y += yOffset;
+        } else if (
+          this.connection.r &&
+          !this.connection.r.pointed &&
+          this.connection.r.target &&
+          this.connection.r.target.curve.p2 &&
+          this.connection.r.target.curve.cp2
+        ) {
+          // right
+          this.connection.r.target.curve.p2.x += xOffset;
+          this.connection.r.target.curve.p2.y += yOffset;
+          this.connection.r.target.curve.cp2.x += xOffset;
+          this.connection.r.target.curve.cp2.y += yOffset;
+        } else if (
+          this.connection.b &&
+          !this.connection.b.pointed &&
+          this.connection.b.target &&
+          this.connection.b.target.curve.p2 &&
+          this.connection.b.target.curve.cp2
+        ) {
+          // bottom
+          this.connection.b.target.curve.p2.x += xOffset;
+          this.connection.b.target.curve.p2.y += yOffset;
+          this.connection.b.target.curve.cp2.x += xOffset;
+          this.connection.b.target.curve.cp2.y += yOffset;
         }
       } else if (this.pressing.target === PressingTarget.lt) {
         this.p1.x += xOffset;
@@ -942,6 +980,8 @@ export default class Process {
             };
             break;
         }
+
+        console.log("this.connection", this.connection);
       }
 
       this.receiving = false;

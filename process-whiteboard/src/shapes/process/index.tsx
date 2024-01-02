@@ -642,7 +642,8 @@ export default class Process {
           this.connection.l.target.curve.p2.y += yOffset;
           this.connection.l.target.curve.cp2.x += xOffset;
           this.connection.l.target.curve.cp2.y += yOffset;
-        } else if (
+        }
+        if (
           this.connection.t &&
           !this.connection.t.pointed &&
           this.connection.t.target &&
@@ -654,7 +655,8 @@ export default class Process {
           this.connection.t.target.curve.p2.y += yOffset;
           this.connection.t.target.curve.cp2.x += xOffset;
           this.connection.t.target.curve.cp2.y += yOffset;
-        } else if (
+        }
+        if (
           this.connection.r &&
           !this.connection.r.pointed &&
           this.connection.r.target &&
@@ -666,7 +668,8 @@ export default class Process {
           this.connection.r.target.curve.p2.y += yOffset;
           this.connection.r.target.curve.cp2.x += xOffset;
           this.connection.r.target.curve.cp2.y += yOffset;
-        } else if (
+        }
+        if (
           this.connection.b &&
           !this.connection.b.pointed &&
           this.connection.b.target &&
@@ -935,6 +938,7 @@ export default class Process {
               y:
                 center.receivingPoints.l.y - this.connection.l.target.shape.p.y,
             };
+
             break;
           case "t":
             this.connection.t.pointed = false;
@@ -980,8 +984,6 @@ export default class Process {
             };
             break;
         }
-
-        console.log("this.connection", this.connection);
       }
 
       this.receiving = false;

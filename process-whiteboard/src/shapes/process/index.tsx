@@ -628,6 +628,19 @@ export default class Process {
         this.p.y += yOffset;
         this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 };
         this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 };
+
+        if (
+          this.connection.l &&
+          !this.connection.l.pointed &&
+          this.connection.l.target &&
+          this.connection.l.target.curve.p2 &&
+          this.connection.l.target.curve.cp2
+        ) {
+          this.connection.l.target.curve.p2.x += xOffset;
+          this.connection.l.target.curve.p2.y += yOffset;
+          this.connection.l.target.curve.cp2.x += xOffset;
+          this.connection.l.target.curve.cp2.y += yOffset;
+        }
       } else if (this.pressing.target === PressingTarget.lt) {
         this.p1.x += xOffset;
         this.p1.y += yOffset;
@@ -877,24 +890,28 @@ export default class Process {
               shape: receivingTarget.shape,
               curve: receivingTarget.curve,
             };
-            console.log("center", center);
-            // console.log(
-            //   "this.connection.l.target.curve",
-            //   this.connection.l.target.curve
-            // );
-            // console.log("this.connection.l.target", this.connection.l.target);
-            // console.log("center.receivingPoints.l", center.receivingPoints.l);
 
             this.connection.l.target.curve.p2 = {
               x:
                 center.receivingPoints.l.x - this.connection.l.target.shape.p.x,
               y:
-                center.receivingPoints.l.y - this.connection.l.target.shape.p.x,
+                center.receivingPoints.l.y - this.connection.l.target.shape.p.y,
             };
             break;
-          // case "t":
-          //   this.connection.t.target = receivingShape;
-          //   break;
+          case "t":
+            this.connection.t.pointed = false;
+            this.connection.t.target = {
+              shape: receivingTarget.shape,
+              curve: receivingTarget.curve,
+            };
+
+            this.connection.t.target.curve.p2 = {
+              x:
+                center.receivingPoints.t.x - this.connection.t.target.shape.p.x,
+              y:
+                center.receivingPoints.t.y - this.connection.t.target.shape.p.y,
+            };
+            break;
           case "r":
             this.connection.r.pointed = false;
             this.connection.r.target = {
@@ -902,14 +919,32 @@ export default class Process {
               curve: receivingTarget.curve,
             };
 
-            console.log("this.connection.r.target", this.connection.r.target);
-            console.log("this", this);
+            this.connection.r.target.curve.p2 = {
+              x:
+                center.receivingPoints.r.x - this.connection.r.target.shape.p.x,
+              y:
+                center.receivingPoints.r.y - this.connection.r.target.shape.p.y,
+            };
+
             break;
-            // case "b":
-            //   this.connection.b.target = receivingShape;
+          case "b":
+            this.connection.b.pointed = false;
+            this.connection.b.target = {
+              shape: receivingTarget.shape,
+              curve: receivingTarget.curve,
+            };
+
+            this.connection.b.target.curve.p2 = {
+              x:
+                center.receivingPoints.b.x - this.connection.b.target.shape.p.x,
+              y:
+                center.receivingPoints.b.y - this.connection.b.target.shape.p.y,
+            };
             break;
         }
       }
+
+      this.receiving = false;
     }
   }
 

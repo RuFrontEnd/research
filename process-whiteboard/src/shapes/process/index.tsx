@@ -2,7 +2,7 @@
 import Curve from "@/shapes/curve";
 import { Vec } from "@/types/vec";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
-import { PressingTarget } from "@/types/shapes/process";
+import { PressingTarget, ReceivingTarget } from "@/types/shapes/process";
 
 export default class Process {
   private anchor = {
@@ -51,31 +51,19 @@ export default class Process {
   connection: {
     l: {
       pointed: boolean;
-      target: {
-        shape: null | Process;
-        curve: null | Curve;
-      };
+      target: null | ReceivingTarget;
     };
     t: {
       pointed: boolean;
-      target: {
-        shape: null | Process;
-        curve: null | Curve;
-      };
+      target: null | ReceivingTarget;
     };
     r: {
       pointed: boolean;
-      target: {
-        shape: null | Process;
-        curve: null | Curve;
-      };
+      target: null | ReceivingTarget;
     };
     b: {
       pointed: boolean;
-      target: {
-        shape: null | Process;
-        curve: null | Curve;
-      };
+      target: null | ReceivingTarget;
     };
   };
   pressing: {
@@ -152,31 +140,19 @@ export default class Process {
     this.connection = {
       l: {
         pointed: false,
-        target: {
-          shape: null,
-          curve: null,
-        },
+        target: null,
       },
       t: {
         pointed: false,
-        target: {
-          shape: null,
-          curve: null,
-        },
+        target: null,
       },
       r: {
         pointed: false,
-        target: {
-          shape: null,
-          curve: null,
-        },
+        target: null,
       },
       b: {
         pointed: false,
-        target: {
-          shape: null,
-          curve: null,
-        },
+        target: null,
       },
     };
     this.dragP = {
@@ -624,7 +600,7 @@ export default class Process {
     }
   }
 
-  onMouseMove(ctx: CanvasRenderingContext2D, p: Vec, receivingShape?: Process) {
+  onMouseMove(p: Vec, receiving?: boolean) {
     if (
       this.selecting &&
       this.pressing.activate &&
@@ -879,43 +855,44 @@ export default class Process {
       }
     }
 
-    if (receivingShape) {
+    if (receiving) {
       this.receiving = this.checkReceivingBoundry(p);
     }
   }
 
-  onMouseUp(
-    p: Vec,
-    receiving?: {
-      shape: Process;
-      curve: Curve;
-    }
-  ) {
+  onMouseUp(p: Vec, receivingTarget?: ReceivingTarget) {
     if (this.pressing.activate) {
       this.pressing = this.initPressing;
     }
 
-    if (receiving && this.receiving) {
+    if (receivingTarget && this.receiving) {
       const pressingReceivingPoint = this.checkReceivingPointsBoundry(p);
 
       if (pressingReceivingPoint.activate) {
-        this.connection.l.pointed = false;
         switch (pressingReceivingPoint.direction) {
           case "l":
+            this.connection.l.pointed = false;
             this.connection.l.target = {
-              shape: receiving.shape,
-              curve: receiving.curve,
+              shape: receivingTarget.shape,
+              curve: receivingTarget.curve,
             };
 
             console.log("this.connection.l.target", this.connection.l.target);
             console.log("this", this);
             break;
-            // case "t":
-            //   this.connection.t.target = receivingShape;
-            //   break;
-            // case "r":
-            //   this.connection.r.target = receivingShape;
-            //   break;
+          // case "t":
+          //   this.connection.t.target = receivingShape;
+          //   break;
+          case "r":
+            this.connection.r.pointed = false;
+            this.connection.r.target = {
+              shape: receivingTarget.shape,
+              curve: receivingTarget.curve,
+            };
+
+            console.log("this.connection.r.target", this.connection.r.target);
+            console.log("this", this);
+            break;
             // case "b":
             //   this.connection.b.target = receivingShape;
             break;

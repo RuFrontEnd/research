@@ -1,3 +1,6 @@
+import Process from "@/shapes/process";
+import Curve from "@/shapes/curve";
+
 enum PressingTarget {
   // anchor points
   m = "m",
@@ -27,4 +30,10 @@ enum PressingTarget {
   cbp2 = "cbp2",
 }
 
+type ReceivingTarget = {
+  shape: Process;
+  curve: Curve;
+};
+
 export { PressingTarget };
+export type { ReceivingTarget };

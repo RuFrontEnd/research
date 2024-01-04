@@ -32,7 +32,10 @@ export default function ProcessPage() {
           if (!shape.curves.l) return;
           concatenatingShape = {
             shape: shape,
-            curve: shape.curves.l,
+            curve: {
+              direction: "l",
+              shape: shape.curves.l,
+            },
           };
         } else if (
           currentShape.pressing.activate &&
@@ -41,7 +44,10 @@ export default function ProcessPage() {
           if (!shape.curves.t) return;
           concatenatingShape = {
             shape: shape,
-            curve: shape.curves.t,
+            curve: {
+              direction: "t",
+              shape: shape.curves.t,
+            },
           };
         } else if (
           currentShape.pressing.activate &&
@@ -50,7 +56,10 @@ export default function ProcessPage() {
           if (!shape.curves.r) return;
           concatenatingShape = {
             shape: shape,
-            curve: shape.curves.r,
+            curve: {
+              direction: "r",
+              shape: shape.curves.r,
+            },
           };
         } else if (
           currentShape.pressing.activate &&
@@ -59,7 +68,10 @@ export default function ProcessPage() {
           if (!shape.curves.b) return;
           concatenatingShape = {
             shape: shape,
-            curve: shape.curves.b,
+            curve: {
+              direction: "b",
+              shape: shape.curves.b,
+            },
           };
         }
       }

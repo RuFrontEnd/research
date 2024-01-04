@@ -2,7 +2,11 @@
 import Curve from "@/shapes/curve";
 import { Vec } from "@/types/vec";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
-import { PressingTarget, ReceivingTarget } from "@/types/shapes/process";
+import {
+  PressingTarget,
+  ConncetionTarget,
+  ReceivingTarget,
+} from "@/types/shapes/process";
 
 export default class Process {
   private anchor = {
@@ -51,19 +55,19 @@ export default class Process {
   connection: {
     l: {
       pointed: boolean;
-      target: null | ReceivingTarget;
+      target: ConncetionTarget;
     };
     t: {
       pointed: boolean;
-      target: null | ReceivingTarget;
+      target: ConncetionTarget;
     };
     r: {
       pointed: boolean;
-      target: null | ReceivingTarget;
+      target: ConncetionTarget;
     };
     b: {
       pointed: boolean;
-      target: null | ReceivingTarget;
+      target: ConncetionTarget;
     };
   };
   pressing: {
@@ -634,6 +638,7 @@ export default class Process {
           this.connection.l &&
           !this.connection.l.pointed &&
           this.connection.l.target &&
+          this.connection.l.target.curve &&
           this.connection.l.target.curve.p2 &&
           this.connection.l.target.curve.cp2
         ) {
@@ -647,6 +652,7 @@ export default class Process {
           this.connection.t &&
           !this.connection.t.pointed &&
           this.connection.t.target &&
+          this.connection.t.target.curve &&
           this.connection.t.target.curve.p2 &&
           this.connection.t.target.curve.cp2
         ) {
@@ -660,6 +666,7 @@ export default class Process {
           this.connection.r &&
           !this.connection.r.pointed &&
           this.connection.r.target &&
+          this.connection.r.target.curve &&
           this.connection.r.target.curve.p2 &&
           this.connection.r.target.curve.cp2
         ) {
@@ -673,6 +680,7 @@ export default class Process {
           this.connection.b &&
           !this.connection.b.pointed &&
           this.connection.b.target &&
+          this.connection.b.target.curve &&
           this.connection.b.target.curve.p2 &&
           this.connection.b.target.curve.cp2
         ) {
@@ -926,62 +934,136 @@ export default class Process {
       if (pressingReceivingPoint.activate) {
         switch (pressingReceivingPoint.direction) {
           case "l":
-            this.connection.l.pointed = false;
-            this.connection.l.target = {
-              shape: receivingTarget.shape,
-              curve: receivingTarget.curve,
-            };
+            {
+              // receiver
+              const receiverDirection = "l",
+                receiver = this.connection[receiverDirection];
 
-            this.connection.l.target.curve.p2 = {
-              x:
-                center.receivingPoints.l.x - this.connection.l.target.shape.p.x,
-              y:
-                center.receivingPoints.l.y - this.connection.l.target.shape.p.y,
-            };
+              receiver.pointed = false;
+              receiver.target = {
+                shape: receivingTarget.shape,
+                curve: receivingTarget.curve.shape,
+              };
+              if (receiver.target.curve) {
+                receiver.target.curve.p2 = {
+                  x:
+                    center.receivingPoints[receiverDirection].x -
+                    receiver.target.shape.p.x,
+                  y:
+                    center.receivingPoints[receiverDirection].y -
+                    receiver.target.shape.p.y,
+                };
+              }
 
+              // sender
+              const sender =
+                receivingTarget.shape.connection[
+                  receivingTarget.curve.direction
+                ];
+              sender.pointed = true;
+              sender.target = {
+                shape: this,
+                curve: null,
+              };
+            }
             break;
-          case "t":
-            this.connection.t.pointed = false;
-            this.connection.t.target = {
-              shape: receivingTarget.shape,
-              curve: receivingTarget.curve,
-            };
+          case "t": {
+            // receiver
+            const receiverDirection = "t",
+              receiver = this.connection[receiverDirection];
 
-            this.connection.t.target.curve.p2 = {
-              x:
-                center.receivingPoints.t.x - this.connection.t.target.shape.p.x,
-              y:
-                center.receivingPoints.t.y - this.connection.t.target.shape.p.y,
+            receiver.pointed = false;
+            receiver.target = {
+              shape: receivingTarget.shape,
+              curve: receivingTarget.curve.shape,
             };
-            break;
+            if (receiver.target.curve) {
+              receiver.target.curve.p2 = {
+                x:
+                  center.receivingPoints[receiverDirection].x -
+                  receiver.target.shape.p.x,
+                y:
+                  center.receivingPoints[receiverDirection].y -
+                  receiver.target.shape.p.y,
+              };
+            }
+
+            // sender
+            const sender =
+              receivingTarget.shape.connection[receivingTarget.curve.direction];
+            sender.pointed = true;
+            sender.target = {
+              shape: this,
+              curve: null,
+            };
+          }
           case "r":
-            this.connection.r.pointed = false;
-            this.connection.r.target = {
-              shape: receivingTarget.shape,
-              curve: receivingTarget.curve,
-            };
+            {
+              // receiver
+              const receiverDirection = "r",
+                receiver = this.connection[receiverDirection];
 
-            this.connection.r.target.curve.p2 = {
-              x:
-                center.receivingPoints.r.x - this.connection.r.target.shape.p.x,
-              y:
-                center.receivingPoints.r.y - this.connection.r.target.shape.p.y,
-            };
+              receiver.pointed = false;
+              receiver.target = {
+                shape: receivingTarget.shape,
+                curve: receivingTarget.curve.shape,
+              };
+              if (receiver.target.curve) {
+                receiver.target.curve.p2 = {
+                  x:
+                    center.receivingPoints[receiverDirection].x -
+                    receiver.target.shape.p.x,
+                  y:
+                    center.receivingPoints[receiverDirection].y -
+                    receiver.target.shape.p.y,
+                };
+              }
 
+              // sender
+              const sender =
+                receivingTarget.shape.connection[
+                  receivingTarget.curve.direction
+                ];
+              sender.pointed = true;
+              sender.target = {
+                shape: this,
+                curve: null,
+              };
+            }
             break;
           case "b":
-            this.connection.b.pointed = false;
-            this.connection.b.target = {
-              shape: receivingTarget.shape,
-              curve: receivingTarget.curve,
-            };
+            {
+              // receiver
+              const receiverDirection = "b",
+                receiver = this.connection[receiverDirection];
 
-            this.connection.b.target.curve.p2 = {
-              x:
-                center.receivingPoints.b.x - this.connection.b.target.shape.p.x,
-              y:
-                center.receivingPoints.b.y - this.connection.b.target.shape.p.y,
-            };
+              receiver.pointed = false;
+              receiver.target = {
+                shape: receivingTarget.shape,
+                curve: receivingTarget.curve.shape,
+              };
+              if (receiver.target.curve) {
+                receiver.target.curve.p2 = {
+                  x:
+                    center.receivingPoints[receiverDirection].x -
+                    receiver.target.shape.p.x,
+                  y:
+                    center.receivingPoints[receiverDirection].y -
+                    receiver.target.shape.p.y,
+                };
+              }
+
+              // sender
+              const sender =
+                receivingTarget.shape.connection[
+                  receivingTarget.curve.direction
+                ];
+              sender.pointed = true;
+              sender.target = {
+                shape: this,
+                curve: null,
+              };
+            }
             break;
         }
       }

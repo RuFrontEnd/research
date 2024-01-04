@@ -30,10 +30,18 @@ enum PressingTarget {
   cbp2 = "cbp2",
 }
 
+type ConncetionTarget = null | {
+  shape: Process;
+  curve: null | Curve;
+};
+
 type ReceivingTarget = {
   shape: Process;
-  curve: Curve;
+  curve: {
+    direction: "l" | "t" | "r" | "b";
+    shape: Curve;
+  };
 };
 
 export { PressingTarget };
-export type { ReceivingTarget };
+export type { ConncetionTarget, ReceivingTarget };

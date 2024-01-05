@@ -690,6 +690,20 @@ export default class Process {
           this.connection.b.target.curve.cp2.x += xOffset;
           this.connection.b.target.curve.cp2.y += yOffset;
         }
+
+        if (
+          this.connection.r &&
+          this.connection.r.pointed &&
+          this.connection.r.target &&
+          this.connection.r.target.shape &&
+          this.curves.r?.p2 &&
+          this.curves.r?.cp2
+        ) {
+          this.curves.r.p2.x = this.connection.r.target.shape.p1.x - this.p.x;
+          this.curves.r.p2.y = this.connection.r.target.shape.p.y - this.p.y;
+          this.curves.r.cp2.x -= xOffset;
+          this.curves.r.cp2.y -= yOffset;
+        }
       } else if (this.pressing.target === PressingTarget.lt) {
         this.p1.x += xOffset;
         this.p1.y += yOffset;

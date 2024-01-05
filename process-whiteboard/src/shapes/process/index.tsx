@@ -699,8 +699,8 @@ export default class Process {
           this.curves.r?.p2 &&
           this.curves.r?.cp2
         ) {
-          this.curves.r.p2.x = this.connection.r.target.shape.p1.x - this.p.x;
-          this.curves.r.p2.y = this.connection.r.target.shape.p.y - this.p.y;
+          this.curves.r.p2.x -= xOffset;
+          this.curves.r.p2.y -= yOffset;
           this.curves.r.cp2.x -= xOffset;
           this.curves.r.cp2.y -= yOffset;
         }

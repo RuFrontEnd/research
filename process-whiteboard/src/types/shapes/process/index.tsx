@@ -43,5 +43,10 @@ type ReceivingTarget = {
   };
 };
 
+type ConnectTarget = null | {
+  shape: Process;
+  direction: 'l' | 't' | 'r' | 'b'
+};
+
 export { PressingTarget };
-export type { ConncetionTarget, ReceivingTarget };
+export type { ConncetionTarget, ReceivingTarget, ConnectTarget };

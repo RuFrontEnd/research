@@ -2,12 +2,12 @@
 import Process from "@/shapes/process";
 import Curve from "@/shapes/curve";
 import { useRef, useEffect, useCallback } from "react";
-import { PressingTarget, ReceivingTarget } from "@/types/shapes/process";
+import { PressingTarget, ConnectTarget } from "@/types/shapes/process";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
   shapes: Process[] = [],
-  concatenatingShape: null | ReceivingTarget = null;
+  sender: null | ConnectTarget = null;
 
 export default function ProcessPage() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null);
@@ -30,48 +30,36 @@ export default function ProcessPage() {
           currentShape.pressing.target === PressingTarget.clp2
         ) {
           if (!shape.curves.l) return;
-          concatenatingShape = {
+          sender = {
             shape: shape,
-            curve: {
-              direction: "l",
-              shape: shape.curves.l,
-            },
+            direction: 'l'
           };
         } else if (
           currentShape.pressing.activate &&
           currentShape.pressing.target === PressingTarget.ctp2
         ) {
           if (!shape.curves.t) return;
-          concatenatingShape = {
+          sender = {
             shape: shape,
-            curve: {
-              direction: "t",
-              shape: shape.curves.t,
-            },
+            direction: 't'
           };
         } else if (
           currentShape.pressing.activate &&
           currentShape.pressing.target === PressingTarget.crp2
         ) {
           if (!shape.curves.r) return;
-          concatenatingShape = {
+          sender = {
             shape: shape,
-            curve: {
-              direction: "r",
-              shape: shape.curves.r,
-            },
+            direction: 'r'
           };
         } else if (
           currentShape.pressing.activate &&
           currentShape.pressing.target === PressingTarget.cbp2
         ) {
           if (!shape.curves.b) return;
-          concatenatingShape = {
+          sender = {
             shape: shape,
-            curve: {
-              direction: "b",
-              shape: shape.curves.b,
-            },
+            direction: 'b'
           };
         }
       }
@@ -85,7 +73,7 @@ export default function ProcessPage() {
     };
 
     shapes.forEach((shape) => {
-      shape.onMouseMove(p, concatenatingShape ? true : false);
+      shape.onMouseMove(p, sender ? true : false);
     });
   };
 
@@ -95,13 +83,14 @@ export default function ProcessPage() {
       y: e.nativeEvent.offsetY,
     };
 
-    if (concatenatingShape) {
+    if (sender) {
+      console.log('sender', sender)
       shapes.forEach((shape) => {
-        if (shape.id === concatenatingShape?.shape?.id) {
+        if (shape.id === sender?.shape?.id) {
           shape.onMouseUp(p);
         } else {
-          if (!concatenatingShape) return;
-          shape.onMouseUp(p, concatenatingShape);
+          if (!sender) return;
+          shape.onMouseUp(p, sender);
         }
       });
     } else {
@@ -110,7 +99,7 @@ export default function ProcessPage() {
       });
     }
 
-    concatenatingShape = null;
+    sender = null;
   }, []);
 
   const draw = useCallback(() => {

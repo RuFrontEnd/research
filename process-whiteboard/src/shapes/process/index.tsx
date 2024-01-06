@@ -24,20 +24,20 @@ export default class Process {
     cpline: Line;
     curve: Line;
   } = {
-    d: 100, // 30
-    size: {
-      fill: 4,
-      stroke: 2,
-    },
-    cpline: {
-      w: 1,
-      c: "#c00",
-    },
-    curve: {
-      w: 6,
-      c: "#333",
-    },
-  };
+      d: 100, // 30
+      size: {
+        fill: 4,
+        stroke: 2,
+      },
+      cpline: {
+        w: 1,
+        c: "#c00",
+      },
+      curve: {
+        w: 6,
+        c: "#333",
+      },
+    };
   private strokeSize = 2;
   private initPressing = {
     activate: false,
@@ -96,33 +96,33 @@ export default class Process {
       y: number | null;
     };
   } = {
-    m: {
-      x: null,
-      y: null,
-    },
-    lt: {
-      x: null,
-      y: null,
-    },
-    rt: {
-      x: null,
-      y: null,
-    },
-    rb: {
-      x: null,
-      y: null,
-    },
-    lb: {
-      x: null,
-      y: null,
-    },
-  };
+      m: {
+        x: null,
+        y: null,
+      },
+      lt: {
+        x: null,
+        y: null,
+      },
+      rt: {
+        x: null,
+        y: null,
+      },
+      rb: {
+        x: null,
+        y: null,
+      },
+      lb: {
+        x: null,
+        y: null,
+      },
+    };
   dragP:
     | Vec
     | {
-        x: null;
-        y: null;
-      };
+      x: null;
+      y: null;
+    };
   curves: {
     l: null | Curve;
     t: null | Curve;
@@ -358,7 +358,7 @@ export default class Process {
       if (
         // lt anchors
         (p.x - center.lt.x) * (p.x - center.lt.x) +
-          (p.y - center.lt.y) * (p.y - center.lt.y) <
+        (p.y - center.lt.y) * (p.y - center.lt.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -368,7 +368,7 @@ export default class Process {
       } else if (
         // rt anchors
         (p.x - center.rt.x) * (p.x - center.rt.x) +
-          (p.y - center.rt.y) * (p.y - center.rt.y) <
+        (p.y - center.rt.y) * (p.y - center.rt.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -378,7 +378,7 @@ export default class Process {
       } else if (
         // rb anchors
         (p.x - center.rb.x) * (p.x - center.rb.x) +
-          (p.y - center.rb.y) * (p.y - center.rb.y) <
+        (p.y - center.rb.y) * (p.y - center.rb.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -388,7 +388,7 @@ export default class Process {
       } else if (
         // lb anchors
         (p.x - center.lb.x) * (p.x - center.lb.x) +
-          (p.y - center.lb.y) * (p.y - center.lb.y) <
+        (p.y - center.lb.y) * (p.y - center.lb.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -398,7 +398,7 @@ export default class Process {
       } else if (
         // l curve trigger
         (p.x - center.curveTrigger.l.x) * (p.x - center.curveTrigger.l.x) +
-          (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
+        (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.l = new Curve(
@@ -428,7 +428,7 @@ export default class Process {
       } else if (
         // t curve trigger
         (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
-          (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
+        (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.t = new Curve(
@@ -458,7 +458,7 @@ export default class Process {
       } else if (
         // r curve trigger
         (p.x - center.curveTrigger.r.x) * (p.x - center.curveTrigger.r.x) +
-          (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
+        (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.r = new Curve(
@@ -488,7 +488,7 @@ export default class Process {
       } else if (
         // b curve trigger
         (p.x - center.curveTrigger.b.x) * (p.x - center.curveTrigger.b.x) +
-          (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
+        (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.b = new Curve(
@@ -692,6 +692,32 @@ export default class Process {
         }
 
         if (
+          this.connection.l &&
+          this.connection.l.pointed &&
+          this.connection.l.target &&
+          this.connection.l.target.shape &&
+          this.curves.l?.p2 &&
+          this.curves.l?.cp2
+        ) {
+          this.curves.l.p2.x -= xOffset;
+          this.curves.l.p2.y -= yOffset;
+          this.curves.l.cp2.x -= xOffset;
+          this.curves.l.cp2.y -= yOffset;
+        }
+        if (
+          this.connection.t &&
+          this.connection.t.pointed &&
+          this.connection.t.target &&
+          this.connection.t.target.shape &&
+          this.curves.t?.p2 &&
+          this.curves.t?.cp2
+        ) {
+          this.curves.t.p2.x -= xOffset;
+          this.curves.t.p2.y -= yOffset;
+          this.curves.t.cp2.x -= xOffset;
+          this.curves.t.cp2.y -= yOffset;
+        }
+        if (
           this.connection.r &&
           this.connection.r.pointed &&
           this.connection.r.target &&
@@ -703,6 +729,19 @@ export default class Process {
           this.curves.r.p2.y -= yOffset;
           this.curves.r.cp2.x -= xOffset;
           this.curves.r.cp2.y -= yOffset;
+        }
+        if (
+          this.connection.b &&
+          this.connection.b.pointed &&
+          this.connection.b.target &&
+          this.connection.b.target.shape &&
+          this.curves.b?.p2 &&
+          this.curves.b?.cp2
+        ) {
+          this.curves.b.p2.x -= xOffset;
+          this.curves.b.p2.y -= yOffset;
+          this.curves.b.cp2.x -= xOffset;
+          this.curves.b.cp2.y -= yOffset;
         }
       } else if (this.pressing.target === PressingTarget.lt) {
         this.p1.x += xOffset;
@@ -972,7 +1011,7 @@ export default class Process {
               // sender
               const sender =
                 receivingTarget.shape.connection[
-                  receivingTarget.curve.direction
+                receivingTarget.curve.direction
                 ];
               sender.pointed = true;
               sender.target = {
@@ -1011,6 +1050,7 @@ export default class Process {
               curve: null,
             };
           }
+          break
           case "r":
             {
               // receiver
@@ -1036,7 +1076,7 @@ export default class Process {
               // sender
               const sender =
                 receivingTarget.shape.connection[
-                  receivingTarget.curve.direction
+                receivingTarget.curve.direction
                 ];
               sender.pointed = true;
               sender.target = {
@@ -1070,7 +1110,7 @@ export default class Process {
               // sender
               const sender =
                 receivingTarget.shape.connection[
-                  receivingTarget.curve.direction
+                receivingTarget.curve.direction
                 ];
               sender.pointed = true;
               sender.target = {

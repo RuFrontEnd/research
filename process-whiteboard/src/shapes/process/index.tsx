@@ -1,4 +1,4 @@
-// TODO: 可以新增 Process Shape 至頁面上
+// TODO: 修正 yellow Process 無法與 blue Process 正常連結
 
 "use client";
 import Curve from "@/shapes/curve";

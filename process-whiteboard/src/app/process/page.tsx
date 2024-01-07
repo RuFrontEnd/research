@@ -84,7 +84,6 @@ export default function ProcessPage() {
     };
 
     if (sender) {
-      console.log('sender', sender)
       shapes.forEach((shape) => {
         if (shape.id === sender?.shape?.id) {
           shape.onMouseUp(p);

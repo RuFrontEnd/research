@@ -6,9 +6,8 @@ import { Vec } from "@/types/vec";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 import {
   PressingTarget,
-  ConncetionTarget,
-  ReceivingTarget,
-  ConnectTarget
+  ConnectTarget,
+  Direction
 } from "@/types/shapes/process";
 
 export default class Process {
@@ -312,6 +311,16 @@ export default class Process {
     };
   };
 
+  resetConnection = (direction: Direction) => {
+    const receiverShape = this.sendTo[direction]?.shape,
+      receiverDirection = this.sendTo[direction]?.direction
+
+    if (receiverShape && receiverDirection) {
+      receiverShape.receiveFrom[receiverDirection] = null
+      this.sendTo[direction] = null
+    }
+  }
+
   onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
     let pressingCurve = {
       l: this.curves.l?.checkBoundry($canvas, {
@@ -530,6 +539,8 @@ export default class Process {
           activate: true,
           target: PressingTarget.clp2,
         };
+
+        this.resetConnection('l')
       } else if (pressingCurve.t?.p === CurvePressingP.cp1) {
         // t curve cp1
         this.pressing = {
@@ -548,6 +559,8 @@ export default class Process {
           activate: true,
           target: PressingTarget.ctp2,
         };
+
+        this.resetConnection('t')
       } else if (pressingCurve.r?.p === CurvePressingP.cp1) {
         // r curve cp1
         this.pressing = {
@@ -560,12 +573,15 @@ export default class Process {
           activate: true,
           target: PressingTarget.crcp2,
         };
+
       } else if (pressingCurve.r?.p === CurvePressingP.p2) {
         // r curve p2
         this.pressing = {
           activate: true,
           target: PressingTarget.crp2,
         };
+
+        this.resetConnection('r')
       } else if (pressingCurve.b?.p === CurvePressingP.cp1) {
         // b curve cp1
         this.pressing = {
@@ -584,6 +600,8 @@ export default class Process {
           activate: true,
           target: PressingTarget.cbp2,
         };
+
+        this.resetConnection('b')
       } else {
         this.selecting = false;
         this.pressing = this.initPressing;
@@ -591,7 +609,6 @@ export default class Process {
       }
 
       this.dragP = p;
-    } else if (!this.selecting && this.receiving) {
     }
   }
 
@@ -1202,7 +1219,7 @@ export default class Process {
     ctx.strokeStyle = "DeepSkyBlue";
     ctx.lineWidth = this.anchor.size.stroke;
 
-    if (this.receiving ) {
+    if (this.receiving) {
       // left
       ctx.beginPath();
       ctx.arc(-this.w / 2, 0, this.anchor.size.fill, 0, 2 * Math.PI, false);

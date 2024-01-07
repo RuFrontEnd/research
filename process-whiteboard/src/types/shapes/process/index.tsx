@@ -35,18 +35,20 @@ type ConncetionTarget = null | {
   curve: null | Curve;
 };
 
+type Direction = "l" | "t" | "r" | "b";
+
 type ReceivingTarget = {
   shape: Process;
   curve: {
-    direction: "l" | "t" | "r" | "b";
+    direction: Direction;
     shape: Curve;
   };
 };
 
 type ConnectTarget = null | {
   shape: Process;
-  direction: 'l' | 't' | 'r' | 'b'
+  direction: Direction
 };
 
 export { PressingTarget };
-export type { ConncetionTarget, ReceivingTarget, ConnectTarget };
+export type { ConncetionTarget, ReceivingTarget, ConnectTarget, Direction };

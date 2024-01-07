@@ -37,3 +37,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Node Version
 18.15.0^
+
+## UI Library
+https://tailblocks.cc/

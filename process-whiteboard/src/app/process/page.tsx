@@ -110,6 +110,18 @@ export default function ProcessPage() {
     requestAnimationFrame(draw);
   }, []);
 
+  const onClickProcess = () => {
+    let process_new = new Process(
+      `process_${shapes.length}`,
+      200,
+      100,
+      { x: 100, y: 100 },
+      "yellow"
+    );
+
+    shapes.push(process_new)
+  }
+
   useEffect(() => {
     if (useEffected) return;
 
@@ -118,14 +130,14 @@ export default function ProcessPage() {
       $canvas.height = window.innerHeight;
       if (!ctx) return;
       let process = new Process(
-        "process1",
+        "process_1",
         200,
         100,
         { x: 300, y: 300 },
         "red"
       );
       let process_2 = new Process(
-        "process2",
+        "process_2",
         200,
         100,
         { x: 1200, y: 300 },
@@ -142,14 +154,21 @@ export default function ProcessPage() {
   }, []);
 
   return (
-    <canvas
-      ref={(el) => {
-        $canvas = el;
-        ctx = $canvas?.getContext("2d");
-      }}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onMouseMove={onMouseMove}
-    />
+    <>
+      <div className="fixed m-4">
+        <div className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer" onClick={onClickProcess}>
+          口
+        </div>
+      </div>
+      <canvas
+        ref={(el) => {
+          $canvas = el;
+          ctx = $canvas?.getContext("2d");
+        }}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
+      />
+    </>
   );
 }

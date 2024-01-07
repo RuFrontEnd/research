@@ -1,4 +1,4 @@
-// TODO: 當 curve 離開 receiver 時要清除 this.sendTo 和 this.receiveFrom
+// TODO: 可以新增 Process Shape 至頁面上
 
 "use client";
 import Curve from "@/shapes/curve";

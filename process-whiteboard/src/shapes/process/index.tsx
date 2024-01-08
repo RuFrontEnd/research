@@ -1,4 +1,4 @@
-// TODO: 修正 curve 碰到本身時會出現 receive points
+// TODO: 修正 Process resize 時 connceted curve 不可跟著移動
 
 "use client";
 import Curve from "@/shapes/curve";
@@ -612,7 +612,7 @@ export default class Process {
     }
   }
 
-  onMouseMove(p: Vec, receiving?: boolean) {
+  onMouseMove(p: Vec, receivable?: boolean) {
     if (
       this.selecting &&
       this.pressing.activate &&
@@ -948,7 +948,7 @@ export default class Process {
       }
     }
 
-    if (receiving) {
+    if (receivable) {
       this.receiving = this.checkReceivingBoundry(p);
     }
   }

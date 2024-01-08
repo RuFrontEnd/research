@@ -73,7 +73,10 @@ export default function ProcessPage() {
     };
 
     shapes.forEach((shape) => {
-      shape.onMouseMove(p, sender ? true : false);
+      shape.onMouseMove(
+        p,
+        sender && sender.shape.id !== shape.id ? true : false
+      );
     });
   };
 

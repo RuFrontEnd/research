@@ -32,7 +32,7 @@ export default function ProcessPage() {
           if (!shape.curves.l) return;
           sender = {
             shape: shape,
-            direction: 'l'
+            direction: "l",
           };
         } else if (
           currentShape.pressing.activate &&
@@ -41,7 +41,7 @@ export default function ProcessPage() {
           if (!shape.curves.t) return;
           sender = {
             shape: shape,
-            direction: 't'
+            direction: "t",
           };
         } else if (
           currentShape.pressing.activate &&
@@ -50,7 +50,7 @@ export default function ProcessPage() {
           if (!shape.curves.r) return;
           sender = {
             shape: shape,
-            direction: 'r'
+            direction: "r",
           };
         } else if (
           currentShape.pressing.activate &&
@@ -59,7 +59,7 @@ export default function ProcessPage() {
           if (!shape.curves.b) return;
           sender = {
             shape: shape,
-            direction: 'b'
+            direction: "b",
           };
         }
       }
@@ -112,15 +112,15 @@ export default function ProcessPage() {
 
   const onClickProcess = () => {
     let process_new = new Process(
-      `process_${shapes.length}`,
+      `process_${shapes.length + 1}`,
       200,
       100,
       { x: 100, y: 100 },
       "yellow"
     );
 
-    shapes.push(process_new)
-  }
+    shapes.push(process_new);
+  };
 
   useEffect(() => {
     if (useEffected) return;
@@ -156,7 +156,10 @@ export default function ProcessPage() {
   return (
     <>
       <div className="fixed m-4">
-        <div className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer" onClick={onClickProcess}>
+        <div
+          className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer"
+          onClick={onClickProcess}
+        >
           口
         </div>
       </div>

@@ -1,4 +1,4 @@
-// TODO: 修正 yellow Process 無法與 blue Process 正常連結
+// TODO: 修正 curve 碰到本身時會出現 receive points
 
 "use client";
 import Curve from "@/shapes/curve";

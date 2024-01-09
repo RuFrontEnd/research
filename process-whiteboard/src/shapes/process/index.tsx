@@ -1,4 +1,4 @@
-// TODO: 製作文字輸入 tooltip
+// TODO: 限縮縮小最小寬度
 
 "use client";
 import Curve from "@/shapes/curve";

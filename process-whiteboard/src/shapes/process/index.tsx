@@ -1,4 +1,4 @@
-// TODO: 完成 Process lt rb lb (rt 已完成) point resize 時 reciver curve p1 p2 位置
+// TODO: 製作文字輸入 tooltip
 
 "use client";
 import Curve from "@/shapes/curve";
@@ -797,6 +797,51 @@ export default class Process {
             this.curves.b.p2.y -= yOffset / 2;
           }
         }
+
+        // resizing by reciever lt point and change sender curve p1 p2 position
+        if (receiveFromCurve_l?.p2 && receiveFromCurve_l?.cp2) {
+          receiveFromCurve_l.p2 = {
+            x: receiveFromCurve_l.p2.x + xOffset,
+            y: receiveFromCurve_l.p2.y + yOffset / 2,
+          };
+          receiveFromCurve_l.cp2 = {
+            x: receiveFromCurve_l.cp2.x + xOffset,
+            y: receiveFromCurve_l.cp2.y + yOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_t?.p2 && receiveFromCurve_t?.cp2) {
+          receiveFromCurve_t.p2 = {
+            x: receiveFromCurve_t.p2.x + xOffset / 2,
+            y: receiveFromCurve_t.p2.y + yOffset,
+          };
+          receiveFromCurve_t.cp2 = {
+            x: receiveFromCurve_t.cp2.x + xOffset / 2,
+            y: receiveFromCurve_t.cp2.y + yOffset,
+          };
+        }
+
+        if (receiveFromCurve_r?.p2 && receiveFromCurve_r?.cp2) {
+          receiveFromCurve_r.p2 = {
+            ...receiveFromCurve_r.p2,
+            y: receiveFromCurve_r.p2.y + yOffset / 2,
+          };
+          receiveFromCurve_r.cp2 = {
+            ...receiveFromCurve_r.cp2,
+            y: receiveFromCurve_r.cp2.y + yOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_b?.p2 && receiveFromCurve_b?.cp2) {
+          receiveFromCurve_b.p2 = {
+            ...receiveFromCurve_b.p2,
+            x: receiveFromCurve_b.p2.x + xOffset / 2,
+          };
+          receiveFromCurve_b.cp2 = {
+            ...receiveFromCurve_b.cp2,
+            x: receiveFromCurve_b.cp2.x + xOffset / 2,
+          };
+        }
       } else if (this.pressing.target === PressingTarget.rt) {
         this.p2.x += xOffset;
         this.p1.y += yOffset;
@@ -982,6 +1027,51 @@ export default class Process {
             this.curves.b.p2.y += yOffset / 2;
           }
         }
+
+        // resizing by reciever rb point and change sender curve p1 p2 position
+        if (receiveFromCurve_l?.p2 && receiveFromCurve_l?.cp2) {
+          receiveFromCurve_l.p2 = {
+            x: receiveFromCurve_l.p2.x,
+            y: receiveFromCurve_l.p2.y + yOffset / 2,
+          };
+          receiveFromCurve_l.cp2 = {
+            x: receiveFromCurve_l.cp2.x,
+            y: receiveFromCurve_l.cp2.y + yOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_t?.p2 && receiveFromCurve_t?.cp2) {
+          receiveFromCurve_t.p2 = {
+            ...receiveFromCurve_t.p2,
+            x: receiveFromCurve_t.p2.x + xOffset / 2,
+          };
+          receiveFromCurve_t.cp2 = {
+            ...receiveFromCurve_t.cp2,
+            x: receiveFromCurve_t.cp2.x + xOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_r?.p2 && receiveFromCurve_r?.cp2) {
+          receiveFromCurve_r.p2 = {
+            x: receiveFromCurve_r.p2.x + xOffset,
+            y: receiveFromCurve_r.p2.y + yOffset / 2,
+          };
+          receiveFromCurve_r.cp2 = {
+            x: receiveFromCurve_r.cp2.x + xOffset,
+            y: receiveFromCurve_r.cp2.y + yOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_b?.p2 && receiveFromCurve_b?.cp2) {
+          receiveFromCurve_b.p2 = {
+            x: receiveFromCurve_b.p2.x + xOffset / 2,
+            y: receiveFromCurve_b.p2.y + yOffset,
+          };
+          receiveFromCurve_b.cp2 = {
+            x: receiveFromCurve_b.cp2.x + xOffset / 2,
+            y: receiveFromCurve_b.cp2.y + yOffset,
+          };
+        }
       } else if (this.pressing.target === PressingTarget.lb) {
         this.p1.x += xOffset;
         this.p2.y += yOffset;
@@ -1054,6 +1144,51 @@ export default class Process {
             this.curves.b.cp2.y += yOffset / 2;
             this.curves.b.p2.y += yOffset / 2;
           }
+        }
+
+        // resizing by reciever lb point and change sender curve p1 p2 position
+        if (receiveFromCurve_l?.p2 && receiveFromCurve_l?.cp2) {
+          receiveFromCurve_l.p2 = {
+            x: receiveFromCurve_l.p2.x + xOffset,
+            y: receiveFromCurve_l.p2.y + yOffset / 2,
+          };
+          receiveFromCurve_l.cp2 = {
+            x: receiveFromCurve_l.cp2.x + xOffset,
+            y: receiveFromCurve_l.cp2.y + yOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_t?.p2 && receiveFromCurve_t?.cp2) {
+          receiveFromCurve_t.p2 = {
+            ...receiveFromCurve_t.p2,
+            x: receiveFromCurve_t.p2.x + xOffset / 2,
+          };
+          receiveFromCurve_t.cp2 = {
+            ...receiveFromCurve_t.cp2,
+            x: receiveFromCurve_t.cp2.x + xOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_r?.p2 && receiveFromCurve_r?.cp2) {
+          receiveFromCurve_r.p2 = {
+            ...receiveFromCurve_r.p2,
+            y: receiveFromCurve_r.p2.y + yOffset / 2,
+          };
+          receiveFromCurve_r.cp2 = {
+            ...receiveFromCurve_r.cp2,
+            y: receiveFromCurve_r.cp2.y + yOffset / 2,
+          };
+        }
+
+        if (receiveFromCurve_b?.p2 && receiveFromCurve_b?.cp2) {
+          receiveFromCurve_b.p2 = {
+            x: receiveFromCurve_b.p2.x + xOffset / 2,
+            y: receiveFromCurve_b.p2.y + yOffset,
+          };
+          receiveFromCurve_b.cp2 = {
+            x: receiveFromCurve_b.cp2.x + xOffset / 2,
+            y: receiveFromCurve_b.cp2.y + yOffset,
+          };
         }
       } else if (
         // l curve

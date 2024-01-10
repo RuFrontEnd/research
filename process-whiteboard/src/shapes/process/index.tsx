@@ -1,4 +1,4 @@
-// TODO: 限縮縮小最小寬高度
+// TODO: 限縮縮小最小寬高度 (lt 完成, rt, rb, lb 待完成)
 
 "use client";
 import Curve from "@/shapes/curve";
@@ -46,7 +46,9 @@ export default class Process {
     target: null,
   };
   w: number;
+  minW: number;
   h: number;
+  minH: number;
   p: Vec;
   private p1: Vec;
   private p2: Vec;
@@ -129,7 +131,9 @@ export default class Process {
   constructor(id: string, w: number, h: number, p: Vec, c: string) {
     this.id = id;
     this.w = w;
+    this.minW = 100;
     this.h = h;
+    this.minH = 100;
     this.p = p;
     this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 };
     this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 };
@@ -718,6 +722,8 @@ export default class Process {
         sendToCurve_r = this.sendTo.r,
         sendToCurve_b = this.sendTo.b;
 
+      const edge = this.getEdge();
+
       if (this.pressing.target === PressingTarget.m) {
         this.p.x += xOffset;
         this.p.y += yOffset;
@@ -778,35 +784,19 @@ export default class Process {
           this.curves.b.cp2.y -= yOffset;
         }
       } else if (this.pressing.target === PressingTarget.lt) {
-        console.log("this.w", this.w);
-        console.log("xOffset", xOffset);
-
-        console.log(
-          "this.checkVertexesBoundry(p)",
-          this.checkVertexesBoundry(p)
-        );
-
-        if (xOffset > 0 && p.x > this.p1.x) {
-          if (this.w <= 100) {
-            this.pressing = this.initPressing;
-            return;
-          }
+        if (
+          (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
+          (xOffset < 0 && p.x < edge.l)
+        ) {
           this.p1.x += xOffset;
-        } else {
-          if (
-            this.checkVertexesBoundry(p).activate &&
-            this.checkVertexesBoundry(p).direction === "lt"
-          ) {
-            this.pressing = {
-              activate: true,
-              target: PressingTarget.lt,
-            };
-          }
         }
-        // if (this.h > 100) {
-        this.p1.x += xOffset;
-        this.p1.y += yOffset;
-        // }
+
+        if (
+          (yOffset > 0 && p.y > edge.t && this.h >= this.minH) ||
+          (yOffset < 0 && p.y < edge.t)
+        ) {
+          this.p1.y += yOffset;
+        }
 
         this.recalculate();
 

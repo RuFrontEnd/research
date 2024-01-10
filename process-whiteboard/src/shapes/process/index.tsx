@@ -36,7 +36,7 @@ export default class Process {
       c: "#c00",
     },
     curve: {
-      w: 6,
+      w: 2,
       c: "#333",
     },
   };

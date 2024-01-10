@@ -386,17 +386,24 @@ export default class Process {
   senderHoldCurveP2Cp2Position = (
     direction: Direction,
     xOffset: number,
-    yOffset: number
+    yOffset: number,
+    canResizeX?: boolean,
+    canResizeY?: boolean
   ) => {
     const curve_p2 = this.curves[direction]?.p2,
       curve_cp2 = this.curves[direction]?.cp2;
 
     if (!curve_p2 || !curve_cp2) return;
 
-    curve_p2.x -= xOffset / 2;
-    curve_p2.y -= yOffset / 2;
-    curve_cp2.x -= xOffset / 2;
-    curve_cp2.y -= yOffset / 2;
+    if (canResizeX) {
+      curve_p2.x -= xOffset / 2;
+      curve_cp2.x -= xOffset / 2;
+    }
+
+    if (canResizeY) {
+      curve_p2.y -= yOffset / 2;
+      curve_cp2.y -= yOffset / 2;
+    }
   };
 
   onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
@@ -784,17 +791,18 @@ export default class Process {
           this.curves.b.cp2.y -= yOffset;
         }
       } else if (this.pressing.target === PressingTarget.lt) {
-        if (
-          (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
-          (xOffset < 0 && p.x < edge.l)
-        ) {
+        const canResizeX =
+            (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
+            (xOffset < 0 && p.x < edge.l),
+          canResizeY =
+            (yOffset > 0 && p.y > edge.t && this.h >= this.minH) ||
+            (yOffset < 0 && p.y < edge.t);
+
+        if (canResizeX) {
           this.p1.x += xOffset;
         }
 
-        if (
-          (yOffset > 0 && p.y > edge.t && this.h >= this.minH) ||
-          (yOffset < 0 && p.y < edge.t)
-        ) {
+        if (canResizeY) {
           this.p1.y += yOffset;
         }
 
@@ -806,13 +814,24 @@ export default class Process {
           this.curves.l?.cp2 &&
           this.curves.l?.p2
         ) {
-          this.curves.l.p1.x += xOffset / 2;
-          this.curves.l.cp1.x += xOffset / 2;
+          if (canResizeX) {
+            this.curves.l.p1.x += xOffset / 2;
+            this.curves.l.cp1.x += xOffset / 2;
+          }
+
           if (sendToCurve_l) {
-            this.senderHoldCurveP2Cp2Position("l", xOffset, yOffset);
+            this.senderHoldCurveP2Cp2Position(
+              "l",
+              xOffset,
+              yOffset,
+              canResizeX,
+              canResizeY
+            );
           } else {
-            this.curves.l.cp2.x += xOffset / 2;
-            this.curves.l.p2.x += xOffset / 2;
+            if (canResizeX) {
+              this.curves.l.p2.x += xOffset / 2;
+              this.curves.l.cp2.x += xOffset / 2;
+            }
           }
         }
 
@@ -822,13 +841,24 @@ export default class Process {
           this.curves.t?.cp2 &&
           this.curves.t?.p2
         ) {
-          this.curves.t.p1.y += yOffset / 2;
-          this.curves.t.cp1.y += yOffset / 2;
+          if (canResizeY) {
+            this.curves.t.p1.y += yOffset / 2;
+            this.curves.t.cp1.y += yOffset / 2;
+          }
+
           if (sendToCurve_t) {
-            this.senderHoldCurveP2Cp2Position("t", xOffset, yOffset);
+            this.senderHoldCurveP2Cp2Position(
+              "t",
+              xOffset,
+              yOffset,
+              canResizeX,
+              canResizeY
+            );
           } else {
-            this.curves.t.cp2.y += yOffset / 2;
-            this.curves.t.p2.y += yOffset / 2;
+            if (canResizeY) {
+              this.curves.t.cp2.y += yOffset / 2;
+              this.curves.t.p2.y += yOffset / 2;
+            }
           }
         }
 
@@ -838,13 +868,23 @@ export default class Process {
           this.curves.r?.cp2 &&
           this.curves.r?.p2
         ) {
-          this.curves.r.p1.x -= xOffset / 2;
-          this.curves.r.cp1.x -= xOffset / 2;
+          if (canResizeX) {
+            this.curves.r.p1.x -= xOffset / 2;
+            this.curves.r.cp1.x -= xOffset / 2;
+          }
           if (sendToCurve_r) {
-            this.senderHoldCurveP2Cp2Position("r", xOffset, yOffset);
+            this.senderHoldCurveP2Cp2Position(
+              "r",
+              xOffset,
+              yOffset,
+              canResizeX,
+              canResizeY
+            );
           } else {
-            this.curves.r.cp2.x -= xOffset / 2;
-            this.curves.r.p2.x -= xOffset / 2;
+            if (canResizeX) {
+              this.curves.r.p2.x -= xOffset / 2;
+              this.curves.r.cp2.x -= xOffset / 2;
+            }
           }
         }
 
@@ -854,59 +894,63 @@ export default class Process {
           this.curves.b?.cp2 &&
           this.curves.b?.p2
         ) {
-          this.curves.b.p1.y -= yOffset / 2;
-          this.curves.b.cp1.y -= yOffset / 2;
+          if (canResizeY) {
+            this.curves.b.p1.y -= yOffset / 2;
+            this.curves.b.cp1.y -= yOffset / 2;
+          }
           if (sendToCurve_b) {
-            this.senderHoldCurveP2Cp2Position("b", xOffset, yOffset);
+            this.senderHoldCurveP2Cp2Position(
+              "b",
+              xOffset,
+              yOffset,
+              canResizeX,
+              canResizeY
+            );
           } else {
-            this.curves.b.cp2.y -= yOffset / 2;
-            this.curves.b.p2.y -= yOffset / 2;
+            if (canResizeY) {
+              this.curves.b.cp2.y -= yOffset / 2;
+              this.curves.b.p2.y -= yOffset / 2;
+            }
           }
         }
 
         // resizing by reciever lt point and change sender curve p1 p2 position
         if (receiveFromCurve_l?.p2 && receiveFromCurve_l?.cp2) {
-          receiveFromCurve_l.p2 = {
-            x: receiveFromCurve_l.p2.x + xOffset,
-            y: receiveFromCurve_l.p2.y + yOffset / 2,
-          };
-          receiveFromCurve_l.cp2 = {
-            x: receiveFromCurve_l.cp2.x + xOffset,
-            y: receiveFromCurve_l.cp2.y + yOffset / 2,
-          };
+          if (canResizeX) {
+            receiveFromCurve_l.p2.x += xOffset;
+            receiveFromCurve_l.cp2.x += xOffset;
+          }
+
+          if (canResizeY) {
+            receiveFromCurve_l.p2.y += yOffset / 2;
+            receiveFromCurve_l.cp2.y += yOffset / 2;
+          }
         }
 
         if (receiveFromCurve_t?.p2 && receiveFromCurve_t?.cp2) {
-          receiveFromCurve_t.p2 = {
-            x: receiveFromCurve_t.p2.x + xOffset / 2,
-            y: receiveFromCurve_t.p2.y + yOffset,
-          };
-          receiveFromCurve_t.cp2 = {
-            x: receiveFromCurve_t.cp2.x + xOffset / 2,
-            y: receiveFromCurve_t.cp2.y + yOffset,
-          };
+          if (canResizeX) {
+            receiveFromCurve_t.p2.x += xOffset / 2;
+            receiveFromCurve_t.cp2.x += xOffset / 2;
+          }
+
+          if (canResizeY) {
+            receiveFromCurve_t.p2.y += yOffset;
+            receiveFromCurve_t.cp2.y += yOffset;
+          }
         }
 
         if (receiveFromCurve_r?.p2 && receiveFromCurve_r?.cp2) {
-          receiveFromCurve_r.p2 = {
-            ...receiveFromCurve_r.p2,
-            y: receiveFromCurve_r.p2.y + yOffset / 2,
-          };
-          receiveFromCurve_r.cp2 = {
-            ...receiveFromCurve_r.cp2,
-            y: receiveFromCurve_r.cp2.y + yOffset / 2,
-          };
+          if (canResizeY) {
+            receiveFromCurve_r.p2.y += yOffset / 2;
+            receiveFromCurve_r.cp2.y += yOffset / 2;
+          }
         }
 
         if (receiveFromCurve_b?.p2 && receiveFromCurve_b?.cp2) {
-          receiveFromCurve_b.p2 = {
-            ...receiveFromCurve_b.p2,
-            x: receiveFromCurve_b.p2.x + xOffset / 2,
-          };
-          receiveFromCurve_b.cp2 = {
-            ...receiveFromCurve_b.cp2,
-            x: receiveFromCurve_b.cp2.x + xOffset / 2,
-          };
+          if (canResizeX) {
+            receiveFromCurve_b.p2.x += xOffset / 2;
+            receiveFromCurve_b.cp2.x += xOffset / 2;
+          }
         }
       } else if (this.pressing.target === PressingTarget.rt) {
         this.p2.x += xOffset;

@@ -1,4 +1,4 @@
-// TODO: 限縮縮小最小寬度
+// TODO: 限縮縮小最小寬高度
 
 "use client";
 import Curve from "@/shapes/curve";
@@ -246,6 +246,55 @@ export default class Process {
       p.y < edge.b + this.anchor.size.fill
     );
   }
+
+  checkVertexesBoundry = (p: Vec) => {
+    let dx, dy;
+
+    dx = this.p1.x - p.x;
+    dy = this.p1.y - p.y;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "lt",
+      };
+    }
+
+    dx = this.p2.x - p.x;
+    dy = this.p1.y - p.y;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "rt",
+      };
+    }
+
+    dx = this.p2.x - p.x;
+    dy = this.p2.y - p.y;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "rb",
+      };
+    }
+
+    dx = this.p1.x - p.x;
+    dy = this.p2.y - p.y;
+
+    if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
+      return {
+        activate: true,
+        direction: "lb",
+      };
+    }
+
+    return {
+      activate: false,
+      direction: null,
+    };
+  };
 
   checkReceivingBoundry = (p: Vec) => {
     const edge = this.getEdge();
@@ -729,8 +778,35 @@ export default class Process {
           this.curves.b.cp2.y -= yOffset;
         }
       } else if (this.pressing.target === PressingTarget.lt) {
+        console.log("this.w", this.w);
+        console.log("xOffset", xOffset);
+
+        console.log(
+          "this.checkVertexesBoundry(p)",
+          this.checkVertexesBoundry(p)
+        );
+
+        if (xOffset > 0 && p.x > this.p1.x) {
+          if (this.w <= 100) {
+            this.pressing = this.initPressing;
+            return;
+          }
+          this.p1.x += xOffset;
+        } else {
+          if (
+            this.checkVertexesBoundry(p).activate &&
+            this.checkVertexesBoundry(p).direction === "lt"
+          ) {
+            this.pressing = {
+              activate: true,
+              target: PressingTarget.lt,
+            };
+          }
+        }
+        // if (this.h > 100) {
         this.p1.x += xOffset;
         this.p1.y += yOffset;
+        // }
 
         this.recalculate();
 

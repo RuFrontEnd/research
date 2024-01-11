@@ -1,7 +1,8 @@
-// TODO: 新增 Decision shape / 共用 common type Id, Width, Height, Color
+// TODO: 除錯 Decision shape 無法 select / 共用 common type Id, Width, Height, Color
 "use client";
 import Process from "@/shapes/process";
 import InOutput from "@/shapes/inOutput";
+import Desicion from "@/shapes/decision";
 import { useRef, useEffect, useCallback } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 
@@ -23,9 +24,9 @@ export default function ProcessPage() {
     shapes.forEach((shape, shapeI) => {
       if (!$canvas) return;
 
-      if (shape instanceof Process || InOutput) {
+      if (shape instanceof Process || InOutput || Desicion) {
         let currentShape =
-          (shapes[shapeI] as Process) || (shapes[shapeI] as InOutput);
+          (shapes[shapeI] as Process) || (shapes[shapeI] as InOutput) || (shapes[shapeI] as Desicion);
         currentShape.onMouseDown(p);
 
         if (
@@ -141,25 +142,33 @@ export default function ProcessPage() {
         100,
         { x: 300, y: 300 },
         "red"
-      );
-      let process_2 = new Process(
-        "process_2",
-        200,
-        100,
-        { x: 1200, y: 300 },
-        "blue"
-      );
-      let inOutput_1 = new InOutput(
-        "inOutput_1",
-        200,
-        100,
-        { x: 600, y: 600 },
-        "green"
-      );
+      ),
+        process_2 = new Process(
+          "process_2",
+          200,
+          100,
+          { x: 1200, y: 300 },
+          "blue"
+        ),
+        inOutput_1 = new InOutput(
+          "inOutput_1",
+          200,
+          100,
+          { x: 600, y: 600 },
+          "green"
+        ),
+        desicion_1 = new Desicion(
+          "desicion_1",
+          150,
+          100,
+          { x: 300, y: 100 },
+          "green"
+        );
 
       shapes.push(process);
       shapes.push(process_2);
       shapes.push(inOutput_1);
+      shapes.push(desicion_1);
 
       requestAnimationFrame(draw);
     }

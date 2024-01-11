@@ -22,20 +22,20 @@ export default class Core {
     cpline: Line;
     curve: Line;
   } = {
-    d: 100, // 30
-    size: {
-      fill: 4,
-      stroke: 2,
-    },
-    cpline: {
-      w: 1,
-      c: "#c00",
-    },
-    curve: {
-      w: 2,
-      c: "#333",
-    },
-  };
+      d: 100, // 30
+      size: {
+        fill: 4,
+        stroke: 2,
+      },
+      cpline: {
+        w: 1,
+        c: "#c00",
+      },
+      curve: {
+        w: 2,
+        c: "#333",
+      },
+    };
   private strokeSize = 2;
   private initPressing = {
     activate: false,
@@ -75,9 +75,9 @@ export default class Core {
   dragP:
     | Vec
     | {
-        x: null;
-        y: null;
-      };
+      x: null;
+      y: null;
+    };
 
   constructor(id: string, w: number, h: number, p: Vec, c: string) {
     this.id = id;
@@ -191,6 +191,14 @@ export default class Core {
 
   checkBoundry(p: Vec) {
     const edge = this.getEdge();
+
+    console.log(p.x, p.y)
+    console.log(edge.l, edge.t, edge.r, edge.b)
+
+    console.log(edge.l - this.anchor.size.fill)
+    console.log(edge.t - this.anchor.size.fill)
+    console.log(edge.r - this.anchor.size.fill)
+    console.log(edge.b - this.anchor.size.fill)
 
     return (
       p.x > edge.l - this.anchor.size.fill &&
@@ -355,10 +363,10 @@ export default class Core {
     }
   };
 
-  drawShape(ctx: CanvasRenderingContext2D) {}
+  drawShape(ctx: CanvasRenderingContext2D) { }
 
   onMouseDown(p: Vec) {
-    console.log("A");
+    console.log(this.id, this.checkBoundry(p));
     let pressingCurve = {
       l: this.curves.l?.checkBoundry({
         x: p.x - this.p.x,
@@ -395,7 +403,7 @@ export default class Core {
       if (
         // lt anchors
         (p.x - center.lt.x) * (p.x - center.lt.x) +
-          (p.y - center.lt.y) * (p.y - center.lt.y) <
+        (p.y - center.lt.y) * (p.y - center.lt.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -405,7 +413,7 @@ export default class Core {
       } else if (
         // rt anchors
         (p.x - center.rt.x) * (p.x - center.rt.x) +
-          (p.y - center.rt.y) * (p.y - center.rt.y) <
+        (p.y - center.rt.y) * (p.y - center.rt.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -415,7 +423,7 @@ export default class Core {
       } else if (
         // rb anchors
         (p.x - center.rb.x) * (p.x - center.rb.x) +
-          (p.y - center.rb.y) * (p.y - center.rb.y) <
+        (p.y - center.rb.y) * (p.y - center.rb.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -425,7 +433,7 @@ export default class Core {
       } else if (
         // lb anchors
         (p.x - center.lb.x) * (p.x - center.lb.x) +
-          (p.y - center.lb.y) * (p.y - center.lb.y) <
+        (p.y - center.lb.y) * (p.y - center.lb.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -435,7 +443,7 @@ export default class Core {
       } else if (
         // l curve trigger
         (p.x - center.curveTrigger.l.x) * (p.x - center.curveTrigger.l.x) +
-          (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
+        (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.l = new Curve(
@@ -465,7 +473,7 @@ export default class Core {
       } else if (
         // t curve trigger
         (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
-          (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
+        (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.t = new Curve(
@@ -495,7 +503,7 @@ export default class Core {
       } else if (
         // r curve trigger
         (p.x - center.curveTrigger.r.x) * (p.x - center.curveTrigger.r.x) +
-          (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
+        (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.r = new Curve(
@@ -525,7 +533,7 @@ export default class Core {
       } else if (
         // b curve trigger
         (p.x - center.curveTrigger.b.x) * (p.x - center.curveTrigger.b.x) +
-          (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
+        (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.b = new Curve(
@@ -664,8 +672,8 @@ export default class Core {
 
       // sender curves follows
       const receiveFromCurve_l = this.receiveFrom.l?.shape.curves[
-          this.receiveFrom.l.direction
-        ],
+        this.receiveFrom.l.direction
+      ],
         receiveFromCurve_t = this.receiveFrom.t?.shape.curves[
           this.receiveFrom.t.direction
         ],
@@ -744,8 +752,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.lt) {
         const canResizeX =
-            (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
-            (xOffset < 0 && p.x < edge.l),
+          (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
+          (xOffset < 0 && p.x < edge.l),
           canResizeY =
             (yOffset > 0 && p.y > edge.t && this.h >= this.minH) ||
             (yOffset < 0 && p.y < edge.t);
@@ -906,8 +914,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.rt) {
         const canResizeX =
-            (xOffset > 0 && p.x > edge.r) ||
-            (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
+          (xOffset > 0 && p.x > edge.r) ||
+          (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
           canResizeY =
             (yOffset > 0 && p.y > edge.t && this.h >= this.minH) ||
             (yOffset < 0 && p.y < edge.t);
@@ -1068,8 +1076,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.rb) {
         const canResizeX =
-            (xOffset > 0 && p.x > edge.r) ||
-            (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
+          (xOffset > 0 && p.x > edge.r) ||
+          (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
           canResizeY =
             (yOffset > 0 && p.y > edge.b) ||
             (yOffset < 0 && p.y < edge.b && this.h >= this.minH);
@@ -1229,8 +1237,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.lb) {
         const canResizeX =
-            (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
-            (xOffset < 0 && p.x < edge.l),
+          (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
+          (xOffset < 0 && p.x < edge.l),
           canResizeY =
             (yOffset > 0 && p.y > edge.b) ||
             (yOffset < 0 && p.y < edge.b && this.h >= this.minH);

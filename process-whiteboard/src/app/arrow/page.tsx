@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useEffect } from "react";
-import { Vec } from "@/types/vec";
+import { Vec } from "@/types/shapes/common";
 
 let ctx: CanvasRenderingContext2D | null | undefined = null;
 

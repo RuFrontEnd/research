@@ -1,6 +1,6 @@
 "use client";
 import Arrow from "@/shapes/arrow";
-import { Vec } from "@/types/vec";
+import { Vec } from "@/types/shapes/common";
 import { Line, PressingP } from "@/types/shapes/curve";
 
 export default class Curve {

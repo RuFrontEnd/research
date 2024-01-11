@@ -1,6 +1,6 @@
 "use client";
 import Curve from "@/shapes/curve";
-import { Vec } from "@/types/vec";
+import { Vec } from "@/types/shapes/common";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 import { PressingTarget, ConnectTarget, Direction } from "@/types/shapes/core";
 
@@ -46,8 +46,8 @@ export default class Core {
   minW: number;
   minH: number;
   p: Vec;
-  private p1: Vec;
-  private p2: Vec;
+  p1: Vec;
+  p2: Vec;
   curves: {
     l: null | Curve;
     t: null | Curve;
@@ -358,6 +358,7 @@ export default class Core {
   drawShape(ctx: CanvasRenderingContext2D) {}
 
   onMouseDown(p: Vec) {
+    console.log("A");
     let pressingCurve = {
       l: this.curves.l?.checkBoundry({
         x: p.x - this.p.x,
@@ -1516,6 +1517,9 @@ export default class Core {
         h: this.h,
       };
 
+    ctx.save();
+    ctx.translate(this.p.x, this.p.y);
+    ctx.fillStyle = this.c;
     this.drawShape(ctx);
 
     if (!this.receiving) {

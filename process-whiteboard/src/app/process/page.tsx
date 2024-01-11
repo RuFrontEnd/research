@@ -1,6 +1,7 @@
-// TODO: 新增 Input/Output shape
+// TODO: 新增 Decision shape / 共用 common type Id, Width, Height, Color
 "use client";
 import Process from "@/shapes/process";
+import InOutput from "@/shapes/inOutput";
 import { useRef, useEffect, useCallback } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 
@@ -21,8 +22,10 @@ export default function ProcessPage() {
 
     shapes.forEach((shape, shapeI) => {
       if (!$canvas) return;
-      if (shape instanceof Process) {
-        let currentShape = shapes[shapeI] as Process;
+
+      if (shape instanceof Process || InOutput) {
+        let currentShape =
+          (shapes[shapeI] as Process) || (shapes[shapeI] as InOutput);
         currentShape.onMouseDown(p);
 
         if (
@@ -146,9 +149,17 @@ export default function ProcessPage() {
         { x: 1200, y: 300 },
         "blue"
       );
+      let inOutput_1 = new InOutput(
+        "inOutput_1",
+        200,
+        100,
+        { x: 600, y: 600 },
+        "green"
+      );
 
       shapes.push(process);
       shapes.push(process_2);
+      shapes.push(inOutput_1);
 
       requestAnimationFrame(draw);
     }

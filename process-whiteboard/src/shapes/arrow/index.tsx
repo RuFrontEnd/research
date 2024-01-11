@@ -1,4 +1,4 @@
-import { Vec } from "@/types/vec";
+import { Vec } from "@/types/shapes/common";
 
 export default class Arrow {
   w: number;

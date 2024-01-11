@@ -49,5 +49,19 @@ type ConnectTarget = null | {
   direction: Direction;
 };
 
+type Id = string;
+type Width = number;
+type Height = number;
+type Color = string;
+
 export { PressingTarget };
-export type { ConncetionTarget, ReceivingTarget, ConnectTarget, Direction };
+export type {
+  ConncetionTarget,
+  ReceivingTarget,
+  ConnectTarget,
+  Direction,
+  Id,
+  Width,
+  Height,
+  Color,
+};

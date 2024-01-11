@@ -11,6 +11,8 @@ import {
 } from "@/types/shapes/process";
 
 export default class Process {
+  id: string;
+  c: string;
   private anchor = {
     size: {
       fill: 4,
@@ -46,16 +48,24 @@ export default class Process {
     target: null,
   };
   w: number;
-  minW: number;
   h: number;
+  minW: number;
   minH: number;
   p: Vec;
   private p1: Vec;
   private p2: Vec;
-  id: string;
-  c: string;
+  curves: {
+    l: null | Curve;
+    t: null | Curve;
+    r: null | Curve;
+    b: null | Curve;
+  };
   selecting: boolean;
   receiving: boolean;
+  pressing: {
+    activate: boolean;
+    target: PressingTarget | null;
+  };
   receiveFrom: {
     l: ConnectTarget;
     t: ConnectTarget;
@@ -68,79 +78,32 @@ export default class Process {
     r: ConnectTarget;
     b: ConnectTarget;
   };
-  pressing: {
-    activate: boolean;
-    target: PressingTarget | null;
-  };
-  center: {
-    m: {
-      x: number | null;
-      y: number | null;
-    };
-    lt: {
-      x: number | null;
-      y: number | null;
-    };
-    rt: {
-      x: number | null;
-      y: number | null;
-    };
-    rb: {
-      x: number | null;
-      y: number | null;
-    };
-    lb: {
-      x: number | null;
-      y: number | null;
-    };
-  } = {
-    m: {
-      x: null,
-      y: null,
-    },
-    lt: {
-      x: null,
-      y: null,
-    },
-    rt: {
-      x: null,
-      y: null,
-    },
-    rb: {
-      x: null,
-      y: null,
-    },
-    lb: {
-      x: null,
-      y: null,
-    },
-  };
   dragP:
     | Vec
     | {
         x: null;
         y: null;
       };
-  curves: {
-    l: null | Curve;
-    t: null | Curve;
-    r: null | Curve;
-    b: null | Curve;
-  };
 
   constructor(id: string, w: number, h: number, p: Vec, c: string) {
     this.id = id;
+    this.c = c;
     this.w = w;
-    this.minW = 100;
     this.h = h;
+    this.minW = 100;
     this.minH = 100;
     this.p = p;
     this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 };
     this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 };
-    this.c = c;
+    this.curves = {
+      l: null,
+      t: null,
+      r: null,
+      b: null,
+    };
     this.selecting = false;
-    this.pressing = this.initPressing;
     this.receiving = false;
+    this.pressing = this.initPressing;
     this.receiveFrom = {
       l: null,
       t: null,
@@ -156,12 +119,6 @@ export default class Process {
     this.dragP = {
       x: null,
       y: null,
-    };
-    this.curves = {
-      l: null,
-      t: null,
-      r: null,
-      b: null,
     };
   }
 
@@ -238,9 +195,7 @@ export default class Process {
     };
   };
 
-  checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
-    if (!$canvas) return false;
-
+  checkBoundry(p: Vec) {
     const edge = this.getEdge();
 
     return (
@@ -406,28 +361,28 @@ export default class Process {
     }
   };
 
-  onMouseDown($canvas: HTMLCanvasElement, p: Vec) {
+  onMouseDown(p: Vec) {
     let pressingCurve = {
-      l: this.curves.l?.checkBoundry($canvas, {
+      l: this.curves.l?.checkBoundry({
         x: p.x - this.p.x,
         y: p.y - this.p.y,
       }),
-      t: this.curves.t?.checkBoundry($canvas, {
+      t: this.curves.t?.checkBoundry({
         x: p.x - this.p.x,
         y: p.y - this.p.y,
       }),
-      r: this.curves.r?.checkBoundry($canvas, {
+      r: this.curves.r?.checkBoundry({
         x: p.x - this.p.x,
         y: p.y - this.p.y,
       }),
-      b: this.curves.b?.checkBoundry($canvas, {
+      b: this.curves.b?.checkBoundry({
         x: p.x - this.p.x,
         y: p.y - this.p.y,
       }),
     };
 
     if (
-      this.checkBoundry($canvas, p) ||
+      this.checkBoundry(p) ||
       pressingCurve.l?.activate ||
       pressingCurve.t?.activate ||
       pressingCurve.r?.activate ||

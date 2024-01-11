@@ -23,7 +23,7 @@ export default function ProcessPage() {
       if (!$canvas) return;
       if (shape instanceof Process) {
         let currentShape = shapes[shapeI] as Process;
-        currentShape.onMouseDown($canvas, p);
+        currentShape.onMouseDown(p);
 
         if (
           currentShape.pressing.activate &&

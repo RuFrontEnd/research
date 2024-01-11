@@ -35,8 +35,8 @@ export default class Curve {
     this.dragP = null;
   }
 
-  checkBoundry($canvas: HTMLCanvasElement, p: Vec) {
-    if (!$canvas || !this.p1 || !this.p2 || !this.cp1 || !this.cp2) {
+  checkBoundry(p: Vec) {
+    if (!this.p1 || !this.p2 || !this.cp1 || !this.cp2) {
       this.pressing = this.initPressing;
       return this.pressing;
     }
@@ -110,7 +110,6 @@ export default class Curve {
 
   onMouseMove(p: Vec) {
     if (this.pressing.activate) {
-
       if (
         this.pressing.p === PressingP.p1 &&
         this.p1 !== null &&

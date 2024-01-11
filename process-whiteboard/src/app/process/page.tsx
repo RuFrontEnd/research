@@ -1,8 +1,8 @@
+// TODO: 新增 Input/Output shape
 "use client";
 import Process from "@/shapes/process";
-import Curve from "@/shapes/curve";
 import { useRef, useEffect, useCallback } from "react";
-import { PressingTarget, ConnectTarget } from "@/types/shapes/process";
+import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,

@@ -24,9 +24,6 @@ export default class Desicion extends Core {
     ctx.lineTo(x4, y4);
     ctx.closePath();
 
-    // 设置填充颜色
-    ctx.fillStyle = "#3498db";
-
     // 填充菱形
     ctx.fill();
   }

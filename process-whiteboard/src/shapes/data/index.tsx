@@ -2,7 +2,7 @@
 import Core from "@/shapes/core";
 import { Vec, Id, W, H, C } from "@/types/shapes/common";
 
-export default class Decision extends Core {
+export default class Data extends Core {
   super(id: Id, w: W, h: H, p: Vec, c: C) {}
 
   drawShape(ctx: CanvasRenderingContext2D) {

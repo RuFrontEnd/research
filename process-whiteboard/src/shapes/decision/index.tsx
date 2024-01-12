@@ -1,19 +1,20 @@
 "use client";
 import Core from "@/shapes/core";
-import { Vec } from "@/types/shapes/common";
+import { Vec, Id, W, H, C } from "@/types/shapes/common";
 export default class Desicion extends Core {
-  super(id: string, w: number, h: number, p: Vec, c: string) {
-
-  }
+  super(id: Id, w: W, h: H, p: Vec, c: C) {}
   drawShape(ctx: CanvasRenderingContext2D) {
-
     // 定义四个顶点的坐标
-    const x1 = this.p.x, y1 = this.p.y - this.h / 2;
-    const x2 = this.p.x + this.w, y2 = this.p.y;
-    const x3 = this.p.x, y3 = this.p.y + this.h / 2;
-    const x4 = this.p.x - this.w, y4 = this.p.y;
+    const x1 = -this.w / 2,
+      y1 = 0;
+    const x2 = 0,
+      y2 = this.h / 2;
+    const x3 = this.w / 2,
+      y3 = 0;
+    const x4 = 0,
+      y4 = -this.h / 2;
 
-    ctx.beginPath()
+    ctx.beginPath();
     // 移动到第一个顶点
     ctx.moveTo(x1, y1);
 
@@ -24,7 +25,7 @@ export default class Desicion extends Core {
     ctx.closePath();
 
     // 设置填充颜色
-    ctx.fillStyle = '#3498db';
+    ctx.fillStyle = "#3498db";
 
     // 填充菱形
     ctx.fill();

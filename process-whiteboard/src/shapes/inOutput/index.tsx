@@ -1,12 +1,11 @@
- "use client";
+"use client";
 import Core from "@/shapes/core";
-import { Vec } from "@/types/shapes/common";
+import { Vec, Id, W, H, C } from "@/types/shapes/common";
+
 export default class Decision extends Core {
-  super(id: string, w: number, h: number, p: Vec, c: string){
+  super(id: Id, w: W, h: H, p: Vec, c: C) {}
 
-  }
   drawShape(ctx: CanvasRenderingContext2D) {
-
     const x1 = -this.w / 2 + 20,
       y1 = -this.h / 2,
       x2 = this.w / 2,

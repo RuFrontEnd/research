@@ -1,8 +1,10 @@
-// TODO: 整理 Process 並拆出共用邏輯
+import { Vec, Id, W, H, C } from "@/types/shapes/common";
 
 "use client";
 import Core from "@/shapes/core";
 export default class Process extends Core {
+  super(id: Id, w: W, h: H, p: Vec, c: C) {}
+
   drawShape(ctx: CanvasRenderingContext2D) {
     const edge = this.getEdge();
 

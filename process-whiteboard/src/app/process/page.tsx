@@ -1,4 +1,4 @@
-// TODO: 除錯 Decision shape 無法 select / 共用 common type Id, Width, Height, Color
+// TODO: inOutput 改為 data / data 儲存資料
 "use client";
 import Process from "@/shapes/process";
 import InOutput from "@/shapes/inOutput";

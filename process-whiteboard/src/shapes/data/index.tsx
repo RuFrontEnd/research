@@ -1,9 +1,26 @@
 "use client";
 import Core from "@/shapes/core";
+import ReactDom from "react-dom";
+import ImportFrame from "@/components/importFrame";
 import { Vec, Id, W, H, C } from "@/types/shapes/common";
 
 export default class Data extends Core {
   super(id: Id, w: W, h: H, p: Vec, c: C) {}
+
+  onDoubleClick(p: Vec) {
+    const $body = document.querySelector("body");
+    if (this.checkBoundry(p) && $body) {
+      return ReactDom.createPortal(
+        <ImportFrame
+          coordinate={{
+            x: this.p.x,
+            y: this.p.y,
+          }}
+        />,
+        $body
+      );
+    }
+  }
 
   drawShape(ctx: CanvasRenderingContext2D) {
     const x1 = -this.w / 2 + 20,

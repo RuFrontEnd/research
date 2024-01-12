@@ -192,14 +192,6 @@ export default class Core {
   checkBoundry(p: Vec) {
     const edge = this.getEdge();
 
-    console.log(p.x, p.y)
-    console.log(edge.l, edge.t, edge.r, edge.b)
-
-    console.log(edge.l - this.anchor.size.fill)
-    console.log(edge.t - this.anchor.size.fill)
-    console.log(edge.r - this.anchor.size.fill)
-    console.log(edge.b - this.anchor.size.fill)
-
     return (
       p.x > edge.l - this.anchor.size.fill &&
       p.y > edge.t - this.anchor.size.fill &&
@@ -366,7 +358,6 @@ export default class Core {
   drawShape(ctx: CanvasRenderingContext2D) { }
 
   onMouseDown(p: Vec) {
-    console.log(this.id, this.checkBoundry(p));
     let pressingCurve = {
       l: this.curves.l?.checkBoundry({
         x: p.x - this.p.x,

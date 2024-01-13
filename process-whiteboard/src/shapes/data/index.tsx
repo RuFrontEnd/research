@@ -3,23 +3,68 @@ import Core from "@/shapes/core";
 import ReactDom from "react-dom";
 import ImportFrame from "@/components/importFrame";
 import { Vec, Id, W, H, C } from "@/types/shapes/common";
+import { Data as DataType } from "@/types/components/importFrame";
+import { Title } from '@/types/shapes/common'
+
 
 export default class Data extends Core {
-  super(id: Id, w: W, h: H, p: Vec, c: C) {}
+  isFrameOpen: boolean;
+  title: Title;
+  data: DataType;
+
+  constructor(id: Id, w: W, h: H, p: Vec, c: C) {
+    super(id, w, h, p, c)
+    this.isFrameOpen = false
+    this.title = ""
+    this.data = []
+  }
+
+  getCoordinate = () => {
+    return {
+      x: this.p.x + this.w / 2 + 10,
+      y: this.p.y,
+    }
+  }
+
+  onConfirm = (title: Title, data: DataType) => {
+    this.title = title
+    this.data = data
+  }
+
+
+  onMouseMove(p: Vec, receivable?: boolean) {
+    super.onMouseMove(p, receivable)
+    const $body = document.querySelector("body");
+
+    if (!this.checkBoundry(p) || !$body || !this.isFrameOpen) return
+
+    return ReactDom.createPortal(
+      <ImportFrame
+        coordinate={this.getCoordinate()}
+        onConfirm={this.onConfirm}
+        init={{ title: this.title, data: this.data.length === 0 ? [""] : this.data }}
+      />,
+      $body
+    );
+  }
 
   onDoubleClick(p: Vec) {
     const $body = document.querySelector("body");
-    if (this.checkBoundry(p) && $body) {
-      return ReactDom.createPortal(
-        <ImportFrame
-          coordinate={{
-            x: this.p.x,
-            y: this.p.y,
-          }}
-        />,
-        $body
-      );
-    }
+
+    if (!this.checkBoundry(p) || !$body) return
+    
+    this.isFrameOpen = true
+
+    return ReactDom.createPortal(
+      <ImportFrame
+        coordinate={this.getCoordinate()}
+        onConfirm={this.onConfirm}
+        init={{ title: this.title, data: this.data.length === 0 ? [""] : this.data }}
+
+      />,
+      $body
+    );
+
   }
 
   drawShape(ctx: CanvasRenderingContext2D) {

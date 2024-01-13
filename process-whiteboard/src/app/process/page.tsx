@@ -1,4 +1,4 @@
-// TODO:  data 儲存資料
+// TODO: 增加 data 新增按鈕 / Process 遞迴尋找 data 資料
 "use client";
 import Process from "@/shapes/process";
 import Data from "@/shapes/data";
@@ -8,7 +8,7 @@ import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
-  shapes: Process[] = [],
+  shapes: (Process | Data | Desicion)[] = [],
   sender: null | ConnectTarget = null;
 
 export default function ProcessPage() {
@@ -80,6 +80,7 @@ export default function ProcessPage() {
       e.preventDefault();
       shapes.forEach((shape) => {
         if (!(shape instanceof Data)) return;
+        shape.isFrameOpen = false
         const p = {
           x: e.nativeEvent.offsetX,
           y: e.nativeEvent.offsetY,
@@ -98,13 +99,19 @@ export default function ProcessPage() {
       y: e.nativeEvent.offsetY,
     };
 
+
     shapes.forEach((shape) => {
-      shape.onMouseMove(
+      const _portal = shape.onMouseMove(
         p,
         sender && sender.shape.id !== shape.id ? true : false
       );
+
+      if (!(shape instanceof Data)) return;
+      if (_portal && shape.isFrameOpen) {
+        setPortal(_portal)
+      }
     });
-  }, []);
+  }, [portal]);
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     e.preventDefault();
@@ -160,12 +167,12 @@ export default function ProcessPage() {
       $canvas.height = window.innerHeight;
       if (!ctx) return;
       let process = new Process(
-          "process_1",
-          200,
-          100,
-          { x: 300, y: 300 },
-          "red"
-        ),
+        "process_1",
+        200,
+        100,
+        { x: 300, y: 300 },
+        "red"
+      ),
         process_2 = new Process(
           "process_2",
           200,
@@ -182,10 +189,10 @@ export default function ProcessPage() {
           "#3498db"
         );
 
-      // shapes.push(process);
-      // shapes.push(process_2);
+      shapes.push(process);
+      shapes.push(process_2);
       shapes.push(data_1);
-      // shapes.push(desicion_1);
+      shapes.push(desicion_1);
 
       requestAnimationFrame(draw);
     }

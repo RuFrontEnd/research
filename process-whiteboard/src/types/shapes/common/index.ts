@@ -16,4 +16,6 @@ type Shapes = Core | Process | Curve;
 
 type Direction = "l" | "t" | "r" | "b";
 
-export type { Id, W, H, C, Vec, Direction, Shapes };
+type Title = string;
+
+export type { Id, W, H, C, Vec, Shapes, Direction, Title };

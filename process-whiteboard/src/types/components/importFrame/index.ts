@@ -1,5 +1,9 @@
 import { Vec } from "@/types/shapes/common";
 
-type Props = { coordinate: Vec };
+type Title = string;
 
-export type { Props };
+type Data = string[];
+
+type Props = { coordinate: Vec, onConfirm: (title: Title, data: Data) => void, init?: { title: Title, data: Data } };
+
+export type { Title, Data, Props };

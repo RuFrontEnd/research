@@ -3,6 +3,7 @@ import Curve from "@/shapes/curve";
 import { Vec } from "@/types/shapes/common";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 import { PressingTarget, ConnectTarget, Direction } from "@/types/shapes/core";
+import { Title } from '@/types/shapes/common'
 
 export default class Core {
   id: string;
@@ -45,6 +46,7 @@ export default class Core {
   h: number;
   minW: number;
   minH: number;
+  title: Title;
   p: Vec;
   p1: Vec;
   p2: Vec;
@@ -86,6 +88,7 @@ export default class Core {
     this.h = h;
     this.minW = 100;
     this.minH = 100;
+    this.title = "";
     this.p = p;
     this.p1 = { x: this.p.x - this.w / 2, y: this.p.y - this.h / 2 };
     this.p2 = { x: this.p.x + this.w / 2, y: this.p.y + this.h / 2 };
@@ -1706,6 +1709,13 @@ export default class Core {
       ctx.fill();
       ctx.closePath();
     }
+
+    // render center text
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "black";
+    ctx.font = "14px Arial";
+    ctx.fillText(this.title, 0, 0);
 
     ctx.restore();
   }

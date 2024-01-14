@@ -1,9 +1,20 @@
-import { Vec, Id, W, H, C } from "@/types/shapes/common";
-
 "use client";
 import Core from "@/shapes/core";
+import { Vec, Id, W, H, C, Title, Data as DataType } from "@/types/shapes/common";
+
 export default class Process extends Core {
-  super(id: Id, w: W, h: H, p: Vec, c: C) {}
+  isFrameOpen: boolean;
+  title: Title;
+  data: DataType;
+  frameOffset: number
+
+  constructor(id: Id, w: W, h: H, p: Vec, c: C) {
+    super(id, w, h, p, c)
+    this.isFrameOpen = false
+    this.title = ""
+    this.data = []
+    this.frameOffset = 20
+  }
 
   drawShape(ctx: CanvasRenderingContext2D) {
     const edge = this.getEdge();

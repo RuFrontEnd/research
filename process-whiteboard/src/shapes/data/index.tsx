@@ -2,21 +2,22 @@
 import Core from "@/shapes/core";
 import ReactDom from "react-dom";
 import ImportFrame from "@/components/importFrame";
-import { Vec, Id, W, H, C } from "@/types/shapes/common";
-import { Data as DataType } from "@/types/components/importFrame";
-import { Title } from '@/types/shapes/common'
+import { Vec, Id, W, H, C, Title, Data as DataType } from "@/types/shapes/common";
+import { } from "@/types/components/importFrame";
 
 
 export default class Data extends Core {
   isFrameOpen: boolean;
   title: Title;
   data: DataType;
+  frameOffset: number
 
   constructor(id: Id, w: W, h: H, p: Vec, c: C) {
     super(id, w, h, p, c)
     this.isFrameOpen = false
     this.title = ""
     this.data = []
+    this.frameOffset = 20
   }
 
   getCoordinate = () => {
@@ -29,6 +30,10 @@ export default class Data extends Core {
   onConfirm = (title: Title, data: DataType) => {
     this.title = title
     this.data = data
+    this.data.forEach(dataItem => {
+      this.allData.push(dataItem)
+    })
+    console.log('this.allData',this.allData)
   }
 
 
@@ -52,7 +57,7 @@ export default class Data extends Core {
     const $body = document.querySelector("body");
 
     if (!this.checkBoundry(p) || !$body) return
-    
+
     this.isFrameOpen = true
 
     return ReactDom.createPortal(
@@ -68,11 +73,11 @@ export default class Data extends Core {
   }
 
   drawShape(ctx: CanvasRenderingContext2D) {
-    const x1 = -this.w / 2 + 20,
+    const x1 = -this.w / 2 + this.frameOffset,
       y1 = -this.h / 2,
       x2 = this.w / 2,
       y2 = -this.h / 2,
-      x3 = this.w / 2 - 20,
+      x3 = this.w / 2 - this.frameOffset,
       y3 = this.h / 2,
       x4 = -this.w / 2,
       y4 = this.h / 2;

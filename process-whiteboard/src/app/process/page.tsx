@@ -1,4 +1,4 @@
-// TODO: 增加 data 新增按鈕 / Process 遞迴尋找 data 資料
+// TODO: Process 遞迴尋找 data 資料
 "use client";
 import Process from "@/shapes/process";
 import Data from "@/shapes/data";
@@ -153,11 +153,23 @@ export default function ProcessPage() {
       200,
       100,
       { x: 100, y: 100 },
-      "yellow"
+      "red"
     );
 
     shapes.push(process_new);
   };
+
+  const onClickData = () => {
+    let data_new = new Data(
+      `data_${shapes.length + 1}`,
+      200,
+      100,
+      { x: 100, y: 100 },
+      "green"
+    );
+
+    shapes.push(data_new);
+  }
 
   useEffect(() => {
     if (useEffected) return;
@@ -203,11 +215,19 @@ export default function ProcessPage() {
   return (
     <>
       <div className="fixed m-4">
-        <div
-          className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer"
-          onClick={onClickProcess}
-        >
-          口
+        <div className="flex flex-col">
+          <div
+            className="mb-2 w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer"
+            onClick={onClickProcess}
+          >
+            P
+          </div>
+          <div
+            className="mb-2 w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer"
+            onClick={onClickData}
+          >
+            D
+          </div>
         </div>
       </div>
       <canvas

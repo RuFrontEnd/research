@@ -18,4 +18,6 @@ type Direction = "l" | "t" | "r" | "b";
 
 type Title = string;
 
-export type { Id, W, H, C, Vec, Shapes, Direction, Title };
+type Data = string[];
+
+export type { Id, W, H, C, Vec, Shapes, Direction, Title, Data };

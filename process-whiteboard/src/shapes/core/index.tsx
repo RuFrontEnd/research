@@ -3,7 +3,7 @@ import Curve from "@/shapes/curve";
 import { Vec } from "@/types/shapes/common";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 import { PressingTarget, ConnectTarget, Direction } from "@/types/shapes/core";
-import { Title } from '@/types/shapes/common'
+import { Title, Data } from '@/types/shapes/common'
 
 export default class Core {
   id: string;
@@ -80,6 +80,7 @@ export default class Core {
       x: null;
       y: null;
     };
+  allData: Data
 
   constructor(id: string, w: number, h: number, p: Vec, c: string) {
     this.id = id;
@@ -117,6 +118,7 @@ export default class Core {
       x: null,
       y: null,
     };
+    this.allData = []
   }
 
   getEdge = () => {
@@ -1452,6 +1454,8 @@ export default class Core {
                 shape: this,
                 direction: pressingReceivingPoint.direction, // l
               };
+
+              console.log('sender.shape',sender.shape)
 
               senderCurve.p2 = {
                 x: this.p1.x - sender.shape.p.x,

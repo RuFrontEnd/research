@@ -1,9 +1,11 @@
 "use client";
 import Curve from "@/shapes/curve";
-import { Vec } from "@/types/shapes/common";
+import Process from "@/shapes/process";
+import { Vec, Direction } from "@/types/shapes/common";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
-import { PressingTarget, ConnectTarget, Direction } from "@/types/shapes/core";
-import { Title, Data } from '@/types/shapes/common'
+import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
+import { Title, DataTable, Shapes } from "@/types/shapes/common";
+import { cloneDeep } from "lodash";
 
 export default class Core {
   id: string;
@@ -23,20 +25,20 @@ export default class Core {
     cpline: Line;
     curve: Line;
   } = {
-      d: 100, // 30
-      size: {
-        fill: 4,
-        stroke: 2,
-      },
-      cpline: {
-        w: 1,
-        c: "#c00",
-      },
-      curve: {
-        w: 2,
-        c: "#333",
-      },
-    };
+    d: 100, // 30
+    size: {
+      fill: 4,
+      stroke: 2,
+    },
+    cpline: {
+      w: 1,
+      c: "#c00",
+    },
+    curve: {
+      w: 2,
+      c: "#333",
+    },
+  };
   private strokeSize = 2;
   private initPressing = {
     activate: false,
@@ -77,12 +79,19 @@ export default class Core {
   dragP:
     | Vec
     | {
-      x: null;
-      y: null;
-    };
-  allData: Data
+        x: null;
+        y: null;
+      };
+  dataTable: DataTable;
 
-  constructor(id: string, w: number, h: number, p: Vec, c: string) {
+  constructor(
+    id: string,
+    w: number,
+    h: number,
+    p: Vec,
+    c: string,
+    dataTable: DataTable
+  ) {
     this.id = id;
     this.c = c;
     this.w = w;
@@ -118,7 +127,7 @@ export default class Core {
       x: null,
       y: null,
     };
-    this.allData = []
+    this.dataTable = dataTable;
   }
 
   getEdge = () => {
@@ -278,7 +287,7 @@ export default class Core {
     if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
       return {
         activate: true,
-        direction: "l",
+        direction: Direction.l,
       };
     }
 
@@ -288,7 +297,7 @@ export default class Core {
     if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
       return {
         activate: true,
-        direction: "t",
+        direction: Direction.t,
       };
     }
 
@@ -298,7 +307,7 @@ export default class Core {
     if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
       return {
         activate: true,
-        direction: "r",
+        direction: Direction.r,
       };
     }
 
@@ -308,7 +317,7 @@ export default class Core {
     if (dx * dx + dy * dy < this.anchor.size.fill * this.anchor.size.fill) {
       return {
         activate: true,
-        direction: "b",
+        direction: Direction.b,
       };
     }
 
@@ -360,9 +369,10 @@ export default class Core {
     }
   };
 
-  drawShape(ctx: CanvasRenderingContext2D) { }
+  drawShape(ctx: CanvasRenderingContext2D) {}
 
   onMouseDown(p: Vec) {
+    // console.log("this", this);
     let pressingCurve = {
       l: this.curves.l?.checkBoundry({
         x: p.x - this.p.x,
@@ -399,7 +409,7 @@ export default class Core {
       if (
         // lt anchors
         (p.x - center.lt.x) * (p.x - center.lt.x) +
-        (p.y - center.lt.y) * (p.y - center.lt.y) <
+          (p.y - center.lt.y) * (p.y - center.lt.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -409,7 +419,7 @@ export default class Core {
       } else if (
         // rt anchors
         (p.x - center.rt.x) * (p.x - center.rt.x) +
-        (p.y - center.rt.y) * (p.y - center.rt.y) <
+          (p.y - center.rt.y) * (p.y - center.rt.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -419,7 +429,7 @@ export default class Core {
       } else if (
         // rb anchors
         (p.x - center.rb.x) * (p.x - center.rb.x) +
-        (p.y - center.rb.y) * (p.y - center.rb.y) <
+          (p.y - center.rb.y) * (p.y - center.rb.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -429,7 +439,7 @@ export default class Core {
       } else if (
         // lb anchors
         (p.x - center.lb.x) * (p.x - center.lb.x) +
-        (p.y - center.lb.y) * (p.y - center.lb.y) <
+          (p.y - center.lb.y) * (p.y - center.lb.y) <
         this.anchor.size.fill * this.anchor.size.fill
       ) {
         this.pressing = {
@@ -439,7 +449,7 @@ export default class Core {
       } else if (
         // l curve trigger
         (p.x - center.curveTrigger.l.x) * (p.x - center.curveTrigger.l.x) +
-        (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
+          (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.l = new Curve(
@@ -469,7 +479,7 @@ export default class Core {
       } else if (
         // t curve trigger
         (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
-        (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
+          (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.t = new Curve(
@@ -499,7 +509,7 @@ export default class Core {
       } else if (
         // r curve trigger
         (p.x - center.curveTrigger.r.x) * (p.x - center.curveTrigger.r.x) +
-        (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
+          (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.r = new Curve(
@@ -529,7 +539,7 @@ export default class Core {
       } else if (
         // b curve trigger
         (p.x - center.curveTrigger.b.x) * (p.x - center.curveTrigger.b.x) +
-        (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
+          (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
         this.curveTrigger.size.fill * this.curveTrigger.size.fill
       ) {
         this.curves.b = new Curve(
@@ -581,7 +591,7 @@ export default class Core {
           target: PressingTarget.clp2,
         };
 
-        this.resetConnection("l");
+        this.resetConnection(Direction.l);
       } else if (pressingCurve.t?.p === CurvePressingP.cp1) {
         // t curve cp1
         this.pressing = {
@@ -601,7 +611,7 @@ export default class Core {
           target: PressingTarget.ctp2,
         };
 
-        this.resetConnection("t");
+        this.resetConnection(Direction.t);
       } else if (pressingCurve.r?.p === CurvePressingP.cp1) {
         // r curve cp1
         this.pressing = {
@@ -621,7 +631,7 @@ export default class Core {
           target: PressingTarget.crp2,
         };
 
-        this.resetConnection("r");
+        this.resetConnection(Direction.r);
       } else if (pressingCurve.b?.p === CurvePressingP.cp1) {
         // b curve cp1
         this.pressing = {
@@ -641,7 +651,7 @@ export default class Core {
           target: PressingTarget.cbp2,
         };
 
-        this.resetConnection("b");
+        this.resetConnection(Direction.b);
       } else {
         this.selecting = false;
         this.pressing = this.initPressing;
@@ -668,8 +678,8 @@ export default class Core {
 
       // sender curves follows
       const receiveFromCurve_l = this.receiveFrom.l?.shape.curves[
-        this.receiveFrom.l.direction
-      ],
+          this.receiveFrom.l.direction
+        ],
         receiveFromCurve_t = this.receiveFrom.t?.shape.curves[
           this.receiveFrom.t.direction
         ],
@@ -748,8 +758,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.lt) {
         const canResizeX =
-          (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
-          (xOffset < 0 && p.x < edge.l),
+            (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
+            (xOffset < 0 && p.x < edge.l),
           canResizeY =
             (yOffset > 0 && p.y > edge.t && this.h >= this.minH) ||
             (yOffset < 0 && p.y < edge.t);
@@ -777,7 +787,7 @@ export default class Core {
 
           if (sendToCurve_l) {
             this.senderHoldCurveP2Cp2Position(
-              "l",
+              Direction.l,
               xOffset,
               yOffset,
               canResizeX,
@@ -804,7 +814,7 @@ export default class Core {
 
           if (sendToCurve_t) {
             this.senderHoldCurveP2Cp2Position(
-              "t",
+              Direction.t,
               xOffset,
               yOffset,
               canResizeX,
@@ -830,7 +840,7 @@ export default class Core {
           }
           if (sendToCurve_r) {
             this.senderHoldCurveP2Cp2Position(
-              "r",
+              Direction.r,
               xOffset,
               yOffset,
               canResizeX,
@@ -856,7 +866,7 @@ export default class Core {
           }
           if (sendToCurve_b) {
             this.senderHoldCurveP2Cp2Position(
-              "b",
+              Direction.b,
               xOffset,
               yOffset,
               canResizeX,
@@ -910,8 +920,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.rt) {
         const canResizeX =
-          (xOffset > 0 && p.x > edge.r) ||
-          (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
+            (xOffset > 0 && p.x > edge.r) ||
+            (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
           canResizeY =
             (yOffset > 0 && p.y > edge.t && this.h >= this.minH) ||
             (yOffset < 0 && p.y < edge.t);
@@ -941,7 +951,7 @@ export default class Core {
 
           if (sendToCurve_l) {
             this.senderHoldCurveP2Cp2Position(
-              "l",
+              Direction.l,
               xOffset,
               yOffset,
               canResizeX,
@@ -967,7 +977,7 @@ export default class Core {
           }
           if (sendToCurve_t) {
             this.senderHoldCurveP2Cp2Position(
-              "t",
+              Direction.t,
               xOffset,
               yOffset,
               canResizeX,
@@ -992,7 +1002,7 @@ export default class Core {
           }
           if (sendToCurve_r) {
             this.senderHoldCurveP2Cp2Position(
-              "r",
+              Direction.r,
               xOffset,
               yOffset,
               canResizeX,
@@ -1018,7 +1028,7 @@ export default class Core {
           }
           if (sendToCurve_b) {
             this.senderHoldCurveP2Cp2Position(
-              "b",
+              Direction.b,
               xOffset,
               yOffset,
               canResizeX,
@@ -1072,8 +1082,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.rb) {
         const canResizeX =
-          (xOffset > 0 && p.x > edge.r) ||
-          (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
+            (xOffset > 0 && p.x > edge.r) ||
+            (xOffset < 0 && p.x < edge.r && this.w >= this.minW),
           canResizeY =
             (yOffset > 0 && p.y > edge.b) ||
             (yOffset < 0 && p.y < edge.b && this.h >= this.minH);
@@ -1100,7 +1110,7 @@ export default class Core {
 
           if (sendToCurve_l) {
             this.senderHoldCurveP2Cp2Position(
-              "l",
+              Direction.l,
               xOffset,
               yOffset,
               canResizeX,
@@ -1127,7 +1137,7 @@ export default class Core {
 
           if (sendToCurve_t) {
             this.senderHoldCurveP2Cp2Position(
-              "t",
+              Direction.t,
               xOffset,
               yOffset,
               canResizeX,
@@ -1154,7 +1164,7 @@ export default class Core {
 
           if (sendToCurve_r) {
             this.senderHoldCurveP2Cp2Position(
-              "r",
+              Direction.r,
               xOffset,
               yOffset,
               canResizeX,
@@ -1180,7 +1190,7 @@ export default class Core {
           }
           if (sendToCurve_b) {
             this.senderHoldCurveP2Cp2Position(
-              "b",
+              Direction.b,
               xOffset,
               yOffset,
               canResizeX,
@@ -1233,8 +1243,8 @@ export default class Core {
         }
       } else if (this.pressing.target === PressingTarget.lb) {
         const canResizeX =
-          (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
-          (xOffset < 0 && p.x < edge.l),
+            (xOffset > 0 && p.x > edge.l && this.w >= this.minW) ||
+            (xOffset < 0 && p.x < edge.l),
           canResizeY =
             (yOffset > 0 && p.y > edge.b) ||
             (yOffset < 0 && p.y < edge.b && this.h >= this.minH);
@@ -1262,7 +1272,7 @@ export default class Core {
 
           if (sendToCurve_l) {
             this.senderHoldCurveP2Cp2Position(
-              "l",
+              Direction.l,
               xOffset,
               yOffset,
               canResizeX,
@@ -1289,7 +1299,7 @@ export default class Core {
 
           if (sendToCurve_t) {
             this.senderHoldCurveP2Cp2Position(
-              "t",
+              Direction.t,
               xOffset,
               yOffset,
               canResizeX,
@@ -1316,7 +1326,7 @@ export default class Core {
 
           if (sendToCurve_r) {
             this.senderHoldCurveP2Cp2Position(
-              "r",
+              Direction.r,
               xOffset,
               yOffset,
               canResizeX,
@@ -1343,7 +1353,7 @@ export default class Core {
 
           if (sendToCurve_b) {
             this.senderHoldCurveP2Cp2Position(
-              "b",
+              Direction.b,
               xOffset,
               yOffset,
               canResizeX,
@@ -1445,7 +1455,7 @@ export default class Core {
 
       if (pressingReceivingPoint.activate && senderCurve) {
         switch (pressingReceivingPoint.direction) {
-          case "l":
+          case Direction.l:
             {
               // receiver
               this.receiveFrom.l = sender;
@@ -1455,7 +1465,31 @@ export default class Core {
                 direction: pressingReceivingPoint.direction, // l
               };
 
-              console.log('sender.shape',sender.shape)
+              // traversal all relational steps
+              const connectedShapeQueue: (Core | Process)[] = [this],
+                connectedShapeHash = { [this.id]: true };
+              // senderAllData = cloneDeep(sender.shape.allData);
+
+              let ds = [Direction.l, Direction.t, Direction.r, Direction.b];
+
+              while (connectedShapeQueue.length !== 0) {
+                // connectedShapeQueue[0].allData = senderAllData;
+
+                ds.forEach((d) => {
+                  const currentConnectTarget: ConnectTarget =
+                    connectedShapeQueue[0].sendTo[d];
+
+                  if (
+                    currentConnectTarget &&
+                    !connectedShapeHash[currentConnectTarget.shape.id]
+                  ) {
+                    connectedShapeQueue.push(currentConnectTarget.shape);
+                    connectedShapeHash[currentConnectTarget.shape.id] = true;
+                  }
+                });
+
+                connectedShapeQueue.shift();
+              }
 
               senderCurve.p2 = {
                 x: this.p1.x - sender.shape.p.x,
@@ -1463,7 +1497,7 @@ export default class Core {
               };
             }
             break;
-          case "t":
+          case Direction.t:
             {
               // receiver
               this.receiveFrom.t = sender;
@@ -1479,7 +1513,7 @@ export default class Core {
               };
             }
             break;
-          case "r":
+          case Direction.r:
             // receiver
             this.receiveFrom.r = sender;
             // sender
@@ -1494,7 +1528,7 @@ export default class Core {
             };
 
             break;
-          case "b":
+          case Direction.b:
             // receiver
             this.receiveFrom.b = sender;
             // sender
@@ -1720,6 +1754,10 @@ export default class Core {
     ctx.fillStyle = "black";
     ctx.font = "14px Arial";
     ctx.fillText(this.title, 0, 0);
+
+    // draw id text
+    ctx.textAlign = "start";
+    ctx.fillText(this.id, -this.w / 2, -this.h / 2 - 10);
 
     ctx.restore();
   }

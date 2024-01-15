@@ -1,15 +1,17 @@
-// TODO: Process 遞迴尋找 data 資料
+// TODO: 尋找左側列 icons / Process onMouseup 走訪 (l receive 完成 / t, r, b 待處裡) / Process 取用可用的 data
 "use client";
 import Process from "@/shapes/process";
 import Data from "@/shapes/data";
 import Desicion from "@/shapes/decision";
 import { useState, useRef, useEffect, useCallback, ReactPortal } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
+import { Direction, DataTable } from "@/types/shapes/common";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
   shapes: (Process | Data | Desicion)[] = [],
-  sender: null | ConnectTarget = null;
+  sender: null | ConnectTarget = null,
+  dataTable: DataTable = {};
 
 export default function ProcessPage() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null);
@@ -41,7 +43,7 @@ export default function ProcessPage() {
           if (!shape.curves.l) return;
           sender = {
             shape: shape,
-            direction: "l",
+            direction: Direction.l,
           };
         } else if (
           currentShape.pressing.activate &&
@@ -50,7 +52,7 @@ export default function ProcessPage() {
           if (!shape.curves.t) return;
           sender = {
             shape: shape,
-            direction: "t",
+            direction: Direction.t,
           };
         } else if (
           currentShape.pressing.activate &&
@@ -59,7 +61,7 @@ export default function ProcessPage() {
           if (!shape.curves.r) return;
           sender = {
             shape: shape,
-            direction: "r",
+            direction: Direction.r,
           };
         } else if (
           currentShape.pressing.activate &&
@@ -68,7 +70,7 @@ export default function ProcessPage() {
           if (!shape.curves.b) return;
           sender = {
             shape: shape,
-            direction: "b",
+            direction: Direction.b,
           };
         }
       }
@@ -80,7 +82,7 @@ export default function ProcessPage() {
       e.preventDefault();
       shapes.forEach((shape) => {
         if (!(shape instanceof Data)) return;
-        shape.isFrameOpen = false
+        shape.isFrameOpen = false;
         const p = {
           x: e.nativeEvent.offsetX,
           y: e.nativeEvent.offsetY,
@@ -92,26 +94,28 @@ export default function ProcessPage() {
     []
   );
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    e.preventDefault();
-    const p = {
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
-    };
+  const onMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      e.preventDefault();
+      const p = {
+        x: e.nativeEvent.offsetX,
+        y: e.nativeEvent.offsetY,
+      };
 
+      shapes.forEach((shape) => {
+        const _portal = shape.onMouseMove(
+          p,
+          sender && sender.shape.id !== shape.id ? true : false
+        );
 
-    shapes.forEach((shape) => {
-      const _portal = shape.onMouseMove(
-        p,
-        sender && sender.shape.id !== shape.id ? true : false
-      );
-
-      if (!(shape instanceof Data)) return;
-      if (_portal && shape.isFrameOpen) {
-        setPortal(_portal)
-      }
-    });
-  }, [portal]);
+        if (!(shape instanceof Data)) return;
+        if (_portal && shape.isFrameOpen) {
+          setPortal(_portal);
+        }
+      });
+    },
+    [portal]
+  );
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     e.preventDefault();
@@ -153,7 +157,7 @@ export default function ProcessPage() {
       200,
       100,
       { x: 100, y: 100 },
-      "red"
+      "red",
     );
 
     shapes.push(process_new);
@@ -165,11 +169,12 @@ export default function ProcessPage() {
       200,
       100,
       { x: 100, y: 100 },
-      "green"
+      "green",
+      dataTable
     );
 
     shapes.push(data_new);
-  }
+  };
 
   useEffect(() => {
     if (useEffected) return;
@@ -179,12 +184,12 @@ export default function ProcessPage() {
       $canvas.height = window.innerHeight;
       if (!ctx) return;
       let process = new Process(
-        "process_1",
-        200,
-        100,
-        { x: 300, y: 300 },
-        "red"
-      ),
+          "process_1",
+          200,
+          100,
+          { x: 300, y: 300 },
+          "red"
+        ),
         process_2 = new Process(
           "process_2",
           200,
@@ -192,13 +197,21 @@ export default function ProcessPage() {
           { x: 1200, y: 300 },
           "blue"
         ),
-        data_1 = new Data("data_1", 200, 100, { x: 600, y: 600 }, "green"),
+        data_1 = new Data(
+          "data_1",
+          200,
+          100,
+          { x: 600, y: 600 },
+          "green",
+          dataTable
+        ),
         desicion_1 = new Desicion(
           "desicion_1",
           150,
           100,
           { x: 300, y: 100 },
-          "#3498db"
+          "#3498db",
+          dataTable
         );
 
       shapes.push(process);

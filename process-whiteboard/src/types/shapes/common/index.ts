@@ -14,10 +14,20 @@ type Vec = { x: number; y: number };
 
 type Shapes = Core | Process | Curve;
 
-type Direction = "l" | "t" | "r" | "b";
+enum Direction {
+  l = "l",
+  t = "t",
+  r = "r",
+  b = "b",
+}
 
 type Title = string;
 
-type Data = string[];
+type DataId = string;
 
-export type { Id, W, H, C, Vec, Shapes, Direction, Title, Data };
+type DataIds = DataId[];
+
+type DataTable = { [id: DataId]: string };
+
+export type { Id, W, H, C, Vec, Shapes, Title, DataId, DataIds, DataTable };
+export { Direction };

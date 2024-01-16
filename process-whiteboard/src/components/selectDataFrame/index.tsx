@@ -5,12 +5,7 @@ import { Data, Props } from "@/types/components/importFrame";
 import { cloneDeep } from "lodash";
 import { Title } from "@/types/shapes/common";
 
-export default function ImportFrame({
-  key,
-  coordinate,
-  init,
-  onConfirm,
-}: Props) {
+export default function SelectDataFrame({ coordinate, init, onConfirm }: Props) {
   const [title, setTitle] = useState<Title>(""),
     [data, setData] = useState<Data>([]);
 
@@ -40,7 +35,6 @@ export default function ImportFrame({
 
   return (
     <div
-      key={key}
       className={`w-[200px] bg-gray-100 rounded-lg p-4 flex flex-col md:ml-auto mt-10 md:mt-0 fixed -translate-y-1/2`}
       style={{
         left: `${coordinate.x}px`,
@@ -48,7 +42,11 @@ export default function ImportFrame({
       }}
     >
       <div className="relative mb-4">
-        <label className="leading-7 text-sm text-gray-600">Title</label>
+        <label
+          className="leading-7 text-sm text-gray-600"
+        >
+          Title
+        </label>
         <input
           type="text"
           id="full-name"
@@ -59,13 +57,11 @@ export default function ImportFrame({
         />
       </div>
       <div className="relative mb-4">
-        <label className="leading-7 text-sm text-gray-600">Data</label>
-        <div
-          className="w-6 h-6 ml-2 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer"
-          onClick={onClickPlus}
+        <label
+          className="leading-7 text-sm text-gray-600"
         >
-          +
-        </div>
+          Data
+        </label>
         {data.map((dataItem, i) => (
           <>
             <input

@@ -1,4 +1,4 @@
-// TODO: 尋找左側列 icons / Process onMouseup 走訪 (l receive 完成 / t, r, b 待處裡) / Process 取用可用的 data
+// TODO: 處理 data shape SelectFrame 開關  / Process onMouseup 走訪 (l receive 完成 / t, r, b 待處裡) / Process 取用可用的 data / 尋找左側列 icons
 "use client";
 import Process from "@/shapes/process";
 import Data from "@/shapes/data";
@@ -11,7 +11,7 @@ let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
   shapes: (Process | Data | Desicion)[] = [],
   sender: null | ConnectTarget = null,
-  dataTable: DataTable = {};
+  dataTable: DataTable = {}; // total data
 
 export default function ProcessPage() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null);
@@ -81,14 +81,20 @@ export default function ProcessPage() {
     (e: React.MouseEvent<HTMLCanvasElement>) => {
       e.preventDefault();
       shapes.forEach((shape) => {
-        if (!(shape instanceof Data)) return;
+        if (!(shape instanceof Data) && !(shape instanceof Process)) return;
+
         shape.isFrameOpen = false;
+
         const p = {
           x: e.nativeEvent.offsetX,
           y: e.nativeEvent.offsetY,
         };
 
-        setPortal(shape.onDoubleClick(p));
+        const _portal = shape.onDoubleClick(p);
+
+        if (_portal) {
+          setPortal(_portal);
+        }
       });
     },
     []
@@ -108,7 +114,7 @@ export default function ProcessPage() {
           sender && sender.shape.id !== shape.id ? true : false
         );
 
-        if (!(shape instanceof Data)) return;
+        if (!(shape instanceof Data) && !(shape instanceof Process)) return;
         if (_portal && shape.isFrameOpen) {
           setPortal(_portal);
         }
@@ -158,6 +164,7 @@ export default function ProcessPage() {
       100,
       { x: 100, y: 100 },
       "red",
+      dataTable
     );
 
     shapes.push(process_new);
@@ -188,14 +195,16 @@ export default function ProcessPage() {
           200,
           100,
           { x: 300, y: 300 },
-          "red"
+          "red",
+          dataTable
         ),
         process_2 = new Process(
           "process_2",
           200,
           100,
           { x: 1200, y: 300 },
-          "blue"
+          "blue",
+          dataTable
         ),
         data_1 = new Data(
           "data_1",

@@ -10,6 +10,7 @@ import {
   C,
   Title,
   DataIds,
+  CurrentDataIds,
   DataTable,
 } from "@/types/shapes/common";
 import { Data as DataType } from "@/types/components/importFrame";
@@ -18,6 +19,7 @@ export default class Data extends Core {
   isFrameOpen: boolean;
   title: Title;
   dataIds: DataIds;
+  currentDataIds: CurrentDataIds;
   frameOffset: number;
 
   constructor(id: Id, w: W, h: H, p: Vec, c: C, dataTable: DataTable) {
@@ -25,6 +27,7 @@ export default class Data extends Core {
     this.isFrameOpen = false;
     this.title = "";
     this.dataIds = [];
+    this.currentDataIds = {};
     this.frameOffset = 20;
   }
 
@@ -38,6 +41,9 @@ export default class Data extends Core {
   onConfirm = (title: Title, data: DataType) => {
     this.title = title;
     this.dataIds = data.map((dataItem) => dataItem.id);
+    this.dataIds.forEach((dataId) => {
+      this.currentDataIds[dataId] = true;
+    });
 
     data.forEach((dataItem) => {
       if (!this.dataTable[dataItem.id]) {
@@ -69,6 +75,7 @@ export default class Data extends Core {
 
     return ReactDom.createPortal(
       <ImportFrame
+        key={this.id}
         coordinate={this.getCoordinate()}
         onConfirm={this.onConfirm}
         init={{
@@ -89,6 +96,7 @@ export default class Data extends Core {
 
     return ReactDom.createPortal(
       <ImportFrame
+        key={this.id}
         coordinate={this.getCoordinate()}
         onConfirm={this.onConfirm}
         init={{

@@ -27,7 +27,21 @@ type DataId = string;
 
 type DataIds = DataId[];
 
+type CurrentDataIds = { [id: DataId]: boolean };
+
 type DataTable = { [id: DataId]: string };
 
-export type { Id, W, H, C, Vec, Shapes, Title, DataId, DataIds, DataTable };
+export type {
+  Id,
+  W,
+  H,
+  C,
+  Vec,
+  Shapes,
+  Title,
+  DataId,
+  DataIds,
+  CurrentDataIds,
+  DataTable,
+};
 export { Direction };

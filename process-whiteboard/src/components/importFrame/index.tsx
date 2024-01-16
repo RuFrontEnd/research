@@ -6,6 +6,7 @@ import { cloneDeep } from "lodash";
 import { Title } from "@/types/shapes/common";
 
 export default function ImportFrame({
+  id,
   key,
   coordinate,
   init,
@@ -40,6 +41,7 @@ export default function ImportFrame({
 
   return (
     <div
+      id={id}
       key={key}
       className={`w-[200px] bg-gray-100 rounded-lg p-4 flex flex-col md:ml-auto mt-10 md:mt-0 fixed -translate-y-1/2`}
       style={{

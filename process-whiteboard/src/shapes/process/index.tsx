@@ -68,17 +68,22 @@ export default class Process extends Core {
 
     this.isFrameOpen = true;
 
-    return ReactDom.createPortal(
-      <SelectDataFrame
-        coordinate={this.getCoordinate()}
-        onConfirm={this.onConfirm}
-        init={{
-          title: this.title,
-          data: this.getInitData(),
-        }}
-      />,
-      $body
-    );
+    return {
+      id: this.id,
+      portal: ReactDom.createPortal(
+        <SelectDataFrame
+          id={this.id}
+          key={this.id}
+          coordinate={this.getCoordinate()}
+          onConfirm={this.onConfirm}
+          init={{
+            title: this.title,
+            data: this.getInitData(),
+          }}
+        />,
+        $body
+      ),
+    };
   }
 
   onMouseMove(p: Vec, receivable?: boolean) {
@@ -87,17 +92,22 @@ export default class Process extends Core {
 
     if (!this.checkBoundry(p) || !$body || !this.isFrameOpen) return;
 
-    return ReactDom.createPortal(
-      <SelectDataFrame
-        coordinate={this.getCoordinate()}
-        onConfirm={this.onConfirm}
-        init={{
-          title: this.title,
-          data: this.getInitData(),
-        }}
-      />,
-      $body
-    );
+    return {
+      id: this.id,
+      portal: ReactDom.createPortal(
+        <SelectDataFrame
+          id={this.id}
+          key={this.id}
+          coordinate={this.getCoordinate()}
+          onConfirm={this.onConfirm}
+          init={{
+            title: this.title,
+            data: this.getInitData(),
+          }}
+        />,
+        $body
+      ),
+    };
   }
 
   drawShape(ctx: CanvasRenderingContext2D) {

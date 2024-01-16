@@ -3,9 +3,12 @@
 import Process from "@/shapes/process";
 import Data from "@/shapes/data";
 import Desicion from "@/shapes/decision";
+import ImportFrame from "@/components/importFrame";
+import SelectDataFrame from "@/components/selectDataFrame";
+import useClickBody from "@/hooks/useClickBody/useClickBody";
 import { useState, useRef, useEffect, useCallback, ReactPortal } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
-import { Direction, DataTable } from "@/types/shapes/common";
+import { Vec, Direction, DataTable } from "@/types/shapes/common";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
@@ -16,7 +19,15 @@ let useEffected = false,
 export default function ProcessPage() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null);
 
-  const [portal, setPortal] = useState<ReactPortal | undefined>(undefined);
+  const [portal, setPortal] = useState<
+      | {
+          id: string;
+          portal: ReactPortal;
+        }
+      | undefined
+    >(undefined),
+    [importFrame, setImportFrame] = useState<{ p: Vec } | undefined>(undefined),
+    [selectFrame, setSelectFrame] = useState<{ p: Vec } | undefined>(undefined);
 
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     e.preventDefault();
@@ -77,29 +88,6 @@ export default function ProcessPage() {
     });
   }, []);
 
-  const onDoubleClick = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      e.preventDefault();
-      shapes.forEach((shape) => {
-        if (!(shape instanceof Data) && !(shape instanceof Process)) return;
-
-        shape.isFrameOpen = false;
-
-        const p = {
-          x: e.nativeEvent.offsetX,
-          y: e.nativeEvent.offsetY,
-        };
-
-        const _portal = shape.onDoubleClick(p);
-
-        if (_portal) {
-          setPortal(_portal);
-        }
-      });
-    },
-    []
-  );
-
   const onMouseMove = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
       e.preventDefault();
@@ -109,18 +97,21 @@ export default function ProcessPage() {
       };
 
       shapes.forEach((shape) => {
-        const _portal = shape.onMouseMove(
+        // const _portal =
+        shape.onMouseMove(
           p,
           sender && sender.shape.id !== shape.id ? true : false
         );
 
-        if (!(shape instanceof Data) && !(shape instanceof Process)) return;
-        if (_portal && shape.isFrameOpen) {
-          setPortal(_portal);
-        }
+        // if (!(shape instanceof Data) && !(shape instanceof Process)) return;
+        // if (_portal && shape.isFrameOpen) {
+        //   setPortal(_portal);
+        // }
       });
     },
-    [portal]
+    [
+      // portal
+    ]
   );
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -147,6 +138,34 @@ export default function ProcessPage() {
 
     sender = null;
   }, []);
+
+  const onDoubleClick = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      e.preventDefault();
+
+      const p = {
+        x: e.nativeEvent.x,
+        y: e.nativeEvent.y,
+      };
+
+      shapes.forEach((shape) => {
+        if (shape.checkBoundry(p)) {
+          setImportFrame({ p: shape.p });
+        }
+        // if (!(shape instanceof Data) && !(shape instanceof Process)) return;
+        // shape.isFrameOpen = false;
+        // const p = {
+        //   x: e.nativeEvent.offsetX,
+        //   y: e.nativeEvent.offsetY,
+        // };
+        // const _portal = shape.onDoubleClick(p);
+        // if (_portal) {
+        //   setPortal(_portal);
+        // }
+      });
+    },
+    []
+  );
 
   const draw = useCallback(() => {
     ctx?.clearRect(0, 0, window.innerWidth, window.innerHeight);
@@ -234,6 +253,35 @@ export default function ProcessPage() {
     useEffected = true;
   }, []);
 
+  // useEffect(() => {
+  //   const onClickBody = (e: MouseEvent) => {
+  //     if (e.target === null) return;
+
+  //     let currentElement = e.target as Element;
+
+  //     let shape = shapes.find((shape) => shape.id === portal?.id),
+  //       p = { x: e.offsetX, y: e.offsetY };
+
+  //     while (currentElement) {
+  //       if (currentElement?.id == portal?.id || shape?.checkBoundry(p)) return;
+  //       if (currentElement.nodeName === "BODY") {
+  //         if (!(shape instanceof Data) && !(shape instanceof Process)) return;
+
+  //         shape.isFrameOpen = false;
+
+  //         return setPortal(undefined);
+  //       }
+  //       currentElement = currentElement.parentNode as Element;
+  //     }
+  //   };
+
+  //   document.body.addEventListener("click", onClickBody);
+
+  //   return () => {
+  //     document.body.addEventListener("click", onClickBody);
+  //   };
+  // }, [portal]);
+
   return (
     <>
       <div className="fixed m-4">
@@ -263,7 +311,35 @@ export default function ProcessPage() {
         onDoubleClick={onDoubleClick}
       />
 
-      {portal && portal}
+      {/* {portal?.id && portal?.portal && portal.portal} */}
+      {importFrame && (
+        <ImportFrame
+          id={"test"}
+          key={"test"}
+          coordinate={importFrame.p}
+          onConfirm={() => {}}
+          // init={{
+          //   title: this.title,
+          //   data: this.getInitData(),
+          // }}
+        />
+      )}
+
+      {selectFrame && (
+        <SelectDataFrame
+          id={"test_2"}
+          key={"test_2"}
+          coordinate={{
+            x: 0,
+            y: 0,
+          }}
+          onConfirm={() => {}}
+          // init={{
+          //   title: this.title,
+          //   data: this.getInitData(),
+          // }}
+        />
+      )}
     </>
   );
 }

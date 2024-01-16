@@ -73,18 +73,22 @@ export default class Data extends Core {
 
     if (!this.checkBoundry(p) || !$body || !this.isFrameOpen) return;
 
-    return ReactDom.createPortal(
-      <ImportFrame
-        key={this.id}
-        coordinate={this.getCoordinate()}
-        onConfirm={this.onConfirm}
-        init={{
-          title: this.title,
-          data: this.getInitData(),
-        }}
-      />,
-      $body
-    );
+    return {
+      id: this.id,
+      portal: ReactDom.createPortal(
+        <ImportFrame
+          id={this.id}
+          key={this.id}
+          coordinate={this.getCoordinate()}
+          onConfirm={this.onConfirm}
+          init={{
+            title: this.title,
+            data: this.getInitData(),
+          }}
+        />,
+        $body
+      ),
+    };
   }
 
   onDoubleClick(p: Vec) {
@@ -94,18 +98,22 @@ export default class Data extends Core {
 
     this.isFrameOpen = true;
 
-    return ReactDom.createPortal(
-      <ImportFrame
-        key={this.id}
-        coordinate={this.getCoordinate()}
-        onConfirm={this.onConfirm}
-        init={{
-          title: this.title,
-          data: this.getInitData(),
-        }}
-      />,
-      $body
-    );
+    return {
+      id: this.id,
+      portal: ReactDom.createPortal(
+        <ImportFrame
+          id={this.id}
+          key={this.id}
+          coordinate={this.getCoordinate()}
+          onConfirm={this.onConfirm}
+          init={{
+            title: this.title,
+            data: this.getInitData(),
+          }}
+        />,
+        $body
+      ),
+    };
   }
 
   drawShape(ctx: CanvasRenderingContext2D) {

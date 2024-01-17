@@ -5,7 +5,13 @@ import { Data, Props } from "@/types/components/importFrame";
 import { cloneDeep } from "lodash";
 import { Title } from "@/types/shapes/common";
 
-export default function SelectDataFrame({ coordinate, init, onConfirm }: Props) {
+export default function SelectDataFrame({
+  id,
+  key,
+  coordinate,
+  init,
+  onConfirm,
+}: Props) {
   const [title, setTitle] = useState<Title>(""),
     [data, setData] = useState<Data>([]);
 
@@ -35,6 +41,8 @@ export default function SelectDataFrame({ coordinate, init, onConfirm }: Props) 
 
   return (
     <div
+      key={key}
+      id={id}
       className={`w-[200px] bg-gray-100 rounded-lg p-4 flex flex-col md:ml-auto mt-10 md:mt-0 fixed -translate-y-1/2`}
       style={{
         left: `${coordinate.x}px`,
@@ -42,11 +50,7 @@ export default function SelectDataFrame({ coordinate, init, onConfirm }: Props) 
       }}
     >
       <div className="relative mb-4">
-        <label
-          className="leading-7 text-sm text-gray-600"
-        >
-          Title
-        </label>
+        <label className="leading-7 text-sm text-gray-600">Title</label>
         <input
           type="text"
           id="full-name"
@@ -57,11 +61,7 @@ export default function SelectDataFrame({ coordinate, init, onConfirm }: Props) 
         />
       </div>
       <div className="relative mb-4">
-        <label
-          className="leading-7 text-sm text-gray-600"
-        >
-          Data
-        </label>
+        <label className="leading-7 text-sm text-gray-600">Data</label>
         {data.map((dataItem, i) => (
           <>
             <input

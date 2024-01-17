@@ -9,12 +9,21 @@ import useClickBody from "@/hooks/useClickBody/useClickBody";
 import { useState, useRef, useEffect, useCallback, ReactPortal } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 import { Vec, Direction, DataTable } from "@/types/shapes/common";
+import Core from "@/shapes/core";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
   shapes: (Process | Data | Desicion)[] = [],
   sender: null | ConnectTarget = null,
-  dataTable: DataTable = {}; // total data
+  dataTable: DataTable = {}, // total data
+  dbClickedShape: Core | null = null,
+  importFrameId = "importFrame",
+  selectDataFrameId = "selectFrame";
+
+const getFramePosition = (shape: Core) => {
+  const frameOffset = 12;
+  return { x: shape.p.x + shape.w / 2 + frameOffset, y: shape.p.y };
+};
 
 export default function ProcessPage() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null);
@@ -88,31 +97,38 @@ export default function ProcessPage() {
     });
   }, []);
 
-  const onMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      e.preventDefault();
-      const p = {
-        x: e.nativeEvent.offsetX,
-        y: e.nativeEvent.offsetY,
-      };
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    const p = {
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY,
+    };
 
-      shapes.forEach((shape) => {
-        // const _portal =
-        shape.onMouseMove(
-          p,
-          sender && sender.shape.id !== shape.id ? true : false
-        );
+    shapes.forEach((shape) => {
+      shape.onMouseMove(
+        p,
+        sender && sender.shape.id !== shape.id ? true : false
+      );
 
-        // if (!(shape instanceof Data) && !(shape instanceof Process)) return;
-        // if (_portal && shape.isFrameOpen) {
-        //   setPortal(_portal);
-        // }
-      });
-    },
-    [
-      // portal
-    ]
-  );
+      if (shape.checkBoundry(p) && dbClickedShape?.id === shape.id) {
+        if (shape instanceof Data) {
+          const $importFrame = document.getElementById(importFrameId);
+          if ($importFrame) {
+            const framePosition = getFramePosition(shape);
+            $importFrame.style.left = `${framePosition.x}px`;
+            $importFrame.style.top = `${framePosition.y}px`;
+          }
+        } else if (shape instanceof Process || shape instanceof Desicion) {
+          const $selectFrame = document.getElementById(selectDataFrameId);
+          if ($selectFrame) {
+            const framePosition = getFramePosition(shape);
+            $selectFrame.style.left = `${framePosition.x}px`;
+            $selectFrame.style.top = `${framePosition.y}px`;
+          }
+        }
+      }
+    });
+  }, []);
 
   const onMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     e.preventDefault();
@@ -150,18 +166,19 @@ export default function ProcessPage() {
 
       shapes.forEach((shape) => {
         if (shape.checkBoundry(p)) {
-          setImportFrame({ p: shape.p });
+          dbClickedShape = shape;
+          if (shape instanceof Data) {
+            setImportFrame({
+              p: getFramePosition(shape),
+            });
+            setSelectFrame(undefined);
+          } else if (shape instanceof Process || shape instanceof Desicion) {
+            setImportFrame(undefined);
+            setSelectFrame({
+              p: getFramePosition(shape),
+            });
+          }
         }
-        // if (!(shape instanceof Data) && !(shape instanceof Process)) return;
-        // shape.isFrameOpen = false;
-        // const p = {
-        //   x: e.nativeEvent.offsetX,
-        //   y: e.nativeEvent.offsetY,
-        // };
-        // const _portal = shape.onDoubleClick(p);
-        // if (_portal) {
-        //   setPortal(_portal);
-        // }
       });
     },
     []
@@ -311,11 +328,10 @@ export default function ProcessPage() {
         onDoubleClick={onDoubleClick}
       />
 
-      {/* {portal?.id && portal?.portal && portal.portal} */}
       {importFrame && (
         <ImportFrame
-          id={"test"}
-          key={"test"}
+          id={importFrameId}
+          key={importFrameId}
           coordinate={importFrame.p}
           onConfirm={() => {}}
           // init={{
@@ -327,12 +343,9 @@ export default function ProcessPage() {
 
       {selectFrame && (
         <SelectDataFrame
-          id={"test_2"}
-          key={"test_2"}
-          coordinate={{
-            x: 0,
-            y: 0,
-          }}
+          id={selectDataFrameId}
+          key={selectDataFrameId}
+          coordinate={selectFrame.p}
           onConfirm={() => {}}
           // init={{
           //   title: this.title,

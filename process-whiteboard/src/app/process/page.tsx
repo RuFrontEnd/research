@@ -8,15 +8,14 @@ import SelectDataFrame from "@/components/selectDataFrame";
 import useClickBody from "@/hooks/useClickBody/useClickBody";
 import { useState, useRef, useEffect, useCallback, ReactPortal } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
-import { Vec, Direction, DataTable } from "@/types/shapes/common";
+import { Vec, Direction } from "@/types/shapes/common";
 import Core from "@/shapes/core";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
   shapes: (Process | Data | Desicion)[] = [],
   sender: null | ConnectTarget = null,
-  dataTable: DataTable = {}, // total data
-  dbClickedShape: Core | null = null,
+  dbClickedShape: Data | Process | Desicion | null = null,
   importFrameId = "importFrame",
   selectDataFrameId = "selectFrame";
 
@@ -199,8 +198,7 @@ export default function ProcessPage() {
       200,
       100,
       { x: 100, y: 100 },
-      "red",
-      dataTable
+      "red"
     );
 
     shapes.push(process_new);
@@ -212,8 +210,7 @@ export default function ProcessPage() {
       200,
       100,
       { x: 100, y: 100 },
-      "green",
-      dataTable
+      "green"
     );
 
     shapes.push(data_new);
@@ -231,32 +228,22 @@ export default function ProcessPage() {
           200,
           100,
           { x: 300, y: 300 },
-          "red",
-          dataTable
+          "red"
         ),
         process_2 = new Process(
           "process_2",
           200,
           100,
           { x: 1200, y: 300 },
-          "blue",
-          dataTable
+          "blue"
         ),
-        data_1 = new Data(
-          "data_1",
-          200,
-          100,
-          { x: 600, y: 600 },
-          "green",
-          dataTable
-        ),
+        data_1 = new Data("data_1", 200, 100, { x: 600, y: 600 }, "green"),
         desicion_1 = new Desicion(
           "desicion_1",
           150,
           100,
           { x: 300, y: 100 },
-          "#3498db",
-          dataTable
+          "#3498db"
         );
 
       shapes.push(process);
@@ -328,16 +315,19 @@ export default function ProcessPage() {
         onDoubleClick={onDoubleClick}
       />
 
-      {importFrame && (
+      {importFrame && dbClickedShape instanceof Data && (
         <ImportFrame
           id={importFrameId}
           key={importFrameId}
           coordinate={importFrame.p}
-          onConfirm={() => {}}
-          // init={{
-          //   title: this.title,
-          //   data: this.getInitData(),
-          // }}
+          onConfirm={(title, data) => {
+            if (!(dbClickedShape instanceof Data)) return;
+            dbClickedShape?.onDataChange(title, data);
+          }}
+          init={{
+            title: dbClickedShape?.title ? dbClickedShape?.title : "",
+            data: dbClickedShape?.data ? dbClickedShape?.data : [],
+          }}
         />
       )}
 

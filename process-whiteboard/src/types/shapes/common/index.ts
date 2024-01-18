@@ -23,25 +23,9 @@ enum Direction {
 
 type Title = string;
 
-type DataId = string;
+type DataItem = { id: string; text: string };
 
-type DataIds = DataId[];
+type Data = DataItem[];
 
-type CurrentDataIds = { [id: DataId]: boolean };
-
-type DataTable = { [id: DataId]: string };
-
-export type {
-  Id,
-  W,
-  H,
-  C,
-  Vec,
-  Shapes,
-  Title,
-  DataId,
-  DataIds,
-  CurrentDataIds,
-  DataTable,
-};
+export type { Id, W, H, C, Vec, Shapes, Title, DataItem, Data };
 export { Direction };

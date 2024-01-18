@@ -4,8 +4,7 @@ import Process from "@/shapes/process";
 import { Vec, Direction } from "@/types/shapes/common";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
-import { Title, DataTable, Shapes } from "@/types/shapes/common";
-import { cloneDeep } from "lodash";
+import { Title } from "@/types/shapes/common";
 
 export default class Core {
   id: string;
@@ -82,7 +81,6 @@ export default class Core {
         x: null;
         y: null;
       };
-  dataTable: DataTable;
 
   constructor(
     id: string,
@@ -90,7 +88,6 @@ export default class Core {
     h: number,
     p: Vec,
     c: string,
-    dataTable: DataTable
   ) {
     this.id = id;
     this.c = c;
@@ -127,7 +124,6 @@ export default class Core {
       x: null,
       y: null,
     };
-    this.dataTable = dataTable;
   }
 
   getEdge = () => {

@@ -1,6 +1,4 @@
-import { Vec, Title, DataId } from "@/types/shapes/common";
-
-type Data = { id: DataId; text: string }[];
+import { Vec, Title, Data } from "@/types/shapes/common";
 
 type Props = {
   id: string;

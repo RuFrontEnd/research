@@ -1,9 +1,9 @@
 "use client";
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
-import { Data, Props } from "@/types/components/importFrame";
+import { Props } from "@/types/components/importFrame";
 import { cloneDeep } from "lodash";
-import { Title } from "@/types/shapes/common";
+import { Title, Data as DataType } from "@/types/shapes/common";
 
 export default function ImportFrame({
   id,
@@ -13,19 +13,23 @@ export default function ImportFrame({
   onConfirm,
 }: Props) {
   const [title, setTitle] = useState<Title>(""),
-    [data, setData] = useState<Data>([]);
+    [data, setData] = useState<DataType>([]);
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
       setTitle(e.currentTarget.value);
     },
     onChangeData = (e: React.ChangeEvent<HTMLInputElement>, i: number) => {
       const _data = cloneDeep(data);
-      _data[i] = { ..._data[i], text: e.currentTarget.value };
+      _data[i].text = e.currentTarget.value;
       setData(_data);
     },
     onClickPlus = () => {
       const _data = cloneDeep(data);
       _data.push({ id: uuidv4(), text: "" });
+      setData(_data);
+    },
+    onClickMinus = (id: string) => {
+      const _data = cloneDeep(data).filter((datdItem) => datdItem.id !== id);
       setData(_data);
     };
 
@@ -69,7 +73,7 @@ export default function ImportFrame({
           +
         </div>
         {data.map((dataItem, i) => (
-          <>
+          <div className="flex">
             <input
               type="text"
               id="full-name"
@@ -80,7 +84,15 @@ export default function ImportFrame({
                 onChangeData(e, i);
               }}
             />
-          </>
+            <div
+              className="w-6 h-6 ml-2 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer"
+              onClick={() => {
+                onClickMinus(dataItem.id);
+              }}
+            >
+              -
+            </div>
+          </div>
         ))}
       </div>
       <button

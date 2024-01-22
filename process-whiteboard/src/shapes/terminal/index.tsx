@@ -32,13 +32,9 @@ export default class Terminal extends Core {
     let ds = [Direction.l, Direction.t, Direction.r, Direction.b];
 
     while (queue.length !== 0) {
-      // console.log("queue", queue);
-      // console.log("options", options);
-
       const shape = queue[0];
 
       shape.options = cloneDeep(options);
-      // console.log("shape", shape);
 
       if (shape instanceof Data) {
         shape.data.forEach((dataItem) => {

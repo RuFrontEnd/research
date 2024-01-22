@@ -382,10 +382,6 @@ export default class Core {
       }),
     };
 
-    if(this.checkBoundry(p)){
-      console.log('this.options', this.options)
-    }
-
     if (
       this.checkBoundry(p) ||
       pressingCurve.l?.activate ||

@@ -1,7 +1,6 @@
 "use client";
 import Curve from "@/shapes/curve";
-import Process from "@/shapes/process";
-import { Vec, Direction } from "@/types/shapes/common";
+import { Vec, Direction, Data } from "@/types/shapes/common";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 import { Title } from "@/types/shapes/common";
@@ -81,14 +80,9 @@ export default class Core {
         x: null;
         y: null;
       };
+  options: Data;
 
-  constructor(
-    id: string,
-    w: number,
-    h: number,
-    p: Vec,
-    c: string,
-  ) {
+  constructor(id: string, w: number, h: number, p: Vec, c: string) {
     this.id = id;
     this.c = c;
     this.w = w;
@@ -124,6 +118,7 @@ export default class Core {
       x: null,
       y: null,
     };
+    this.options = []
   }
 
   getEdge = () => {
@@ -386,6 +381,10 @@ export default class Core {
         y: p.y - this.p.y,
       }),
     };
+
+    if(this.checkBoundry(p)){
+      console.log('this.options', this.options)
+    }
 
     if (
       this.checkBoundry(p) ||
@@ -1459,32 +1458,6 @@ export default class Core {
                 shape: this,
                 direction: pressingReceivingPoint.direction, // l
               };
-
-              // traversal all relational steps
-              const connectedShapeQueue: (Core | Process)[] = [this],
-                connectedShapeHash = { [this.id]: true };
-              // senderAllData = cloneDeep(sender.shape.allData);
-
-              let ds = [Direction.l, Direction.t, Direction.r, Direction.b];
-
-              while (connectedShapeQueue.length !== 0) {
-                // connectedShapeQueue[0].allData = senderAllData;
-
-                ds.forEach((d) => {
-                  const currentConnectTarget: ConnectTarget =
-                    connectedShapeQueue[0].sendTo[d];
-
-                  if (
-                    currentConnectTarget &&
-                    !connectedShapeHash[currentConnectTarget.shape.id]
-                  ) {
-                    connectedShapeQueue.push(currentConnectTarget.shape);
-                    connectedShapeHash[currentConnectTarget.shape.id] = true;
-                  }
-                });
-
-                connectedShapeQueue.shift();
-              }
 
               senderCurve.p2 = {
                 x: this.p1.x - sender.shape.p.x,

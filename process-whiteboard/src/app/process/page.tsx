@@ -1,4 +1,4 @@
-// TODO: terminal shape 在 onMouseUp 時做 traversal / 處理 data shape SelectFrame 開關  / Process onMouseup 走訪 (l receive 完成 / t, r, b 待處裡) / Process 取用可用的 data / 尋找左側列 icons
+// TODO: Data onConfirm 時觸發 Terminal traversal / Process 取用可用的 data / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關 / 尋找左側列 icons / 後端判斷 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -141,10 +141,6 @@ export default function ProcessPage() {
       shapes.forEach((shape) => {
         if (shape.id === sender?.shape?.id) {
           shape.onMouseUp(p);
-
-          // if(shape instanceof Data){
-          //   shape.onTraversal()
-          // }
         } else {
           if (!sender) return;
           shape.onMouseUp(p, sender);
@@ -154,6 +150,13 @@ export default function ProcessPage() {
       shapes.forEach((shape) => {
         shape.onMouseUp(p);
       });
+    }
+
+    const terminal = shapes.find(
+      (shape) => shape instanceof Terminal && shape.isStart
+    );
+    if (terminal && terminal instanceof Terminal) {
+      terminal.onTraversal();
     }
 
     sender = null;
@@ -232,10 +235,11 @@ export default function ProcessPage() {
           "terminal_1",
           200,
           100,
-          { x: 500, y: 300 },
-          "orange"
+          { x: 300, y: 100 },
+          "orange",
+          true
         ),
-        process = new Process("process_1", 200, 100, { x: 300, y: 300 }, "red"),
+        process = new Process("process_1", 200, 100, { x: 300, y: 350 }, "red"),
         process_2 = new Process(
           "process_2",
           200,
@@ -243,20 +247,20 @@ export default function ProcessPage() {
           { x: 1200, y: 300 },
           "blue"
         ),
-        data_1 = new Data("data_1", 200, 100, { x: 600, y: 600 }, "green"),
-        desicion_1 = new Desicion(
-          "desicion_1",
-          150,
-          100,
-          { x: 300, y: 100 },
-          "#3498db"
-        );
+        data_1 = new Data("data_1", 200, 100, { x: 600, y: 600 }, "green");
+      // desicion_1 = new Desicion(
+      //   "desicion_1",
+      //   150,
+      //   100,
+      //   { x: 300, y: 100 },
+      //   "#3498db"
+      // );
 
       shapes.push(terminal);
       shapes.push(process);
       shapes.push(process_2);
       shapes.push(data_1);
-      shapes.push(desicion_1);
+      // shapes.push(desicion_1);
 
       requestAnimationFrame(draw);
     }

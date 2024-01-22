@@ -368,7 +368,6 @@ export default class Core {
   drawShape(ctx: CanvasRenderingContext2D) {}
 
   onMouseDown(p: Vec) {
-    // console.log("this", this);
     let pressingCurve = {
       l: this.curves.l?.checkBoundry({
         x: p.x - this.p.x,

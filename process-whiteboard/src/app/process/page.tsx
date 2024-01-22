@@ -1,5 +1,6 @@
-// TODO: 處理 data shape SelectFrame 開關  / Process onMouseup 走訪 (l receive 完成 / t, r, b 待處裡) / Process 取用可用的 data / 尋找左側列 icons
+// TODO: terminal shape 在 onMouseUp 時做 traversal / 處理 data shape SelectFrame 開關  / Process onMouseup 走訪 (l receive 完成 / t, r, b 待處裡) / Process 取用可用的 data / 尋找左側列 icons
 "use client";
+import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
 import Data from "@/shapes/data";
 import Desicion from "@/shapes/decision";
@@ -13,9 +14,9 @@ import Core from "@/shapes/core";
 
 let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
-  shapes: (Process | Data | Desicion)[] = [],
+  shapes: (Terminal | Process | Data | Desicion)[] = [],
   sender: null | ConnectTarget = null,
-  dbClickedShape: Data | Process | Desicion | null = null,
+  dbClickedShape: Terminal | Data | Process | Desicion | null = null,
   importFrameId = "importFrame",
   selectDataFrameId = "selectFrame";
 
@@ -140,6 +141,10 @@ export default function ProcessPage() {
       shapes.forEach((shape) => {
         if (shape.id === sender?.shape?.id) {
           shape.onMouseUp(p);
+
+          // if(shape instanceof Data){
+          //   shape.onTraversal()
+          // }
         } else {
           if (!sender) return;
           shape.onMouseUp(p, sender);
@@ -223,13 +228,14 @@ export default function ProcessPage() {
       $canvas.width = window.innerWidth;
       $canvas.height = window.innerHeight;
       if (!ctx) return;
-      let process = new Process(
-          "process_1",
+      let terminal = new Terminal(
+          "terminal_1",
           200,
           100,
-          { x: 300, y: 300 },
-          "red"
+          { x: 500, y: 300 },
+          "orange"
         ),
+        process = new Process("process_1", 200, 100, { x: 300, y: 300 }, "red"),
         process_2 = new Process(
           "process_2",
           200,
@@ -246,6 +252,7 @@ export default function ProcessPage() {
           "#3498db"
         );
 
+      shapes.push(terminal);
       shapes.push(process);
       shapes.push(process_2);
       shapes.push(data_1);

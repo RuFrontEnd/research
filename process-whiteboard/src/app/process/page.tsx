@@ -1,4 +1,4 @@
-// TODO: Data onConfirm 時觸發 Terminal traversal / Process 取用可用的 data / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關 / 尋找左側列 icons / 後端判斷 data 是否資料重名
+// TODO: Process 取用可用的 data /Data onConfirm 時觸發 Terminal traversal / 條件判斷當 drag p2 時才進行 Terminal traversal / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關 / 尋找左側列 icons / 後端判斷 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -16,9 +16,7 @@ let useEffected = false,
   ctx: CanvasRenderingContext2D | null | undefined = null,
   shapes: (Terminal | Process | Data | Desicion)[] = [],
   sender: null | ConnectTarget = null,
-  dbClickedShape: Terminal | Data | Process | Desicion | null = null,
-  importFrameId = "importFrame",
-  selectDataFrameId = "selectFrame";
+  dbClickedShape: Terminal | Data | Process | Desicion | null = null;
 
 const getFramePosition = (shape: Core) => {
   const frameOffset = 12;
@@ -28,14 +26,9 @@ const getFramePosition = (shape: Core) => {
 export default function ProcessPage() {
   let { current: $canvas } = useRef<HTMLCanvasElement | null>(null);
 
-  const [portal, setPortal] = useState<
-      | {
-          id: string;
-          portal: ReactPortal;
-        }
-      | undefined
-    >(undefined),
-    [importFrame, setImportFrame] = useState<{ p: Vec } | undefined>(undefined),
+  const [importFrame, setImportFrame] = useState<{ p: Vec } | undefined>(
+      undefined
+    ),
     [selectFrame, setSelectFrame] = useState<{ p: Vec } | undefined>(undefined);
 
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -112,14 +105,14 @@ export default function ProcessPage() {
 
       if (shape.checkBoundry(p) && dbClickedShape?.id === shape.id) {
         if (shape instanceof Data) {
-          const $importFrame = document.getElementById(importFrameId);
+          const $importFrame = document.getElementById(dbClickedShape?.id);
           if ($importFrame) {
             const framePosition = getFramePosition(shape);
             $importFrame.style.left = `${framePosition.x}px`;
             $importFrame.style.top = `${framePosition.y}px`;
           }
         } else if (shape instanceof Process || shape instanceof Desicion) {
-          const $selectFrame = document.getElementById(selectDataFrameId);
+          const $selectFrame = document.getElementById(dbClickedShape?.id);
           if ($selectFrame) {
             const framePosition = getFramePosition(shape);
             $selectFrame.style.left = `${framePosition.x}px`;
@@ -328,8 +321,8 @@ export default function ProcessPage() {
 
       {importFrame && dbClickedShape instanceof Data && (
         <ImportFrame
-          id={importFrameId}
-          key={importFrameId}
+          id={dbClickedShape.id}
+          key={dbClickedShape.id}
           coordinate={importFrame.p}
           onConfirm={(title, data) => {
             if (!(dbClickedShape instanceof Data)) return;
@@ -342,18 +335,20 @@ export default function ProcessPage() {
         />
       )}
 
-      {selectFrame && (
-        <SelectDataFrame
-          id={selectDataFrameId}
-          key={selectDataFrameId}
-          coordinate={selectFrame.p}
-          onConfirm={() => {}}
-          // init={{
-          //   title: this.title,
-          //   data: this.getInitData(),
-          // }}
-        />
-      )}
+      {selectFrame &&
+        (dbClickedShape instanceof Process ||
+          dbClickedShape instanceof Desicion) && (
+          <SelectDataFrame
+            id={dbClickedShape.id}
+            key={dbClickedShape.id}
+            coordinate={selectFrame.p}
+            onConfirm={() => {}}
+            init={{
+              title: dbClickedShape?.title ? dbClickedShape?.title : "",
+              data: dbClickedShape?.options ? dbClickedShape?.options : [],
+            }}
+          />
+        )}
     </>
   );
 }

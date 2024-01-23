@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Data, Props } from "@/types/components/importFrame";
-import { Title } from "@/types/shapes/common";
+import { Props, Selections } from "@/types/components/selectDataFrame";
+import { Title, DataItem } from "@/types/shapes/common";
+import { cloneDeep } from "lodash";
 
 export default function SelectDataFrame({
   id,
@@ -11,20 +12,54 @@ export default function SelectDataFrame({
   onConfirm,
 }: Props) {
   const [title, setTitle] = useState<Title>(""),
-    [data, setData] = useState<Data>([]);
+    [selections, setSelections] = useState<Selections>({});
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
   };
 
-  useEffect(() => {
-    if (init?.title) {
-      setTitle(init.title);
-    }
+  const onClickCheckedBox = (dataId: DataItem["id"]) => {
+    const _selections: Selections = cloneDeep(selections);
 
-    if (init?.data && init?.data.length > 0) {
-      setData(init.data);
-    }
+    _selections[dataId] = !_selections[dataId];
+
+    setSelections(_selections);
+  };
+
+  const onClickConfirm = () => {
+    const selectedData = (() => {
+      const data: Props["init"]["selections"] = [];
+
+      init.options.forEach((option) => {
+        if (selections[option.id]) {
+          data.push(option);
+        }
+      });
+
+      return data;
+    })();
+
+    onConfirm(title, selectedData);
+  };
+
+  useEffect(() => {
+    setTitle(init.title);
+
+    const _selections: Selections = (() => {
+      const output: Selections = {};
+
+      init.options.forEach((option) => {
+        output[option.id] = false;
+      });
+
+      init.selections.forEach((selection) => {
+        output[selection.id] = true;
+      });
+
+      return output;
+    })();
+
+    setSelections(_selections);
   }, [key, id]);
 
   return (
@@ -52,26 +87,33 @@ export default function SelectDataFrame({
         <label className="leading-7 text-sm text-gray-600">Data Usage</label>
       </div>
       <ul className="flex flex-col">
-        {data.map((dataItem, i) => (
+        {init?.options.map((option, i) => (
           <li className="mb-2">
             <div className="grid grid-cols-[auto,1fr] gap-2">
               <div className="col-span-1">
-                <span className="bg-indigo-100 text-indigo-500 w-4 h-4 rounded-full inline-flex items-center justify-center">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="3"
-                    className="w-3 h-3"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20 6L9 17l-5-5"></path>
-                  </svg>
+                <span
+                  className="bg-indigo-100 text-indigo-500 w-4 h-4 rounded-full inline-flex items-center justify-center"
+                  onClick={() => {
+                    onClickCheckedBox(option.id);
+                  }}
+                >
+                  {selections[option.id] && (
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="3"
+                      className="w-3 h-3"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                  )}
                 </span>
               </div>
               <div className="col-span-1 [overflow-wrap:anywhere]">
-                <span>{dataItem.text}</span>
+                <span>{option.text}</span>
               </div>
             </div>
           </li>
@@ -79,9 +121,7 @@ export default function SelectDataFrame({
       </ul>
       <button
         className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-        onClick={() => {
-          onConfirm(title, data);
-        }}
+        onClick={onClickConfirm}
       >
         Confirm
       </button>

@@ -1,8 +1,24 @@
 "use client";
 import Core from "@/shapes/core";
-import { Vec, Id, W, H, C } from "@/types/shapes/common";
+import {
+  Vec,
+  Id,
+  W,
+  H,
+  C,
+  Title,
+  Data as DataType,
+} from "@/types/shapes/common";
 export default class Desicion extends Core {
-  super(id: Id, w: W, h: H, p: Vec, c: C) {}
+  constructor(id: Id, w: W, h: H, p: Vec, c: C) {
+    super(id, w, h, p, c);
+  }
+
+  onDataChange = (title: Title, data: DataType) => {
+    this.title = title;
+    this.selectedData = data;
+  };
+
   drawShape(ctx: CanvasRenderingContext2D) {
     // 定义四个顶点的坐标
     const x1 = -this.w / 2,

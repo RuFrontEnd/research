@@ -1,4 +1,4 @@
-// TODO: Process 取用可用的 data /Data onConfirm 時觸發 Terminal traversal / 條件判斷當 drag p2 時才進行 Terminal traversal / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關 / 尋找左側列 icons / 後端判斷 data 是否資料重名
+// TODO: Data onConfirm 時觸發 Terminal traversal / 條件判斷當 drag p2 時才進行 Terminal traversal / 確認 Decision 取用可用的 data 邏輯是否與 Process 一致 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -342,10 +342,18 @@ export default function ProcessPage() {
             id={dbClickedShape.id}
             key={dbClickedShape.id}
             coordinate={selectFrame.p}
-            onConfirm={() => {}}
+            onConfirm={(title, data) => {
+              if (
+                !(dbClickedShape instanceof Process) &&
+                !(dbClickedShape instanceof Desicion)
+              )
+                return;
+              dbClickedShape?.onDataChange(title, data);
+            }}
             init={{
-              title: dbClickedShape?.title ? dbClickedShape?.title : "",
-              data: dbClickedShape?.options ? dbClickedShape?.options : [],
+              title: dbClickedShape?.title,
+              options: dbClickedShape?.options,
+              selections: dbClickedShape.selectedData,
             }}
           />
         )}

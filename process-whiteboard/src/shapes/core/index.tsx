@@ -81,6 +81,7 @@ export default class Core {
         y: null;
       };
   options: Data;
+  selectedData: Data;
 
   constructor(id: string, w: number, h: number, p: Vec, c: string) {
     this.id = id;
@@ -118,7 +119,8 @@ export default class Core {
       x: null,
       y: null,
     };
-    this.options = []
+    this.options = [];
+    this.selectedData = [];
   }
 
   getEdge = () => {

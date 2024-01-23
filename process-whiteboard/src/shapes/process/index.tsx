@@ -11,23 +11,13 @@ import {
 } from "@/types/shapes/common";
 
 export default class Process extends Core {
-  isFrameOpen: boolean;
-  title: Title;
-  data: DataType;
-  frameOffset: number;
-
   constructor(id: Id, w: W, h: H, p: Vec, c: C) {
     super(id, w, h, p, c);
-    this.isFrameOpen = false;
-    this.title = "";
-    this.data = [];
-    this.frameOffset = 20;
   }
 
-  onConfirm = (title: Title, data: DataType) => {
+  onDataChange = (title: Title, data: DataType) => {
     this.title = title;
-
-    // TODO: 缺少取用 data 邏輯
+    this.selectedData = data;
   };
 
   drawShape(ctx: CanvasRenderingContext2D) {

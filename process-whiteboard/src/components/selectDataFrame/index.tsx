@@ -1,15 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Props, Selections } from "@/types/components/selectDataFrame";
-import { Title, DataItem } from "@/types/shapes/common";
-import { cloneDeep } from "lodash";
+import { Title, DataItem, Data as DataType } from "@/types/shapes/common";
+import cloneDeep from "lodash/cloneDeep";
 
 export default function SelectDataFrame({
-  id,
-  key,
+  shape,
   coordinate,
-  init,
   onConfirm,
+  onClick,
 }: Props) {
   const [title, setTitle] = useState<Title>(""),
     [selections, setSelections] = useState<Selections>({});
@@ -28,9 +27,15 @@ export default function SelectDataFrame({
 
   const onClickConfirm = () => {
     const selectedData = (() => {
-      const data: Props["init"]["selections"] = [];
+      const data: DataType = [];
 
-      init.options.forEach((option) => {
+      shape.options.forEach((option) => {
+        if (selections[option.id]) {
+          data.push(option);
+        }
+      });
+
+      shape.redundancies.forEach((option) => {
         if (selections[option.id]) {
           data.push(option);
         }
@@ -43,34 +48,35 @@ export default function SelectDataFrame({
   };
 
   useEffect(() => {
-    setTitle(init.title);
+    setTitle(shape.title);
 
     const _selections: Selections = (() => {
       const output: Selections = {};
 
-      init.options.forEach((option) => {
+      shape.options.forEach((option) => {
         output[option.id] = false;
       });
 
-      init.selections.forEach((selection) => {
-        output[selection.id] = true;
+      shape.selectedData.forEach((selectedDataItem) => {
+        output[selectedDataItem.id] = true;
       });
 
       return output;
     })();
 
     setSelections(_selections);
-  }, [key, id]);
+  }, [shape]);
 
   return (
     <div
-      key={key}
-      id={id}
+      key={shape.id}
+      id={shape.id}
       className={`w-[200px] bg-gray-100 rounded-lg p-4 flex flex-col md:ml-auto mt-10 md:mt-0 fixed -translate-y-1/2`}
       style={{
         left: `${coordinate.x}px`,
         top: `${coordinate.y}px`,
       }}
+      onClick={onClick}
     >
       <div className="relative mb-4">
         <label className="leading-7 text-sm text-gray-600">Title</label>
@@ -87,7 +93,7 @@ export default function SelectDataFrame({
         <label className="leading-7 text-sm text-gray-600">Data Usage</label>
       </div>
       <ul className="flex flex-col">
-        {init?.options.map((option, i) => (
+        {shape.options.map((option, i) => (
           <li className="mb-2">
             <div className="grid grid-cols-[auto,1fr] gap-2">
               <div className="col-span-1">
@@ -119,6 +125,43 @@ export default function SelectDataFrame({
           </li>
         ))}
       </ul>
+      <div>
+        <label className="leading-7 text-sm text-gray-600">Redundancies</label>
+      </div>
+      <ul className="flex flex-col">
+        {shape.redundancies.map((option, i) => (
+          <li className="mb-2">
+            <div className="grid grid-cols-[auto,1fr] gap-2">
+              <div className="col-span-1">
+                <span
+                  className="bg-red-100 text-red-500 w-4 h-4 rounded-full inline-flex items-center justify-center"
+                  onClick={() => {
+                    onClickCheckedBox(option.id);
+                  }}
+                >
+                  {selections[option.id] && (
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="3"
+                      className="w-3 h-3"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                  )}
+                </span>
+              </div>
+              <div className="text-red-500 col-span-1 [overflow-wrap:anywhere]">
+                <span>{option.text}</span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+
       <button
         className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
         onClick={onClickConfirm}

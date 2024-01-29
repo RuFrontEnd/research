@@ -1,11 +1,12 @@
 import { Vec, Title, Data, DataItem } from "@/types/shapes/common";
+import Process from "@/shapes/process";
+import Desicion from "@/shapes/decision";
 
 type Props = {
-  id: string;
-  key: string;
+  shape: Process | Desicion;
   coordinate: Vec;
   onConfirm: (title: Title, data: Data) => void;
-  init: { title: Title; options: Data; selections: Data };
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
 type Selections = { [dataId: DataItem["id"]]: boolean };

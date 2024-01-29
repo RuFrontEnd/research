@@ -11,6 +11,7 @@ export default function ImportFrame({
   coordinate,
   init,
   onConfirm,
+  onClick,
 }: Props) {
   const [title, setTitle] = useState<Title>(""),
     [data, setData] = useState<DataType>([]);
@@ -52,6 +53,7 @@ export default function ImportFrame({
         left: `${coordinate.x}px`,
         top: `${coordinate.y}px`,
       }}
+      onClick={onClick}
     >
       <div className="relative mb-4">
         <label className="leading-7 text-sm text-gray-600">Title</label>

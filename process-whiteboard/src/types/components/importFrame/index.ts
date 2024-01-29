@@ -5,6 +5,7 @@ type Props = {
   key: string;
   coordinate: Vec;
   onConfirm: (title: Title, data: Data) => void;
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   init?: { title: Title; data: Data };
 };
 

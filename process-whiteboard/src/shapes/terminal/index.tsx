@@ -34,7 +34,7 @@ export default class Terminal extends Core {
     while (queue.length !== 0) {
       const shape = queue[0];
 
-      shape.options = cloneDeep(options);
+      shape.options = cloneDeep(options); // give options to the shape
 
       if (shape instanceof Data) {
         shape.data.forEach((dataItem) => {

@@ -1,4 +1,4 @@
-// TODO: Data onConfirm 時觸發 Terminal traversal / 條件判斷當 drag p2 時才進行 Terminal traversal / 確認 Decision 取用可用的 data 邏輯是否與 Process 一致 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
+// TODO: onConfirm 時觸發 Terminal traversal / 條件判斷當 drag p2 時才進行 Terminal traversal / 確認 Decision 取用可用的 data 邏輯是否與 Process 一致 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -6,8 +6,7 @@ import Data from "@/shapes/data";
 import Desicion from "@/shapes/decision";
 import ImportFrame from "@/components/importFrame";
 import SelectDataFrame from "@/components/selectDataFrame";
-import useClickBody from "@/hooks/useClickBody/useClickBody";
-import { useState, useRef, useEffect, useCallback, ReactPortal } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 import { Vec, Direction } from "@/types/shapes/common";
 import Core from "@/shapes/core";
@@ -130,8 +129,11 @@ export default function ProcessPage() {
       y: e.nativeEvent.offsetY,
     };
 
+    // create relationships between shapes and shapes
     if (sender) {
       shapes.forEach((shape) => {
+        shape.options = [];
+
         if (shape.id === sender?.shape?.id) {
           shape.onMouseUp(p);
         } else {
@@ -145,11 +147,19 @@ export default function ProcessPage() {
       });
     }
 
+    // traversal to give all shapes corresponding options
     const terminal = shapes.find(
       (shape) => shape instanceof Terminal && shape.isStart
     );
     if (terminal && terminal instanceof Terminal) {
       terminal.onTraversal();
+    }
+
+    // check all correspondants of shapes' between options and selectedData 
+    if (sender) {
+      shapes.forEach((shape) => {
+        shape.getRedundancies();
+      });
     }
 
     sender = null;

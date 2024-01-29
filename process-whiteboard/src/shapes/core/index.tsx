@@ -1,6 +1,6 @@
 "use client";
 import Curve from "@/shapes/curve";
-import { Vec, Direction, Data } from "@/types/shapes/common";
+import { Vec, Direction, Data as DataType } from "@/types/shapes/common";
 import { Line, PressingP as CurvePressingP } from "@/types/shapes/curve";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 import { Title } from "@/types/shapes/common";
@@ -80,8 +80,9 @@ export default class Core {
         x: null;
         y: null;
       };
-  options: Data;
-  selectedData: Data;
+  options: DataType;
+  selectedData: DataType;
+  redundancies: DataType;
 
   constructor(id: string, w: number, h: number, p: Vec, c: string) {
     this.id = id;
@@ -121,6 +122,7 @@ export default class Core {
     };
     this.options = [];
     this.selectedData = [];
+    this.redundancies = [];
   }
 
   getEdge = () => {
@@ -360,6 +362,22 @@ export default class Core {
       curve_p2.y -= yOffset / 2;
       curve_cp2.y -= yOffset / 2;
     }
+  };
+
+  getRedundancies = () => {
+    this.redundancies = [];
+
+    let optionsHash: { [text: string]: boolean } = {};
+
+    this.options.forEach((option) => {
+      optionsHash[option.text] = true;
+    });
+
+    this.selectedData.forEach((dataItem) => {
+      if (!optionsHash[dataItem.text]) {
+        this.redundancies.push(dataItem);
+      }
+    });
   };
 
   drawShape(ctx: CanvasRenderingContext2D) {}
@@ -1724,6 +1742,13 @@ export default class Core {
     // draw id text
     ctx.textAlign = "start";
     ctx.fillText(this.id, -this.w / 2, -this.h / 2 - 10);
+
+    if (this.redundancies.length > 0) {
+      // draw error message
+      ctx.textAlign = "end";
+      ctx.fillStyle = "red";
+      ctx.fillText("error!", this.w / 2, -this.h / 2 - 10);
+    }
 
     ctx.restore();
   }

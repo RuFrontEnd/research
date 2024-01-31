@@ -26,7 +26,7 @@ export default class Terminal extends Core {
   onTraversal() {
     // traversal all relational steps
     const queue: (Core | Process | Data | Decision)[] = [this],
-      hash = { [this.id]: true },
+      locks = { [this.id]: { l: false, t: false, r: false, b: false } }, // prevent from graph cycle
       options: DataType = [];
 
     let ds = [Direction.l, Direction.t, Direction.r, Direction.b];
@@ -45,10 +45,24 @@ export default class Terminal extends Core {
       ds.forEach((d) => {
         const connectTarget: ConnectTarget = shape.sendTo[d];
 
-        // prevent from graph cycle
-        if (connectTarget && !hash[connectTarget.shape.id]) {
+        if (!connectTarget) return;
+
+        const hasLock = locks[connectTarget.shape.id];
+
+        if (!hasLock) {
+          locks[connectTarget.shape.id] = {
+            l: false,
+            t: false,
+            r: false,
+            b: false,
+          };
+        }
+
+        const hasDirectLock = locks[connectTarget.shape.id][d];
+
+        if (!hasDirectLock) {
           queue.push(connectTarget.shape);
-          hash[connectTarget.shape.id] = true;
+          locks[connectTarget.shape.id][d] = true;
         }
       });
 

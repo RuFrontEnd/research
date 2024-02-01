@@ -1,4 +1,4 @@
-// TODO: 確認 Decision 取用可用的 data 邏輯是否與 Process 一致 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
+// TODO: 將 core 中操作 curve 邏輯整理至 curve class / 確認 Decision 取用可用的 data 邏輯是否與 Process 一致 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -68,7 +68,7 @@ export default function ProcessPage() {
           (shapes[shapeI] as Process) ||
           (shapes[shapeI] as Data) ||
           (shapes[shapeI] as Desicion);
-        currentShape.onMouseDown(p);
+        currentShape.onMouseDown($canvas, p);
 
         if (
           currentShape.pressing.activate &&
@@ -193,7 +193,6 @@ export default function ProcessPage() {
 
       shapes.forEach((shape) => {
         if (shape.checkBoundry(p)) {
-
           setDbClickedShape(shape);
 
           if (shape instanceof Data) {

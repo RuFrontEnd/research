@@ -382,33 +382,19 @@ export default class Core {
 
   drawShape(ctx: CanvasRenderingContext2D) {}
 
-  onMouseDown(p: Vec) {
+  onMouseDown(canvas: HTMLCanvasElement, p: Vec) {
+    let shapeP = {
+      x: p.x - this.p.x,
+      y: p.y - this.p.y,
+    };
     let pressingCurve = {
-      l: this.curves.l?.checkBoundry({
-        x: p.x - this.p.x,
-        y: p.y - this.p.y,
-      }),
-      t: this.curves.t?.checkBoundry({
-        x: p.x - this.p.x,
-        y: p.y - this.p.y,
-      }),
-      r: this.curves.r?.checkBoundry({
-        x: p.x - this.p.x,
-        y: p.y - this.p.y,
-      }),
-      b: this.curves.b?.checkBoundry({
-        x: p.x - this.p.x,
-        y: p.y - this.p.y,
-      }),
+      l: this.curves.l?.checkControlPointsBoundry(shapeP),
+      t: this.curves.t?.checkControlPointsBoundry(shapeP),
+      r: this.curves.r?.checkControlPointsBoundry(shapeP),
+      b: this.curves.b?.checkControlPointsBoundry(shapeP),
     };
 
-    if (
-      this.checkBoundry(p) ||
-      pressingCurve.l?.activate ||
-      pressingCurve.t?.activate ||
-      pressingCurve.r?.activate ||
-      pressingCurve.b?.activate
-    ) {
+    if (this.checkBoundry(p)) {
       this.selecting = true;
     }
 
@@ -486,6 +472,8 @@ export default class Core {
           },
           { x: -this.w / 2 - this.curveTrigger.d, y: 0 }
         );
+
+        this.selecting = false;
       } else if (
         // t curve trigger
         (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
@@ -516,6 +504,8 @@ export default class Core {
           },
           { x: 0, y: -this.h / 2 - this.curveTrigger.d }
         );
+
+        this.selecting = false;
       } else if (
         // r curve trigger
         (p.x - center.curveTrigger.r.x) * (p.x - center.curveTrigger.r.x) +
@@ -546,6 +536,8 @@ export default class Core {
           },
           { x: this.w / 2 + this.curveTrigger.d, y: 0 }
         );
+
+        this.selecting = false;
       } else if (
         // b curve trigger
         (p.x - center.curveTrigger.b.x) * (p.x - center.curveTrigger.b.x) +
@@ -576,6 +568,8 @@ export default class Core {
           },
           { x: 0, y: this.h / 2 + this.curveTrigger.d }
         );
+
+        this.selecting = false;
       } else if (p.x > edge.l && p.y > edge.t && p.x < edge.r && p.y < edge.b) {
         // inside the shape
         this.pressing = {
@@ -669,6 +663,19 @@ export default class Core {
       }
 
       this.dragP = p;
+    }
+
+    if (this.curves.l) {
+      this.curves.l.onMouseDown(canvas, shapeP);
+    }
+    if (this.curves.t) {
+      this.curves.t.onMouseDown(canvas, shapeP);
+    }
+    if (this.curves.r) {
+      this.curves.r.onMouseDown(canvas, shapeP);
+    }
+    if (this.curves.b) {
+      this.curves.b.onMouseDown(canvas, shapeP);
     }
   }
 

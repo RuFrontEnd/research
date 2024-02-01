@@ -1618,7 +1618,7 @@ export default class Core {
         // draw curve triggers
         ctx.lineWidth = this.curveTrigger.size.stroke;
 
-        if (!this.curves.l) {
+        if (!this.curves.l && !this.receiveFrom.l) {
           // left
           ctx.beginPath();
           ctx.arc(
@@ -1634,7 +1634,7 @@ export default class Core {
           ctx.closePath();
         }
 
-        if (!this.curves.t) {
+        if (!this.curves.t && !this.receiveFrom.t) {
           // top
           ctx.beginPath();
           ctx.arc(
@@ -1650,7 +1650,7 @@ export default class Core {
           ctx.closePath();
         }
 
-        if (!this.curves.r) {
+        if (!this.curves.r && !this.receiveFrom.r) {
           // right
           ctx.beginPath();
           ctx.arc(
@@ -1666,7 +1666,7 @@ export default class Core {
           ctx.closePath();
         }
 
-        if (!this.curves.b) {
+        if (!this.curves.b && !this.receiveFrom.b) {
           ctx.beginPath();
           ctx.arc(
             0,

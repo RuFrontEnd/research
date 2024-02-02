@@ -576,86 +576,6 @@ export default class Core {
           activate: true,
           target: PressingTarget.m,
         };
-      } else if (pressingCurve.l?.p === CurvePressingP.cp1) {
-        // l curve cp1
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.clcp1,
-        };
-      } else if (pressingCurve.l?.p === CurvePressingP.cp2) {
-        // l curve cp2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.clcp2,
-        };
-      } else if (pressingCurve.l?.p === CurvePressingP.p2) {
-        // l curve p2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.clp2,
-        };
-
-        this.resetConnection(Direction.l);
-      } else if (pressingCurve.t?.p === CurvePressingP.cp1) {
-        // t curve cp1
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.ctcp1,
-        };
-      } else if (pressingCurve.t?.p === CurvePressingP.cp2) {
-        // t curve cp2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.ctcp2,
-        };
-      } else if (pressingCurve.t?.p === CurvePressingP.p2) {
-        // t curve p2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.ctp2,
-        };
-
-        this.resetConnection(Direction.t);
-      } else if (pressingCurve.r?.p === CurvePressingP.cp1) {
-        // r curve cp1
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.crcp1,
-        };
-      } else if (pressingCurve.r?.p === CurvePressingP.cp2) {
-        // r curve cp2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.crcp2,
-        };
-      } else if (pressingCurve.r?.p === CurvePressingP.p2) {
-        // r curve p2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.crp2,
-        };
-
-        this.resetConnection(Direction.r);
-      } else if (pressingCurve.b?.p === CurvePressingP.cp1) {
-        // b curve cp1
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.cbcp1,
-        };
-      } else if (pressingCurve.b?.p === CurvePressingP.cp2) {
-        // b curve cp2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.cbcp2,
-        };
-      } else if (pressingCurve.b?.p === CurvePressingP.p2) {
-        // b curve p2
-        this.pressing = {
-          activate: true,
-          target: PressingTarget.cbp2,
-        };
-
-        this.resetConnection(Direction.b);
       } else {
         this.selecting = false;
         this.pressing = this.initPressing;
@@ -663,6 +583,88 @@ export default class Core {
       }
 
       this.dragP = p;
+    }
+
+    if (pressingCurve.l?.p === CurvePressingP.cp1) {
+      // l curve cp1
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.clcp1,
+      };
+    } else if (pressingCurve.l?.p === CurvePressingP.cp2) {
+      // l curve cp2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.clcp2,
+      };
+    } else if (pressingCurve.l?.p === CurvePressingP.p2) {
+      // l curve p2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.clp2,
+      };
+
+      this.resetConnection(Direction.l);
+    } else if (pressingCurve.t?.p === CurvePressingP.cp1) {
+      // t curve cp1
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.ctcp1,
+      };
+    } else if (pressingCurve.t?.p === CurvePressingP.cp2) {
+      // t curve cp2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.ctcp2,
+      };
+    } else if (pressingCurve.t?.p === CurvePressingP.p2) {
+      // t curve p2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.ctp2,
+      };
+
+      this.resetConnection(Direction.t);
+    } else if (pressingCurve.r?.p === CurvePressingP.cp1) {
+      // r curve cp1
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.crcp1,
+      };
+    } else if (pressingCurve.r?.p === CurvePressingP.cp2) {
+      // r curve cp2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.crcp2,
+      };
+    } else if (pressingCurve.r?.p === CurvePressingP.p2) {
+      // r curve p2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.crp2,
+      };
+
+      this.resetConnection(Direction.r);
+    } else if (pressingCurve.b?.p === CurvePressingP.cp1) {
+      // b curve cp1
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.cbcp1,
+      };
+    } else if (pressingCurve.b?.p === CurvePressingP.cp2) {
+      // b curve cp2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.cbcp2,
+      };
+    } else if (pressingCurve.b?.p === CurvePressingP.p2) {
+      // b curve p2
+      this.pressing = {
+        activate: true,
+        target: PressingTarget.cbp2,
+      };
+
+      this.resetConnection(Direction.b);
     }
 
     if (this.curves.l) {
@@ -1421,39 +1423,34 @@ export default class Core {
             receiveFromCurve_b.cp2.y += yOffset;
           }
         }
-      } else if (
-        // l curve
-        (this.pressing.target === PressingTarget.clcp1 ||
-          this.pressing.target === PressingTarget.clcp2 ||
-          this.pressing.target === PressingTarget.clp2) &&
-        this.curves.l
-      ) {
-        this.curves.l?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });
-      } else if (
-        // t curve
-        (this.pressing.target === PressingTarget.ctcp1 ||
-          this.pressing.target === PressingTarget.ctcp2 ||
-          this.pressing.target === PressingTarget.ctp2) &&
-        this.curves.t
-      ) {
-        this.curves.t?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });
-      } else if (
-        // r curve
-        (this.pressing.target === PressingTarget.crcp1 ||
-          this.pressing.target === PressingTarget.crcp2 ||
-          this.pressing.target === PressingTarget.crp2) &&
-        this.curves.r
-      ) {
-        this.curves.r?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });
-      } else if (
-        // b curve
-        (this.pressing.target === PressingTarget.cbcp1 ||
-          this.pressing.target === PressingTarget.cbcp2 ||
-          this.pressing.target === PressingTarget.cbp2) &&
-        this.curves.b
-      ) {
-        this.curves.b?.onMouseMove({ x: p.x - this.p.x, y: p.y - this.p.y });
       }
+    }
+
+    const shapeP = { x: p.x - this.p.x, y: p.y - this.p.y };
+
+    if (
+      // l curve
+      this.curves.l
+    ) {
+      this.curves.l?.onMouseMove(shapeP);
+    }
+    if (
+      // t curve
+      this.curves.t
+    ) {
+      this.curves.t?.onMouseMove(shapeP);
+    }
+    if (
+      // r curve
+      this.curves.r
+    ) {
+      this.curves.r?.onMouseMove(shapeP);
+    }
+    if (
+      // b curve
+      this.curves.b
+    ) {
+      this.curves.b?.onMouseMove(shapeP);
     }
 
     if (receivable) {
@@ -1536,6 +1533,19 @@ export default class Core {
         }
       }
       this.receiving = false;
+    }
+
+    if (this.curves.l) {
+      this.curves.l?.onMouseUp();
+    }
+    if (this.curves.t) {
+      this.curves.t?.onMouseUp();
+    }
+    if (this.curves.r) {
+      this.curves.r?.onMouseUp();
+    }
+    if (this.curves.b) {
+      this.curves.b?.onMouseUp();
     }
   }
 

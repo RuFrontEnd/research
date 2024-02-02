@@ -83,7 +83,7 @@ export default class Curve {
   checkControlPointsBoundry(p: Vec) {
     if (!this.p1 || !this.p2 || !this.cp1 || !this.cp2) {
       this.pressing = this.initPressing;
-      return this.pressing;
+      return this.initPressing;
     }
 
     let dx, dy;
@@ -92,48 +92,60 @@ export default class Curve {
     dy = this.p2.y - p.y;
 
     if (dx * dx + dy * dy < this.radius * this.radius) {
-      this.pressing = {
+      // this.pressing = {
+      //   activate: true,
+      //   p: PressingP.p2,
+      // };
+      return {
         activate: true,
         p: PressingP.p2,
       };
-      return this.pressing;
     }
 
     dx = this.cp2.x - p.x;
     dy = this.cp2.y - p.y;
 
     if (dx * dx + dy * dy < this.radius * this.radius) {
-      this.pressing = {
+      // this.pressing = {
+      //   activate: true,
+      //   p: PressingP.cp2,
+      // };
+      return {
         activate: true,
         p: PressingP.cp2,
       };
-      return this.pressing;
     }
 
     dx = this.cp1.x - p.x;
     dy = this.cp1.y - p.y;
 
     if (dx * dx + dy * dy < this.radius * this.radius) {
-      this.pressing = {
+      // this.pressing = {
+      //   activate: true,
+      //   p: PressingP.cp1,
+      // };
+      return {
         activate: true,
         p: PressingP.cp1,
       };
-      return this.pressing;
     }
 
     dx = this.p1.x - p.x;
     dy = this.p1.y - p.y;
 
     if (dx * dx + dy * dy < this.radius * this.radius) {
-      this.pressing = {
+      // this.pressing = {
+      //   activate: true,
+      //   p: PressingP.p1,
+      // };
+      return {
         activate: true,
         p: PressingP.p1,
       };
-      return this.pressing;
     }
 
-    this.pressing = this.initPressing;
-    return this.pressing;
+    // this.pressing = this.initPressing;
+    return this.initPressing;
   }
 
   checkBoundry(p: Vec) {
@@ -156,15 +168,19 @@ export default class Curve {
     //   $canvas.style.cursor = "move";
     // } // TODO: 待修改 cursor
 
-    this.selecting = this.checkBoundry(p);
+    const pressingControlPoint = this.checkControlPointsBoundry(p);
 
-    if (this.selecting) {
-      this.checkControlPointsBoundry(p);
-    }
+    this.selecting = this.selecting
+      ? this.checkBoundry(p) || pressingControlPoint.activate
+      : this.checkBoundry(p);
+
+    if (!this.selecting) return;
+
+    this.pressing = pressingControlPoint;
   }
 
   onMouseMove(p: Vec) {
-    if (this.pressing.activate) {
+    if (this.pressing.activate && this.selecting) {
       if (
         this.pressing.p === PressingP.p1 &&
         this.p1 !== null &&
@@ -221,11 +237,13 @@ export default class Curve {
     }
   }
 
-  onMouseUp($canvas: HTMLCanvasElement) {
-    if (this.pressing.activate) {
-      $canvas.style.cursor = "default";
-      this.pressing = this.initPressing;
-    }
+  onMouseUp() {
+    // $canvas: HTMLCanvasElement
+    // if (this.pressing.activate) {
+    //   $canvas.style.cursor = "default";
+    //   this.pressing = this.initPressing;
+    // } // TODO: 處理 cursor
+    this.pressing = this.initPressing;
   }
 
   draw(ctx: CanvasRenderingContext2D) {

@@ -236,6 +236,18 @@ export default function ProcessPage() {
     shapes.push(data_new);
   };
 
+  const onClickDecision = () => {
+    let data_new = new Desicion(
+      `data_${shapes.length + 1}`,
+      200,
+      100,
+      { x: 100, y: 100 },
+      "#3498db"
+    );
+
+    shapes.push(data_new);
+  };
+
   const onConfirmImportFrame = (title: string, data: DataType) => {
     if (!(dbClickedShape instanceof Data)) return;
     dbClickedShape?.onDataChange(title, data);
@@ -324,6 +336,12 @@ export default function ProcessPage() {
             onClick={onClickData}
           >
             D
+          </div>
+          <div
+            className="mb-2 w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0 cursor-pointer"
+            onClick={onClickDecision}
+          >
+            De
           </div>
         </div>
       </div>

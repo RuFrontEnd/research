@@ -249,47 +249,6 @@ export default class Curve {
   draw(ctx: CanvasRenderingContext2D) {
     if (!this.p1 || !this.p2 || !this.cp1 || !this.cp2) return;
 
-    // control lines
-    ctx.lineWidth = this.cpline.w;
-    ctx.strokeStyle = this.cpline.c;
-    ctx.fillStyle = this.cpline.c;
-
-    ctx.beginPath();
-    ctx.moveTo(this.p1.x, this.p1.y);
-    // ctx.fillText(`p1`, this.p1.x + 14, this.p1.y);
-    // ctx.fillText(
-    //   `(this.p1.x:${this.p1.x}, this.p1.y:${this.p1.y})`,
-    //   this.p1.x + 14,
-    //   this.p1.y
-    // );
-    ctx.lineTo(this.cp1.x, this.cp1.y);
-    // ctx.fillText(`cp1`, this.cp1.x + 14, this.cp1.y);
-    // ctx.fillText(
-    //   `(this.cp1.x:${this.cp1.x}, this.cp1.y:${this.cp1.y})`,
-    //   this.cp1.x + 14,
-    //   this.cp1.y
-    // );
-
-    if (this.cp2) {
-      ctx.moveTo(this.p2.x, this.p2.y);
-      // ctx.fillText(`p2`, this.p2.x + 14, this.p2.y);
-      // ctx.fillText(
-      //   `(this.p2.x:${this.p2.x}, this.p2.y:${this.p2.y})`,
-      //   this.p2.x + 14,
-      //   this.p2.y
-      // );
-      ctx.lineTo(this.cp2.x, this.cp2.y);
-      // ctx.fillText(`cp2`, this.cp2.x + 14, this.cp2.y);
-      // ctx.fillText(
-      //   `(this.cp2.x:${this.cp2.x}, this.cp2.y:${this.cp2.y})`,
-      //   this.cp2.x + 14,
-      //   this.cp2.y
-      // );
-    } else {
-      ctx.lineTo(this.p2.x, this.p2.y);
-    }
-    ctx.stroke();
-
     // curve
     ctx.lineWidth = this.curve.w;
     ctx.strokeStyle = this.curve.c;
@@ -309,6 +268,7 @@ export default class Curve {
       ctx.quadraticCurveTo(this.cp1.x, this.cp1.y, this.p2.x, this.p2.y);
     }
     ctx.stroke();
+    ctx.closePath();
 
     // arrow
     this.arrow.draw(
@@ -319,6 +279,46 @@ export default class Curve {
     );
 
     if (this.selecting) {
+      // control lines
+      ctx.lineWidth = this.cpline.w;
+      ctx.strokeStyle = this.cpline.c;
+      ctx.fillStyle = this.cpline.c;
+
+      ctx.moveTo(this.p1.x, this.p1.y);
+      // ctx.fillText(`p1`, this.p1.x + 14, this.p1.y);
+      // ctx.fillText(
+      //   `(this.p1.x:${this.p1.x}, this.p1.y:${this.p1.y})`,
+      //   this.p1.x + 14,
+      //   this.p1.y
+      // );
+      ctx.lineTo(this.cp1.x, this.cp1.y);
+      // ctx.fillText(`cp1`, this.cp1.x + 14, this.cp1.y);
+      // ctx.fillText(
+      //   `(this.cp1.x:${this.cp1.x}, this.cp1.y:${this.cp1.y})`,
+      //   this.cp1.x + 14,
+      //   this.cp1.y
+      // );
+      if (this.cp2) {
+        ctx.moveTo(this.p2.x, this.p2.y);
+        // ctx.fillText(`p2`, this.p2.x + 14, this.p2.y);
+        // ctx.fillText(
+        //   `(this.p2.x:${this.p2.x}, this.p2.y:${this.p2.y})`,
+        //   this.p2.x + 14,
+        //   this.p2.y
+        // );
+        ctx.lineTo(this.cp2.x, this.cp2.y);
+        // ctx.fillText(`cp2`, this.cp2.x + 14, this.cp2.y);
+        // ctx.fillText(
+        //   `(this.cp2.x:${this.cp2.x}, this.cp2.y:${this.cp2.y})`,
+        //   this.cp2.x + 14,
+        //   this.cp2.y
+        // );
+      } else {
+        ctx.lineTo(this.p2.x, this.p2.y);
+      }
+      ctx.stroke();
+      ctx.closePath();
+
       // control points
       ctx.lineWidth = 2;
       ctx.strokeStyle = "#900";
@@ -328,21 +328,25 @@ export default class Curve {
       ctx.arc(this.p1.x, this.p1.y, 10, 0, 2 * Math.PI, true); // p1 control point
       ctx.fill();
       ctx.stroke();
+      ctx.closePath();
 
       ctx.beginPath();
       ctx.arc(this.cp1.x, this.cp1.y, 10, 0, 2 * Math.PI, true); // cp1 control point
       ctx.fill();
       ctx.stroke();
+      ctx.closePath();
 
       ctx.beginPath();
       ctx.arc(this.p2.x, this.p2.y, 10, 0, 2 * Math.PI, true); // p2 control point
       ctx.fill();
       ctx.stroke();
+      ctx.closePath();
 
       ctx.beginPath();
       ctx.arc(this.cp2.x, this.cp2.y, 10, 0, 2 * Math.PI, true); // cp2 control point
       ctx.fill();
       ctx.stroke();
+      ctx.closePath();
     }
   }
 }

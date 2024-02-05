@@ -20,11 +20,19 @@ export default class Process extends Core {
     this.selectedData = data;
   };
 
-  drawShape(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    ctx.translate(this.p.x, this.p.y);
+    ctx.fillStyle = this.c;
+
     const edge = this.getEdge();
 
     ctx.beginPath();
     ctx.fillRect(edge.l - this.p.x, edge.t - this.p.y, this.w, this.h);
     ctx.closePath();
+
+    ctx.restore();
+
+    super.draw(ctx);
   }
 }

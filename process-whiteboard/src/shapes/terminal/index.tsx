@@ -70,7 +70,11 @@ export default class Terminal extends Core {
     }
   }
 
-  drawShape(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    ctx.translate(this.p.x, this.p.y);
+    ctx.fillStyle = this.c;
+
     if (this.w >= this.h) {
       let r = this.h / 2;
       ctx.beginPath();
@@ -88,5 +92,9 @@ export default class Terminal extends Core {
       ctx.fill();
       ctx.fillRect(-r, -this.h / 2 + r, this.w, this.h - 2 * r);
     }
+
+    ctx.restore();
+
+    super.draw(ctx);
   }
 }

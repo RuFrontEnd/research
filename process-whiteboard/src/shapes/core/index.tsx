@@ -1561,7 +1561,6 @@ export default class Core {
     ctx.save();
     ctx.translate(this.p.x, this.p.y);
     ctx.fillStyle = this.c;
-    this.drawShape(ctx);
 
     if (!this.receiving) {
       if (this.selecting) {

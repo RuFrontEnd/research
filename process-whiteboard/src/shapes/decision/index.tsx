@@ -19,7 +19,10 @@ export default class Desicion extends Core {
     this.selectedData = data;
   };
 
-  drawShape(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    ctx.translate(this.p.x, this.p.y);
+    ctx.fillStyle = this.c;
     // 定义四个顶点的坐标
     const x1 = -this.w / 2,
       y1 = 0;
@@ -42,5 +45,103 @@ export default class Desicion extends Core {
 
     // 填充菱形
     ctx.fill();
+    ctx.restore();
+
+    super.draw(ctx);
+
+    ctx.save();
+    ctx.translate(this.p.x, this.p.y);
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "14px Arial";
+
+    if (
+      this.curves.l &&
+      this.curves.l.p1 &&
+      this.curves.l.cp1 &&
+      this.curves.l.cp2 &&
+      this.curves.l.p2
+    ) {
+      const bezierPoint = this.curves.l.getBezierPoint(0.5, [
+        this.curves.l.p1,
+        this.curves.l.cp1,
+        this.curves.l.cp2,
+        this.curves.l.p2,
+      ]);
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.arc(bezierPoint.x, bezierPoint.y, 10, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fillText("Y", bezierPoint.x, bezierPoint.y + 2);
+    } else if (
+      this.curves.t &&
+      this.curves.t.p1 &&
+      this.curves.t.cp1 &&
+      this.curves.t.cp2 &&
+      this.curves.t.p2
+    ) {
+      const bezierPoint = this.curves.t.getBezierPoint(0.5, [
+        this.curves.t.p1,
+        this.curves.t.cp1,
+        this.curves.t.cp2,
+        this.curves.t.p2,
+      ]);
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.arc(bezierPoint.x, bezierPoint.y, 10, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fillText("Y", bezierPoint.x, bezierPoint.y + 2);
+    } else if (
+      this.curves.r &&
+      this.curves.r.p1 &&
+      this.curves.r.cp1 &&
+      this.curves.r.cp2 &&
+      this.curves.r.p2
+    ) {
+      const bezierPoint = this.curves.r.getBezierPoint(0.5, [
+        this.curves.r.p1,
+        this.curves.r.cp1,
+        this.curves.r.cp2,
+        this.curves.r.p2,
+      ]);
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.arc(bezierPoint.x, bezierPoint.y, 10, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fillText("Y", bezierPoint.x, bezierPoint.y + 2);
+    } else if (
+      this.curves.b &&
+      this.curves.b.p1 &&
+      this.curves.b.cp1 &&
+      this.curves.b.cp2 &&
+      this.curves.b.p2
+    ) {
+      const bezierPoint = this.curves.b.getBezierPoint(0.5, [
+        this.curves.b.p1,
+        this.curves.b.cp1,
+        this.curves.b.cp2,
+        this.curves.b.p2,
+      ]);
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.arc(bezierPoint.x, bezierPoint.y, 10, 0, 2 * Math.PI, false);
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fillText("Y", bezierPoint.x, bezierPoint.y + 2);
+    }
+
+    ctx.restore();
   }
 }

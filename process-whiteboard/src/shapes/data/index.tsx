@@ -29,7 +29,11 @@ export default class Data extends Core {
     this.data = data;
   };
 
-  drawShape(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    ctx.translate(this.p.x, this.p.y);
+    ctx.fillStyle = this.c;
+
     const x1 = -this.w / 2 + this.frameOffset,
       y1 = -this.h / 2,
       x2 = this.w / 2,
@@ -46,5 +50,9 @@ export default class Data extends Core {
     ctx.lineTo(x4, y4);
     ctx.closePath();
     ctx.fill();
+
+    ctx.restore();
+
+    super.draw(ctx);
   }
 }

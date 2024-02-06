@@ -77,7 +77,8 @@ export default class Desicion extends Core {
 
       ctx.fillStyle = "black";
       ctx.fillText("Y", bezierPoint.x, bezierPoint.y + 2);
-    } else if (
+    }
+    if (
       this.curves.t &&
       this.curves.t.p1 &&
       this.curves.t.cp1 &&
@@ -98,7 +99,8 @@ export default class Desicion extends Core {
 
       ctx.fillStyle = "black";
       ctx.fillText("Y", bezierPoint.x, bezierPoint.y + 2);
-    } else if (
+    }
+    if (
       this.curves.r &&
       this.curves.r.p1 &&
       this.curves.r.cp1 &&
@@ -119,7 +121,8 @@ export default class Desicion extends Core {
 
       ctx.fillStyle = "black";
       ctx.fillText("Y", bezierPoint.x, bezierPoint.y + 2);
-    } else if (
+    }
+    if (
       this.curves.b &&
       this.curves.b.p1 &&
       this.curves.b.cp1 &&

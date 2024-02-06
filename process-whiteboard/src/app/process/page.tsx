@@ -1,4 +1,4 @@
-// TODO: 將 core 中操作 curve 邏輯整理至 curve class / 確認 Decision 取用可用的 data 邏輯是否與 Process 一致 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
+// TODO: 刪除功能 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -300,20 +300,20 @@ export default function ProcessPage() {
           { x: 1200, y: 300 },
           "blue"
         ),
-        data_1 = new Data("data_1", 200, 100, { x: 600, y: 600 }, "green");
-      // desicion_1 = new Desicion(
-      //   "desicion_1",
-      //   150,
-      //   100,
-      //   { x: 300, y: 100 },
-      //   "#3498db"
-      // );
+        data_1 = new Data("data_1", 200, 100, { x: 600, y: 600 }, "green"),
+        desicion_1 = new Desicion(
+          "desicion_1",
+          150,
+          100,
+          { x: 500, y: 100 },
+          "#3498db"
+        );
 
       shapes.push(terminal);
       shapes.push(process);
       shapes.push(process_2);
       shapes.push(data_1);
-      // shapes.push(desicion_1);
+      shapes.push(desicion_1);
 
       requestAnimationFrame(draw);
     }

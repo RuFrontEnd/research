@@ -322,6 +322,40 @@ export default class Core {
     };
   };
 
+  checkCurveTriggerBoundry = (p: Vec) => {
+    const center = this.getCenter();
+
+    if (
+      // l curve trigger
+      (p.x - center.curveTrigger.l.x) * (p.x - center.curveTrigger.l.x) +
+        (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
+      this.curveTrigger.size.fill * this.curveTrigger.size.fill
+    ) {
+      return Direction.l;
+    } else if (
+      // t curve trigger
+      (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
+        (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
+      this.curveTrigger.size.fill * this.curveTrigger.size.fill
+    ) {
+      return Direction.t;
+    } else if (
+      // r curve trigger
+      (p.x - center.curveTrigger.r.x) * (p.x - center.curveTrigger.r.x) +
+        (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
+      this.curveTrigger.size.fill * this.curveTrigger.size.fill
+    ) {
+      return Direction.r;
+    } else if (
+      // b curve trigger
+      (p.x - center.curveTrigger.b.x) * (p.x - center.curveTrigger.b.x) +
+        (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
+      this.curveTrigger.size.fill * this.curveTrigger.size.fill
+    ) {
+      return Direction.b;
+    }
+  };
+
   resetConnection = (direction: Direction) => {
     const receiverShape = this.sendTo[direction]?.shape,
       receiverDirection = this.sendTo[direction]?.direction;
@@ -379,8 +413,6 @@ export default class Core {
       }
     });
   };
-
-  drawShape(ctx: CanvasRenderingContext2D) {}
 
   onMouseDown(canvas: HTMLCanvasElement, p: Vec) {
     let shapeP = {
@@ -444,9 +476,7 @@ export default class Core {
         };
       } else if (
         // l curve trigger
-        (p.x - center.curveTrigger.l.x) * (p.x - center.curveTrigger.l.x) +
-          (p.y - center.curveTrigger.l.y) * (p.y - center.curveTrigger.l.y) <
-        this.curveTrigger.size.fill * this.curveTrigger.size.fill
+        this.checkCurveTriggerBoundry(p) === Direction.l
       ) {
         this.curves.l = new Curve(
           this.curveTrigger.cpline,
@@ -476,9 +506,7 @@ export default class Core {
         this.selecting = false;
       } else if (
         // t curve trigger
-        (p.x - center.curveTrigger.t.x) * (p.x - center.curveTrigger.t.x) +
-          (p.y - center.curveTrigger.t.y) * (p.y - center.curveTrigger.t.y) <
-        this.curveTrigger.size.fill * this.curveTrigger.size.fill
+        this.checkCurveTriggerBoundry(p) === Direction.t
       ) {
         this.curves.t = new Curve(
           this.curveTrigger.cpline,
@@ -508,9 +536,7 @@ export default class Core {
         this.selecting = false;
       } else if (
         // r curve trigger
-        (p.x - center.curveTrigger.r.x) * (p.x - center.curveTrigger.r.x) +
-          (p.y - center.curveTrigger.r.y) * (p.y - center.curveTrigger.r.y) <
-        this.curveTrigger.size.fill * this.curveTrigger.size.fill
+        this.checkCurveTriggerBoundry(p) === Direction.r
       ) {
         this.curves.r = new Curve(
           this.curveTrigger.cpline,
@@ -540,9 +566,7 @@ export default class Core {
         this.selecting = false;
       } else if (
         // b curve trigger
-        (p.x - center.curveTrigger.b.x) * (p.x - center.curveTrigger.b.x) +
-          (p.y - center.curveTrigger.b.y) * (p.y - center.curveTrigger.b.y) <
-        this.curveTrigger.size.fill * this.curveTrigger.size.fill
+        this.checkCurveTriggerBoundry(p) === Direction.b
       ) {
         this.curves.b = new Curve(
           this.curveTrigger.cpline,
@@ -1549,7 +1573,7 @@ export default class Core {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, sendable: boolean = true) {
     const edge = this.getEdge(),
       fillRectParams = {
         x: edge.l - this.p.x,
@@ -1634,7 +1658,7 @@ export default class Core {
         // draw curve triggers
         ctx.lineWidth = this.curveTrigger.size.stroke;
 
-        if (!this.curves.l && !this.receiveFrom.l) {
+        if (!this.curves.l && !this.receiveFrom.l && sendable) {
           // left
           ctx.beginPath();
           ctx.arc(
@@ -1650,7 +1674,7 @@ export default class Core {
           ctx.closePath();
         }
 
-        if (!this.curves.t && !this.receiveFrom.t) {
+        if (!this.curves.t && !this.receiveFrom.t && sendable) {
           // top
           ctx.beginPath();
           ctx.arc(
@@ -1666,7 +1690,7 @@ export default class Core {
           ctx.closePath();
         }
 
-        if (!this.curves.r && !this.receiveFrom.r) {
+        if (!this.curves.r && !this.receiveFrom.r && sendable) {
           // right
           ctx.beginPath();
           ctx.arc(
@@ -1682,7 +1706,7 @@ export default class Core {
           ctx.closePath();
         }
 
-        if (!this.curves.b && !this.receiveFrom.b) {
+        if (!this.curves.b && !this.receiveFrom.b && sendable) {
           ctx.beginPath();
           ctx.arc(
             0,

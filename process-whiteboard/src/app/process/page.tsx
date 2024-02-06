@@ -1,4 +1,4 @@
-// TODO: 刪除功能 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
+// TODO: 修正 arrow 跟隨位置 / 新增 arrow 點擊範圍偵測 / terminal 新增 / infinite whiteboard / zoom 功能 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -212,6 +212,40 @@ export default function ProcessPage() {
     []
   );
 
+  function handleKeyDown(this: Window, e: KeyboardEvent) {
+    if (e.key === "Backspace") {
+      // delete
+      let removeShape: null | Terminal | Process | Data | Desicion = null,
+        removeCurve: null | {
+          shape: Terminal | Process | Data | Desicion;
+          direction: Direction;
+        } = null;
+
+      const ds = [Direction.l, Direction.t, Direction.r, Direction.b];
+
+      for (const currentShape of shapes) {
+        if (removeShape || removeCurve) break;
+
+        if (currentShape.selecting) {
+          removeShape = currentShape;
+          break;
+        } else {
+          for (const d of ds) {
+            if (currentShape.curves[d]?.selecting) {
+              removeCurve = { shape: currentShape, direction: d };
+            }
+          }
+        }
+      }
+
+      if (removeShape) {
+        shapes = shapes.filter((shape) => shape.id !== removeShape?.id);
+      } else if (removeCurve) {
+        removeCurve.shape.curves[removeCurve.direction] = null;
+      }
+    }
+  }
+
   const onClickProcess = () => {
     let process_new = new Process(
       `process_${shapes.length + 1}`,
@@ -280,6 +314,8 @@ export default function ProcessPage() {
   useEffect(() => {
     if (useEffected) return;
 
+    window.addEventListener("keydown", handleKeyDown);
+
     if ($canvas) {
       $canvas.width = window.innerWidth;
       $canvas.height = window.innerHeight;
@@ -346,6 +382,7 @@ export default function ProcessPage() {
         </div>
       </div>
       <canvas
+        tabIndex={1}
         ref={(el) => {
           $canvas = el;
           ctx = $canvas?.getContext("2d");

@@ -1572,7 +1572,7 @@ export default class Core {
       this.curves.b?.onMouseUp();
     }
   }
-
+  
   draw(ctx: CanvasRenderingContext2D, sendable: boolean = true) {
     const edge = this.getEdge(),
       fillRectParams = {

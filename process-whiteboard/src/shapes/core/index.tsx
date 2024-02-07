@@ -414,7 +414,20 @@ export default class Core {
     });
   };
 
+  removeCurve = (d: Direction) => {
+    this.curves[d] = null;
+
+    const sendShape = this.sendTo[d]?.shape,
+      recieveShapeDirection = this.sendTo[d]?.direction;
+
+    if (sendShape && recieveShapeDirection) {
+      sendShape.receiveFrom[recieveShapeDirection] = null;
+      this.sendTo[d] = null;
+    }
+  };
+
   onMouseDown(canvas: HTMLCanvasElement, p: Vec) {
+    console.log("this", this);
     let shapeP = {
       x: p.x - this.p.x,
       y: p.y - this.p.y,
@@ -1572,7 +1585,7 @@ export default class Core {
       this.curves.b?.onMouseUp();
     }
   }
-  
+
   draw(ctx: CanvasRenderingContext2D, sendable: boolean = true) {
     const edge = this.getEdge(),
       fillRectParams = {

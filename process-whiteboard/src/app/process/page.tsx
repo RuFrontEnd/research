@@ -241,7 +241,7 @@ export default function ProcessPage() {
       if (removeShape) {
         shapes = shapes.filter((shape) => shape.id !== removeShape?.id);
       } else if (removeCurve) {
-        removeCurve.shape.curves[removeCurve.direction] = null;
+        removeCurve.shape.removeCurve(removeCurve.direction);
       }
     }
   }

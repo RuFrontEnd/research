@@ -427,7 +427,6 @@ export default class Core {
   };
 
   onMouseDown(canvas: HTMLCanvasElement, p: Vec) {
-    console.log("this", this);
     let shapeP = {
       x: p.x - this.p.x,
       y: p.y - this.p.y,

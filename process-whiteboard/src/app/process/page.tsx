@@ -1,4 +1,4 @@
-// TODO: 修正 arrow 跟隨位置 / 新增 arrow 點擊範圍偵測 / terminal 新增 / infinite whiteboard / zoom 功能 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
+// TODO: traversal 失效 / 修正 arrow 跟隨位置 / 新增 arrow 點擊範圍偵測 / terminal 新增 / infinite whiteboard / zoom 功能 / 修正 receive point 出現時會影響 curve 渲染 / 禁止 shape 頂點未從 terminal 出發 ( 會造成無法 traversal ) / 處理 data shape SelectFrame 開關(點擊 frame 以外要關閉) / 尋找左側列 icons / 後端判斷新增的 data 是否資料重名
 "use client";
 import Terminal from "@/shapes/terminal";
 import Process from "@/shapes/process";
@@ -6,7 +6,7 @@ import Data from "@/shapes/data";
 import Desicion from "@/shapes/decision";
 import ImportFrame from "@/components/importFrame";
 import SelectDataFrame from "@/components/selectDataFrame";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, use } from "react";
 import { PressingTarget, ConnectTarget } from "@/types/shapes/core";
 import { Vec, Direction, Data as DataType } from "@/types/shapes/common";
 import Core from "@/shapes/core";
@@ -33,7 +33,7 @@ export default function ProcessPage() {
       Terminal | Data | Process | Desicion | null
     >(null);
 
-  const checkData = () => {
+  const checkData = (dbClickedShapeId?: string) => {
     // traversal to give all shapes corresponding options
     const terminal = shapes.find(
       (shape) => shape instanceof Terminal && shape.isStart
@@ -45,7 +45,7 @@ export default function ProcessPage() {
     // check all correspondants of shapes' between options and selectedData
     shapes.forEach((shape) => {
       shape.getRedundancies();
-      if (shape.id === dbClickedShape?.id) {
+      if (shape.id === dbClickedShapeId) {
         setDbClickedShape(cloneDeep(shape));
       }
     });
@@ -174,7 +174,7 @@ export default function ProcessPage() {
       }
 
       if (sender) {
-        checkData();
+        checkData(dbClickedShape?.id);
       }
 
       sender = null;
@@ -213,8 +213,14 @@ export default function ProcessPage() {
   );
 
   function handleKeyDown(this: Window, e: KeyboardEvent) {
-    if (e.key === "Backspace") {
-      // delete
+    // delete
+
+    if (
+      e.key === "Backspace" &&
+      !importFrame &&
+      !selectFrame &&
+      !dbClickedShape
+    ) {
       let removeShape: null | Terminal | Process | Data | Desicion = null,
         removeCurve: null | {
           shape: Terminal | Process | Data | Desicion;
@@ -314,8 +320,6 @@ export default function ProcessPage() {
   useEffect(() => {
     if (useEffected) return;
 
-    window.addEventListener("keydown", handleKeyDown);
-
     if ($canvas) {
       $canvas.width = window.innerWidth;
       $canvas.height = window.innerHeight;
@@ -356,6 +360,13 @@ export default function ProcessPage() {
 
     useEffected = true;
   }, []);
+
+  useEffect(() => {
+    console.log("dbClickedShape", dbClickedShape);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [importFrame, selectFrame, dbClickedShape]);
 
   return (
     <>
